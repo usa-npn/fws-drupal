@@ -1,0 +1,749 @@
+/*
+* Skeleton V1.1
+* Copyright 2011, Dave Gamache
+* www.getskeleton.com
+* Free to use under the MIT license.
+* http://www.opensource.org/licenses/mit-license.php
+* 8/17/2011
+*/
+
+
+/* Table of Contents:
+ 1. Base 1200 Grid
+ 2. Clearing
+ 3. Boilerplate
+ 4. Mobile
+*/
+
+
+
+/*==========================================================================
+1. Base 1200 Grid
+===========================================================================*/
+
+.container-12 {
+	position: relative;
+	width: 1200px;
+	margin: 0 auto;
+	padding: 0;
+}
+
+.grid-1,
+.grid-2,
+.grid-3,
+.grid-4,
+.grid-5,
+.grid-6,
+.grid-7,
+.grid-8,
+.grid-9,
+.grid-10,
+.grid-11,
+.grid-12 {
+	float: left;
+	display: inline;
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+
+/* Nested Column Classes
+===========================================================================*/
+
+.container-12 .alpha {margin-left: 0;}
+.container-12 .omega {margin-right: 0;}
+
+.container-12 .grid-1 {width: 70px;}
+.container-12 .grid-2 {width: 170px;}
+.container-12 .grid-3 {width: 270px;}
+.container-12 .grid-4 {width: 100%;}
+.container-12 .grid-5 {width: 470px;}
+.container-12 .grid-6 {width: 570px;}
+.container-12 .grid-7 {width: 670px;}
+.container-12 .grid-8 {width: 770px;}
+.container-12 .grid-9 {width: 870px;}
+.container-12 .grid-10 {width: 970px;}
+.container-12 .grid-11 {width: 1070px;}
+.container-12 .grid-12 {width: 1170px;}
+
+
+/* Prefix Styles
+===========================================================================*/
+
+.container-12 .prefix-1 {padding-left: 100px;}
+.container-12 .prefix-2 {padding-left: 200px;}
+.container-12 .prefix-3 {padding-left: 300px;}
+.container-12 .prefix-4 {padding-left: 400px;}
+.container-12 .prefix-5 {padding-left: 500px;}
+.container-12 .prefix-6 {padding-left: 600px;}
+.container-12 .prefix-7 {padding-left: 700px;}
+.container-12 .prefix-8 {padding-left: 800px;}
+.container-12 .prefix-9 {padding-left: 900px;}
+.container-12 .prefix-10 {padding-left: 1000px;}
+.container-12 .prefix-11 {padding-left: 1100px;}
+
+
+/* Suffix Styles
+===========================================================================*/
+
+.container-12 .suffix-1 {padding-right: 100px;}
+.container-12 .suffix-2 {padding-right: 200px;}
+.container-12 .suffix-3 {padding-right: 300px;}
+.container-12 .suffix-4 {padding-right: 400px;}
+.container-12 .suffix-5 {padding-right: 500px;}
+.container-12 .suffix-6 {padding-right: 600px;}
+.container-12 .suffix-7 {padding-right: 700px;}
+.container-12 .suffix-8 {padding-right: 800px;}
+.container-12 .suffix-9 {padding-right: 900px;}
+.container-12 .suffix-10 {padding-right: 1000px;}
+.container-12 .suffix-11 {padding-right: 1100px;}
+
+
+
+/*==========================================================================
+2. Clearing
+===========================================================================*/
+
+/* Self Clearing Goodness */
+.container-12:after {
+	clear: both;
+	content: "\0020";
+	display: block;
+	height: 0;
+	visibility: hidden;
+}
+
+/* Use clearfix class on parent to clear nested columns,
+or wrap each row of columns in a <div class="row"> */
+.clearfix:before,
+.clearfix:after,
+.row:before,
+.row:after {
+	content: '\0020';
+	display: block;
+	height: 0;
+	overflow: hidden;
+	visibility: hidden;
+	width: 0;
+}
+.row:after,
+.clearfix:after {
+	clear: both;
+}
+.row,
+.clearfix {
+	zoom: 1;
+}
+
+/* You can also use a <br class="clear"> to clear columns */
+.clear {
+	clear: both;
+	display: block;
+	height: 0;
+	overflow: hidden;
+	visibility: hidden;
+	width: 0;
+}
+
+.view-content:after	 {
+	clear: both;
+	content: '';
+	display: block;
+	width: 100%;
+}
+
+/*===============================================================
+3. Boilerplate
+====================================================================*/
+/**
+* Reset CSS
+ */
+
+
+/* General
+===========================================================================*/
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+	background: transparent;
+	border: 0;
+	font-size: 100%;
+	margin: 0;
+	outline: 0;
+	padding: 0;
+	vertical-align: baseline;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section {
+	display: block;
+}
+
+body {
+	-webkit-text-size-adjust: none;
+}
+
+audio,
+canvas,
+video {
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+}
+audio:not([controls]) {
+	display: none;
+}
+
+[hidden] {
+	display: none;
+}
+
+p {
+	margin: 0 0 15px;
+}
+
+blockquote,
+q {
+	quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+	content: '';
+	content: none;
+}
+
+/* change colours to suit your needs */
+ins {
+	text-decoration: none;
+}
+
+/* change colours to suit your needs */
+mark {
+	font-style: italic;
+	font-weight: bold;
+}
+
+del {
+	text-decoration: line-through;
+}
+
+abbr[title],
+dfn[title] {
+	border-bottom: 1px dotted;
+	cursor: help;
+}
+
+/* change border colour to suit your needs */
+hr {
+	border: 0;
+	border-top: 1px solid #cccccc;
+	display: block;
+	height: 1px;
+	margin: 1em 0;
+	padding: 0;
+}
+
+pre, code, kbd, samp {
+	font-family: monospace, sans-serif;
+}
+
+
+/* Accessible focus treatment */
+a,
+a:hover,
+a:active {
+	outline: none;
+}
+
+/* Remove margins for navigation lists */
+small {
+	font-size: 85%;
+}
+
+strong {
+	font-weight: bold;
+}
+
+img {
+	font-size: 0;
+	line-height: 0;
+	vertical-align: top;
+	-ms-interpolation-mode: bicubic;
+}
+
+svg:not(:root) {
+	overflow: hidden;
+}
+
+sub {
+	vertical-align: sub;
+	font-size: smaller;
+}
+sup {
+	vertical-align: super;
+	font-size: smaller;
+}
+
+pre {
+	padding: 15px;
+	white-space: pre; /* CSS2 */
+	white-space: pre-wrap; /* CSS 2.1 */
+	white-space: pre-line; /* CSS 3 (and 2.1 as well, actually) */
+	word-wrap: break-word; /* IE */
+}
+
+
+/* Lists
+===========================================================================*/
+
+ul,
+ol {
+	margin: 0;
+	padding-left: 0;
+}
+
+ol {
+	list-style-type: decimal;
+}
+
+nav ul {
+	list-style: none;
+}
+
+li ul,
+li ol {
+	margin: 0;
+}
+
+
+dl {
+	margin: 0 0 1.5em 0;
+}
+
+dl dt {
+	font-weight: bold;
+}
+
+dl dd {
+	margin-left: 1.5em;
+}
+
+
+/* Table
+===========================================================================*/
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	margin-bottom: 1.5em;
+	width: 100%;
+}
+
+th,
+tr,
+td {
+	padding: 0.1em 0.5em;
+	vertical-align: top;
+}
+
+th {
+	font-weight: bold;
+}
+
+
+/* Forms
+===========================================================================*/
+
+/*
+ * Corrects margin displayed oddly in IE6/7
+ */
+form {
+	margin: 0;
+}
+
+/*
+ * 1. Corrects font size not being inherited in all browsers
+ * 2. Addresses margins set differently in IE6/7, F3/4, S5, Chrome
+ * 3. Improves appearance and consistency in all browsers
+ */
+button,
+input,
+select,
+textarea {
+	font-size: 100%; /* 1 */
+	font-family: sans-serif;
+	margin: 0; /* 2 */
+	vertical-align: baseline; /* 3 */
+	*vertical-align: middle; /* 3 */
+}
+
+/*
+ * 1. Addresses FF3/4 setting line-height using !important in the UA stylesheet
+ * 2. Corrects inner spacing displayed oddly in IE6/7
+ */
+button,
+input {
+	line-height: normal; /* 1 */
+	*overflow: visible; /* 2 */
+}
+
+/*
+ * Corrects overlap and whitespace issue for buttons and inputs in IE6/7
+ * Known issue: reintroduces inner spacing
+ */
+table button,
+table input {
+	*overflow: auto;
+}
+
+/*
+ * 1. Improves usability and consistency of cursor style between image-type 'input' and others
+ * 2. Corrects inability to style clickable 'input' types in iOS
+ */
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+	cursor: pointer; /* 1 */
+	-webkit-appearance: button; /* 2 */
+}
+
+/*
+ * 1. Addresses box sizing set to content-box in IE8/9
+ * 2. Addresses excess padding in IE8/9
+ */
+input[type="checkbox"],
+input[type="radio"] {
+	box-sizing: border-box; /* 1 */
+	padding: 0; /* 2 */
+}
+
+input[type="radio"] {
+	vertical-align: text-bottom;
+}
+
+input[type="checkbox"] {
+	vertical-align: middle;
+	*vertical-align: baseline;
+}
+
+/*
+ * 1. Addresses appearance set to searchfield in S5, Chrome
+ * 2. Addresses box sizing set to border-box in S5, Chrome (include -moz to future-proof)
+ */
+input[type="search"] {
+	-webkit-appearance: textfield; /* 1 */
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box; /* 2 */
+	box-sizing: content-box;
+}
+
+/*
+ * Corrects inner padding displayed oddly in S5, Chrome on OSX
+ */
+input[type="search"]::-webkit-search-decoration {
+	-webkit-appearance: none;
+}
+
+/*
+ * Corrects inner padding and border displayed oddly in FF3/4
+ * www.sitepen.com/blog/2008/05/14/the-devils-in-the-details-fixing-dojos-toolbar-buttons/
+ */
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+
+/*
+ * 1. Removes default vertical scrollbar in IE6/7/8/9
+ * 2. Improves readability and alignment in all browsers
+ */
+textarea {
+	overflow: auto;
+	vertical-align: top;
+	resize: none;
+}
+
+select:focus, input:focus, textarea:focus {
+	outline: none;
+}
+
+/* hand cursor on clickable input elements */
+label,
+input[type=button],
+input[type=submit], button {
+	cursor: pointer;
+}
+
+fieldset {
+	border: 1px solid;
+	margin: .5em 0;
+	padding: 1em;
+}
+
+legend {
+	*margin-left: -7px;
+}
+
+
+/* Classes
+===========================================================================*/
+
+/* for image replacement */
+.ir {
+	background-color: transparent;
+	background-repeat: no-repeat;
+	border: 0;
+	direction: ltr;
+	display: block;
+	overflow: hidden;
+	text-align: left;
+	text-indent: -999em;
+}
+
+.ir br {
+	display: none;
+}
+
+/* Hide from both screenreaders and browsers:h5bp.com/u */
+.hidden {
+	display: none !important;
+	visibility: hidden;
+}
+
+/* Hide only visually, but have it available for screenreaders:h5bp.com/v */
+.visuallyhidden {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+
+/* Extends the .visuallyhidden class to allow the element to be focusable when navigated to via the keyboard:h5bp.com/p */
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+	clip: auto;
+	height: auto;
+	margin: 0;
+	overflow: visible;
+	position: static;
+	width: auto;
+}
+
+/* Hide visually and from screenreaders, but maintain layout */
+.invisible {
+	visibility: hidden;
+}
+
+#cboxTitle {
+	background: #fff;
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+}
+
+#edit-author #edit-name {
+	background-image: none;
+}
+
+#skip-link {
+	position: absolute;
+}
+
+.at300b iframe {
+	background: none !important;
+}
+
+.addthis_toolbox {
+	padding-top: 3px;
+}
+
+.addthis_button_compact {
+	margin: 4px 0 0 30px;
+}
+
+/*===============================================================
+4. Mobile
+====================================================================
+
+Table of Contents:
+ 1. Tablet landscape
+ 2. Tablet portrait
+ 3. Mobile
+*/
+
+
+
+/*==========================================================================
+1. Tablet landscape
+===========================================================================*/
+
+@media (max-width: 1250px) {
+	.container-12 {width: 960px;}
+
+	.grid-1,
+	.grid-2,
+	.grid-3,
+	.grid-4,
+	.grid-5,
+	.grid-6,
+	.grid-7,
+	.grid-8,
+	.grid-9,
+	.grid-10,
+	.grid-11,
+	.grid-12 {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+
+	.container-12 .grid-1 {width: 60px;}
+	.container-12 .grid-2 {width: 140px;}
+	.container-12 .grid-3 {width: 220px;}
+	.container-12 .grid-4 {width: 300px;}
+	.container-12 .grid-5 {width: 380px;}
+	.container-12 .grid-6 {width: 460px;}
+	.container-12 .grid-7 {width: 540px;}
+	.container-12 .grid-8 {width: 620px;}
+	.container-12 .grid-9 {width: 700px;}
+	.container-12 .grid-10 {width: 780px;}
+	.container-12 .grid-11 {width: 860px;}
+	.container-12 .grid-12 {width: 940px;}
+
+
+	/* Prefix Styles
+	===========================================================================*/
+
+	.container-12 .prefix-1 {padding-left: 80px;}
+	.container-12 .prefix-2 {padding-left: 160px;}
+	.container-12 .prefix-3 {padding-left: 240px;}
+	.container-12 .prefix-4 {padding-left: 320px;}
+	.container-12 .prefix-5 {padding-left: 400px;}
+	.container-12 .prefix-6 {padding-left: 480px;}
+	.container-12 .prefix-7 {padding-left: 560px;}
+	.container-12 .prefix-8 {padding-left: 640px;}
+	.container-12 .prefix-9 {padding-left: 720px;}
+	.container-12 .prefix-10 {padding-left: 800px;}
+	.container-12 .prefix-11 {padding-left: 880px;}
+
+
+	/* Suffix Styles
+	===========================================================================*/
+
+	.container-12 .suffix-1 {padding-right: 80px;}
+	.container-12 .suffix-2 {padding-right: 160px;}
+	.container-12 .suffix-3 {padding-right: 240px;}
+	.container-12 .suffix-4 {padding-right: 320px;}
+	.container-12 .suffix-5 {padding-right: 400px;}
+	.container-12 .suffix-6 {padding-right: 480px;}
+	.container-12 .suffix-7 {padding-right: 560px;}
+	.container-12 .suffix-8 {padding-right: 640px;}
+	.container-12 .suffix-9 {padding-right: 720px;}
+	.container-12 .suffix-10 {padding-right: 800px;}
+	.container-12 .suffix-11 {padding-right: 880px;}
+}
+
+
+
+/*==========================================================================
+2. Tablet portrait
+===========================================================================*/
+/* Note: Design for a width of 768px */
+
+@media (max-width: 995px) {
+	.container-12 {width: 768px;}
+
+	.container-12 .grid-1 {width: 44px;}
+	.container-12 .grid-2 {width: 108px;}
+	.container-12 .grid-3 {width: 172px;}
+	.container-12 .grid-4 {width: 236px;}
+	.container-12 .grid-5 {width: 300px;}
+	.container-12 .grid-6 {width: 364px;}
+	.container-12 .grid-7 {width: 428px;}
+	.container-12 .grid-8 {width: 492px;}
+	.container-12 .grid-9 {width: 556px;}
+	.container-12 .grid-10 {width: 620px;}
+	.container-12 .grid-11 {width: 684px;}
+	.container-12 .grid-12 {width: 748px;}
+
+
+	/* Prefix Styles
+	===========================================================================*/
+
+	.container-12 .prefix-1 {padding-left: 64px;}
+	.container-12 .prefix-2 {padding-left: 128px;}
+	.container-12 .prefix-3 {padding-left: 192px;}
+	.container-12 .prefix-4 {padding-left: 256px;}
+	.container-12 .prefix-5 {padding-left: 320px;}
+	.container-12 .prefix-6 {padding-left: 384px;}
+	.container-12 .prefix-7 {padding-left: 448px;}
+	.container-12 .prefix-8 {padding-left: 512px;}
+	.container-12 .prefix-9 {padding-left: 576px;}
+	.container-12 .prefix-10 {padding-left: 640px;}
+	.container-12 .prefix-11 {padding-left: 704px;}
+
+
+	/* Suffix Styles
+	===========================================================================*/
+
+	.container-12 .suffix-1 {padding-right: 64px;}
+	.container-12 .suffix-2 {padding-right: 128px;}
+	.container-12 .suffix-3 {padding-right: 192px;}
+	.container-12 .suffix-4 {padding-right: 256px;}
+	.container-12 .suffix-5 {padding-right: 320px;}
+	.container-12 .suffix-6 {padding-right: 384px;}
+	.container-12 .suffix-7 {padding-right: 448px;}
+	.container-12 .suffix-8 {padding-right: 512px;}
+	.container-12 .suffix-9 {padding-right: 576px;}
+	.container-12 .suffix-10 {padding-right: 640px;}
+	.container-12 .suffix-11 {padding-right: 704px;}
+}
+
+
+
+/*==========================================================================
+1. Mobile
+===========================================================================*/
+/* Note: Design for a width of 480px */
+
+@media (max-width: 767px) {
+	.container-12 {
+		padding: 0 15px;
+		width: auto;
+	}
+
+	.container-12 [class*="grid-"] {
+		display: block;
+		float: none;
+		margin: 0 0 30px;
+		width: auto;
+	}
+
+	.grid-12,
+	.omega {
+		margin-bottom: 0 !important;
+	}
+
+
+	/* Prefix and suffix styles
+	===========================================================================*/
+
+	.container-12 [class*="prefix-"] {padding-left: 0;}
+	.container-12 [class*="suffix-"] {padding-right: 0;}
+}
