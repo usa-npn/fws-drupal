@@ -94,7 +94,6 @@ endif; ?>
  
  $dark_color = $node->field_color_scheme['und'][0]['taxonomy_term']->field_dark_color['und'][0]['value'];
  $light_color = $node->field_color_scheme['und'][0]['taxonomy_term']->field_light_color['und'][0]['value'];
- print $dark_color . " " . $light_color;
  ?>
 
 
@@ -132,7 +131,7 @@ endif; ?>
 				</div>
 			<?php endif; ?>
 						
-			<div class="clearfix header-bg-refuge" style="background-image: url(<?php echo (($has_header_image) ? $header_image_url : base_path().path_to_theme() . '/images/fws-sandcranes.png') ?>); background-position: center;background-size:contain;background-repeat:no-repeat;margin-top:100px" data-stellar-background-ratio = "0.5">
+			<div class="clearfix header-bg-refuge" style="background-image: url(<?php echo (($has_header_image) ? $header_image_url : base_path().path_to_theme() . '/images/fws-sandcranes.png') ?>); background-position: center;background-size:contain;background-repeat:no-repeat;" data-stellar-background-ratio = "0.5">
 				<!-- Region Slider Content -->
 				<?php if ( $page['slider_content'] ) : 
 					mnpn_region_preffix ( 'slider_content' );
@@ -222,6 +221,12 @@ endif; ?>
 										<!-- System help block -->
 										<?php print render( $page['help'] );
 									endif; ?>
+									
+									<?php if ( !empty( $tabs['#primary'] ) ) : ?>
+											<!-- Tabs links -->
+											<div class="tabs"><?php print render( $tabs ); ?></div>
+									<?php endif; ?>
+									
 
 
 									<?php if ( $action_links ) : ?>
