@@ -1,0 +1,172 @@
+<?php
+
+define('REFUGE_API', 'api/refuge');
+define('REFUGE_DASHBOARD','dashboard');
+
+define('REFUGE_DASHBOARD_THEME','refuge_dashboard');
+
+/**
+ * Implements hook_menu
+ */
+function fws_dashboard_menu() {
+    // for now no list resource, just an entity one since that's all that's necessary
+    return array(
+        REFUGE_API => array(
+            'access callback' => TRUE,
+            'page callback' => 'fws_dashboard_list',
+        ),
+        REFUGE_API.'/%fws_dashboard_refuge' => array(
+             'access callback' => 'fws_dashboard_refuge_access',
+             'access arguments' => array(2),
+             'page callback' => 'fws_dashboard_refuge',
+             'page arguments' => array(2),
+             'type' => MENU_CALLBACK,
+         ),
+         REFUGE_DASHBOARD.'/%fws_dashboard_refuge' => array(
+             'title' => t('Refuge Dashboard'),
+             'access callback' => TRUE,
+             'page callback' => 'fws_dashboard_dashboard',
+             'page arguments' => array(1),
+             'type' => MENU_CALLBACK,
+         ),
+     );
+}
+
+/**
+ * Implements hook_theme
+ */
+function fws_dashboard_theme() {
+    return array(
+        REFUGE_DASHBOARD_THEME => array(
+            'template' => 'dashboard',
+            'variables' => array(
+                'refuge_id' => NULL,
+                'user_is_admin' => NULL,
+            ),
+        ),
+    );
+}
+
+/**
+ * auto loader for a refuge
+ */
+function fws_dashboard_refuge_load($refuge_id) {
+    if (!ctype_digit($refuge_id)) { // !all digits (nid) like arctic-nwr
+        $node_path = drupal_get_normal_path($refuge_id); // e.g. node/11
+        if (preg_match('/^node\/\d+$/', $node_path) !== 1) {
+            return NULL;
+        }
+        $path_parts = explode('/', $node_path);
+        $refuge_id = $path_parts[1];
+    }
+    $node = node_load($refuge_id);
+    if (!$node || $node->type !== 'refuge') {
+        return NULL;
+    }
+    return entity_metadata_wrapper('node', $node);
+}
+
+/**
+ * Tests whether the current user is a refuge admin
+ */
+function fws_dashboard_user_is_admin($refuge) {
+    global $user;
+    //dd($user,'USER');
+    // TODO this is just site admin
+    return ($user->uid && is_array($user->roles) && in_array('administrator',$user->roles));
+}
+
+/**
+ * access callback for the current request and refuge.
+ */
+function fws_dashboard_refuge_access($refuge) {
+    return ($_SERVER['REQUEST_METHOD'] === 'GET') || // anyone can read a refuge
+           ($_SERVER['REQUEST_METHOD'] === 'PUT' && fws_dashboard_user_is_admin($refuge)); // admins can update
+}
+
+/**
+ * page callback for dashboard/<refuge>
+ */
+function fws_dashboard_dashboard($refuge) {
+    return theme(REFUGE_DASHBOARD_THEME,array(
+        'refuge_id' => $refuge->nid->value(),
+        'user_is_admin' => fws_dashboard_user_is_admin($refuge),
+    ));
+}
+
+/**
+ * page callback for api/refuge/<refuge>
+ */
+function fws_dashboard_refuge($refuge) { // call GET or PUT based on
+    if (!$refuge) {
+        return drupal_not_found();
+    }
+    call_user_func('_fws_dashboard_refuge_'.$_SERVER['REQUEST_METHOD'],$refuge);
+}
+
+/**
+ * Simple refuge api list.  Format response mimics firebase.
+ */
+function fws_dashboard_list() {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+          ->entityCondition('bundle', 'refuge')
+          ->propertyCondition('status', NODE_PUBLISHED);
+    $result = $query->execute();
+    $response = array();
+    if(isset($result['node'])) {
+        foreach (entity_load('node',array_keys($result['node'])) as $node) {
+            $refuge = entity_metadata_wrapper('node', $node);
+            $refuge_json = _fws_dashboard_refuge_s11n($refuge);
+            $response[$refuge_json['id']] = $refuge_json;
+        }
+    }
+    drupal_json_output($response);
+    drupal_exit();
+}
+
+/**
+ * serializes a refuge to an array for JSON output.
+ */
+function _fws_dashboard_refuge_s11n($refuge) {
+    $selections = $refuge->field_saved_visualizations->value();
+    $path_alias = drupal_get_path_alias('node/'.$refuge->nid->value());
+    $url_opts = array('absolute'=>TRUE);
+    $return = array(
+         'id' => $path_alias,
+         'label' => $refuge->label(),
+         'network_id' => intval($refuge->field_network_id->value()),
+         'boundary_id' => $refuge->field_refuge_boundary->value(),
+         'selections' => $selections ? drupal_json_decode($selections) : array(),
+         'links' => array(
+             'self' => url(REFUGE_API.'/'.$path_alias,$url_opts),
+             'dashboard' => url(REFUGE_DASHBOARD.'/'.$path_alias,$url_opts),
+         ),
+     );
+     return $return;
+}
+
+/**
+ * Simple HTTP GET for a single refuge.
+ */
+function _fws_dashboard_refuge_GET($refuge) {
+     drupal_json_output(_fws_dashboard_refuge_s11n($refuge));
+     drupal_exit();
+}
+
+/**
+ * Simple HTTP PUT for a single refuge (only allows "selections" to be updated, ignores everything else).
+ */
+function _fws_dashboard_refuge_PUT($refuge) {
+    dd('fws_dashboard_refuge_PUT');
+    if(!isset($_SERVER['CONTENT_TYPE']) || !strstr($_SERVER['CONTENT_TYPE'],'application/json')) {
+        return drupal_not_found(); // 400 would be preferable but..
+    }
+    $input = drupal_json_decode(file_get_contents('php://input'));
+    dd($input,'INPUT');
+    if(isset($input['selections'])) {
+        $refuge->field_saved_visualizations->set(drupal_json_encode($input['selections']));
+        $refuge->save();
+    }
+    _fws_dashboard_refuge_GET($refuge);
+}

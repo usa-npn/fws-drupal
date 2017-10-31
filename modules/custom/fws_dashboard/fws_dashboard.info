@@ -1,0 +1,7 @@
+name = FWS Refuge Dashboard
+description = Provides resources and single page app for refuge dashboards
+package = USFWS
+;configure = admin/config/fws_dashboard
+core = 7.x
+dependencies[] = entity
+version = 7.x-1.0
