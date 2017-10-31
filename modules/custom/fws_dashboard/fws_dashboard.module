@@ -22,29 +22,47 @@ function fws_dashboard_menu() {
              'page arguments' => array(2),
              'type' => MENU_CALLBACK,
          ),
-         REFUGE_DASHBOARD.'/%fws_dashboard_refuge' => array(
-             'title' => t('Refuge Dashboard'),
-             'access callback' => TRUE,
-             'page callback' => 'fws_dashboard_dashboard',
-             'page arguments' => array(1),
-             'type' => MENU_CALLBACK,
-         ),
      );
 }
 
 /**
- * Implements hook_theme
+ * Implements hook_block_info()
  */
-function fws_dashboard_theme() {
+function fws_dashboard_block_info() {
     return array(
-        REFUGE_DASHBOARD_THEME => array(
-            'template' => 'dashboard',
-            'variables' => array(
-                'refuge_id' => NULL,
-                'user_is_admin' => NULL,
-            ),
+        'refuge_dashboard' => array(
+            'info' => t('Refuge Dashboard'),
+            'cache' => DRUPAL_NO_CACHE,
         ),
     );
+}
+
+/**
+ * Implements hook_block_view()
+ */
+function fws_dashboard_block_view($delta='') {
+    if($delta === 'refuge_dashboard') {
+        $node = menu_get_object();
+        $refuge = entity_metadata_wrapper('node', $node);
+        $refuge_id = $refuge->nid->value();
+        $module_path = drupal_get_path('module','fws_dashboard');
+        $user_is_admin = fws_dashboard_user_is_admin($refuge) ? ' user_is_admin' :'';
+        $html = <<<EOT
+<script>
+var npn_base_href = '/$module_path/app/';
+</script>
+<refuge-dashboard refuge_id="$refuge_id"$user_is_admin></refuge-dashboard>
+<script type="text/javascript" src="$module_path/app/inline.bundle.js"></script>
+<script type="text/javascript" src="$module_path/app/polyfills.bundle.js"></script>
+<script type="text/javascript" src="$module_path/app/scripts.bundle.js"></script>
+<script type="text/javascript" src="$module_path/app/styles.bundle.js"></script>
+<script type="text/javascript" src="$module_path/app/vendor.bundle.js"></script>
+<script type="text/javascript" src="$module_path/app/main.bundle.js"></script>
+EOT;
+        return array(
+            'content' => $html,
+        );
+    }
 }
 
 /**
@@ -82,16 +100,6 @@ function fws_dashboard_user_is_admin($refuge) {
 function fws_dashboard_refuge_access($refuge) {
     return ($_SERVER['REQUEST_METHOD'] === 'GET') || // anyone can read a refuge
            ($_SERVER['REQUEST_METHOD'] === 'PUT' && fws_dashboard_user_is_admin($refuge)); // admins can update
-}
-
-/**
- * page callback for dashboard/<refuge>
- */
-function fws_dashboard_dashboard($refuge) {
-    return theme(REFUGE_DASHBOARD_THEME,array(
-        'refuge_id' => $refuge->nid->value(),
-        'user_is_admin' => fws_dashboard_user_is_admin($refuge),
-    ));
 }
 
 /**
@@ -134,7 +142,7 @@ function _fws_dashboard_refuge_s11n($refuge) {
     $url_opts = array('absolute'=>TRUE);
     $return = array(
          'id' => $path_alias,
-         'label' => $refuge->label(),
+         'title' => $refuge->label(),
          'network_id' => intval($refuge->field_network_id->value()),
          'boundary_id' => $refuge->field_refuge_boundary->value(),
          'selections' => $selections ? drupal_json_decode($selections) : array(),
@@ -158,12 +166,10 @@ function _fws_dashboard_refuge_GET($refuge) {
  * Simple HTTP PUT for a single refuge (only allows "selections" to be updated, ignores everything else).
  */
 function _fws_dashboard_refuge_PUT($refuge) {
-    dd('fws_dashboard_refuge_PUT');
     if(!isset($_SERVER['CONTENT_TYPE']) || !strstr($_SERVER['CONTENT_TYPE'],'application/json')) {
         return drupal_not_found(); // 400 would be preferable but..
     }
     $input = drupal_json_decode(file_get_contents('php://input'));
-    dd($input,'INPUT');
     if(isset($input['selections'])) {
         $refuge->field_saved_visualizations->set(drupal_json_encode($input['selections']));
         $refuge->save();

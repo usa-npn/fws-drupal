@@ -80,8 +80,8 @@ endif; ?>
  else:
 	$has_header_image = false;
  endif; ?>
- 
- 
+
+
   <?php if(!empty( $node->field_border_color['und'][0]['value'] ) ) :
 	$has_border_color = true;
 	$border_color = $node->field_border_color['und'][0]['value'];
@@ -89,9 +89,9 @@ endif; ?>
 	$has_border_color = false;
 	$border_color = '';
  endif; ?>
- 
+
  <?php
- 
+
  $dark_color = $node->field_color_scheme['und'][0]['taxonomy_term']->field_dark_color['und'][0]['value'];
  $light_color = $node->field_color_scheme['und'][0]['taxonomy_term']->field_light_color['und'][0]['value'];
  ?>
@@ -104,7 +104,7 @@ endif; ?>
 
 
 <div id="page-wrapper" class="page-wrapper">
-	<div id="page" class="page">		
+	<div id="page" class="page">
 
 		<!-- Header
 		======================================================================================= -->
@@ -119,8 +119,8 @@ endif; ?>
 				</div>
 			</div>
 		</div>
-				
-		
+
+
 		<header id="header" class="header page-header clearfix" role="banner">
 			<!-- Region Header Top -->
 			<?php if ( $page['header_top'] ) : ?>
@@ -130,10 +130,10 @@ endif; ?>
 					</div>
 				</div>
 			<?php endif; ?>
-						
+
 			<div class="clearfix header-bg-refuge" style="background-image: url(<?php echo (($has_header_image) ? $header_image_url : base_path().path_to_theme() . '/images/fws-sandcranes.png') ?>); background-position: center;background-size:contain;background-repeat:no-repeat;" data-stellar-background-ratio = "0.5">
 				<!-- Region Slider Content -->
-				<?php if ( $page['slider_content'] ) : 
+				<?php if ( $page['slider_content'] ) :
 					mnpn_region_preffix ( 'slider_content' );
 						print render( $page['slider_content'] );
 					mnpn_region_suffix ( 'slider_content' );
@@ -158,26 +158,26 @@ endif; ?>
 			<?php endif; ?>
 
 			<!-- Region Header bottom -->
-			<?php if ( $page['header_bottom'] ) : 
+			<?php if ( $page['header_bottom'] ) :
 				mnpn_region_preffix ( 'header_bottom' );
 					print render( $page['header_bottom'] );
 				mnpn_region_suffix ( 'header_bottom' );
 			endif; ?>
-			
 
-			
+
+
 		</header>
 
 		<!-- Content
 		======================================================================================= -->
-		<div id="main-wrapper" class="main-wrapper" role="main">		
+		<div id="main-wrapper" class="main-wrapper" role="main">
 			<!-- Region content top -->
-			<?php if ( $page['content_top'] ) : 
+			<?php if ( $page['content_top'] ) :
 				mnpn_region_preffix ( 'content_top' );
 					print render( $page['content_top'] );
 				mnpn_region_suffix ( 'content_top' );
 			endif; ?>
-			
+
 			<div class="container-12">
 				<div class="grid-12" style="border-top:10px solid #<?php echo $dark_color; ?>">
 					<div id="main" class="main-refuge clearfix">
@@ -198,7 +198,7 @@ endif; ?>
 											<?php print $messages; ?>
 										</div>
 									<?php endif; ?>
-									
+
 									<?php if ( $page['highlighted'] ) : ?>
 										<!-- Highlighted -->
 										<div id="highlighted" class="highlighted"><?php print render( $page['highlighted'] ); ?></div>
@@ -215,18 +215,18 @@ endif; ?>
 											<h2 id="page-title" class="title page-title-refuge <?php if(!$has_header_image) print 'page-title-no-banner'; ?>" ><?php print $title; ?></h2>
 										<?php print render( $title_suffix );
 									endif; ?>
-									
+
 
 									<?php if ( $page['help'] ): ?>
 										<!-- System help block -->
 										<?php print render( $page['help'] );
 									endif; ?>
-									
+
 									<?php if ( !empty( $tabs['#primary'] ) ) : ?>
 											<!-- Tabs links -->
 											<div class="tabs"><?php print render( $tabs ); ?></div>
 									<?php endif; ?>
-									
+
 
 
 									<?php if ( $action_links ) : ?>
@@ -240,6 +240,10 @@ endif; ?>
 							<div class = 'refuge-content'>
 								<!-- Page content -->
 								<?php echo $node->body['und'][0]['value']; ?>
+								<?php
+								$block = module_invoke('fws_dashboard','block_view','refuge_dashboard');
+								print $block['content'];
+								?>
 							</div>
 						</div>
 
@@ -254,9 +258,9 @@ endif; ?>
 					</div>
 				</div>
 			</div>
-			
+
 			<!-- Region Content bottom -->
-			<?php if ( $page['content_bottom'] ) : 
+			<?php if ( $page['content_bottom'] ) :
 				mnpn_region_preffix ( 'content_bottom' );
 					print render( $page['content_bottom'] );
 				mnpn_region_suffix ( 'content_bottom' );
@@ -267,8 +271,8 @@ endif; ?>
 		======================================================================================= -->
 		<footer id="footer" class="footer page-footer" role="contentinfo">
 
-			<!-- Region Footer top -->			
-			<?php if ( $page['footer_top'] ) : 
+			<!-- Region Footer top -->
+			<?php if ( $page['footer_top'] ) :
 				mnpn_region_preffix ( 'footer_top' );
 					print render( $page['footer_top'] );
 				mnpn_region_suffix ( 'footer_top' );
