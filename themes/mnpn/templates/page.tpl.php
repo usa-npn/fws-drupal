@@ -138,7 +138,7 @@ endif; ?>
 				endif;
 			?>				
 			
-			<div class="clearfix header-bg" style="background-image: url(<?php echo base_path().path_to_theme() ?>/images/fws-sandcranes.png); background-position: center;background-size:contain;background-repeat:no-repeat;margin-top:100px" data-stellar-background-ratio = "0.5">
+			<div class="clearfix header-bg" style="background-image: url(<?php echo base_path().path_to_theme() ?>/images/fws-sandcranes-2.jpg); background-position: center;background-size:contain;background-repeat:no-repeat" data-stellar-background-ratio = "0.5">
 				<!-- Region Slider Content -->
 				<?php if ( $page['slider_content'] ) : 
 					mnpn_region_preffix ( 'slider_content' );
@@ -228,7 +228,10 @@ endif; ?>
 										<!-- System help block -->
 										<?php print render( $page['help'] );
 									endif; ?>
-
+									<?php if ( !empty( $tabs['#primary'] ) ) : ?>
+											<!-- Tabs links -->
+											<div class="tabs"><?php print render( $tabs ); ?></div>
+									<?php endif; ?>
 
 									<?php if ( $action_links ) : ?>
 										<!-- Action links -->
