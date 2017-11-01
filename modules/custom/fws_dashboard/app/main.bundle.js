@@ -191,28 +191,31 @@ var Guid = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__legend_doy_pipe__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/legend-doy.pipe.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_common__ = __webpack_require__("../../../common/@angular/common.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__config__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/config.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__species__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/species.ts");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return __WEBPACK_IMPORTED_MODULE_9__species__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__phenophase__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/phenophase.ts");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return __WEBPACK_IMPORTED_MODULE_10__phenophase__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__npn_service_utils_service__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/npn-service-utils.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__species__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/species.ts");
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return __WEBPACK_IMPORTED_MODULE_10__species__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__phenophase__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/phenophase.ts");
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return __WEBPACK_IMPORTED_MODULE_11__phenophase__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__cache_service__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return __WEBPACK_IMPORTED_MODULE_2__species_service__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return __WEBPACK_IMPORTED_MODULE_2__species_service__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return __WEBPACK_IMPORTED_MODULE_3__network_service__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__window__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/window.ts");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return __WEBPACK_IMPORTED_MODULE_11__window__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return __WEBPACK_IMPORTED_MODULE_4__species_title_pipe__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__window__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/window.ts");
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "o", function() { return __WEBPACK_IMPORTED_MODULE_12__window__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return __WEBPACK_IMPORTED_MODULE_4__species_title_pipe__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_5__doy_pipe__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_6__legend_doy_pipe__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__guid__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/guid.ts");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_12__guid__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__guid__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/guid.ts");
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_13__guid__["a"]; });
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "f", function() { return __WEBPACK_IMPORTED_MODULE_8__config__["a"]; });
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "i", function() { return __WEBPACK_IMPORTED_MODULE_8__config__["b"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return __WEBPACK_IMPORTED_MODULE_9__npn_service_utils_service__["a"]; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -242,6 +245,7 @@ NpnCommonModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_1__cache_service__["a" /* CacheService */],
             __WEBPACK_IMPORTED_MODULE_2__species_service__["a" /* SpeciesService */],
             __WEBPACK_IMPORTED_MODULE_3__network_service__["a" /* NetworkService */],
+            __WEBPACK_IMPORTED_MODULE_9__npn_service_utils_service__["a" /* NpnServiceUtils */],
             __WEBPACK_IMPORTED_MODULE_4__species_title_pipe__["a" /* SpeciesTitlePipe */],
             __WEBPACK_IMPORTED_MODULE_7__angular_common__["c" /* DatePipe */],
             __WEBPACK_IMPORTED_MODULE_5__doy_pipe__["a" /* DoyPipe */],
@@ -254,6 +258,7 @@ NpnCommonModule = __decorate([
         ]
     })
 ], NpnCommonModule);
+
 
 
 
@@ -400,6 +405,81 @@ NetworkService = __decorate([
 
 var _a, _b, _c;
 //# sourceMappingURL=network.service.js.map
+
+/***/ }),
+
+/***/ "../../../../../../../../../../../../npn_common/common/npn-service-utils.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NpnServiceUtils; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__ = __webpack_require__("../../../../rxjs/add/operator/toPromise.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__cache_service__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/cache-service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__config__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/config.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
+
+
+
+
+var NpnServiceUtils = (function () {
+    function NpnServiceUtils(http, cache, config) {
+        this.http = http;
+        this.cache = cache;
+        this.config = config;
+    }
+    NpnServiceUtils.prototype.apiUrl = function (suffix) {
+        return "" + this.config.apiRoot + suffix;
+    };
+    NpnServiceUtils.prototype.dataApiUrl = function (suffix) {
+        return "" + this.config.dataApiRoot + suffix;
+    };
+    NpnServiceUtils.prototype.cachedGet = function (url, params) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            var cacheKey = {
+                u: url,
+                params: params
+            }, data = _this.cache.get(cacheKey);
+            if (data) {
+                resolve(data);
+            }
+            else {
+                _this.http.get(url, { params: params })
+                    .toPromise()
+                    .then(function (response) {
+                    data = response.json();
+                    _this.cache.set(cacheKey, data);
+                    resolve(data);
+                })
+                    .catch(reject);
+            }
+        });
+    };
+    return NpnServiceUtils;
+}());
+NpnServiceUtils = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
+    __param(2, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Inject */])(__WEBPACK_IMPORTED_MODULE_4__config__["a" /* NPN_CONFIGURATION */])),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__cache_service__["a" /* CacheService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__cache_service__["a" /* CacheService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__config__["b" /* NpnConfiguration */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__config__["b" /* NpnConfiguration */]) === "function" && _c || Object])
+], NpnServiceUtils);
+
+var _a, _b, _c;
+//# sourceMappingURL=npn-service-utils.service.js.map
 
 /***/ }),
 
@@ -1719,7 +1799,7 @@ WmsMapLegendComponent = __decorate([
         template: "\n    <svg class=\"gridded-legend\"></svg>\n    ",
         styles: ["\n    "]
     }),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__common__["n" /* Window */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["n" /* Window */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__common__["o" /* Window */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["o" /* Window */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _c || Object])
 ], WmsMapLegendComponent);
 
 var _a, _b, _c;
@@ -2417,7 +2497,7 @@ __decorate([
 ], ActivityCurve.prototype, "id", void 0);
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__vis_selection__["j" /* selectionProperty */])(),
-    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__common__["k" /* Species */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["k" /* Species */]) === "function" && _a || Object)
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__common__["l" /* Species */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["l" /* Species */]) === "function" && _a || Object)
 ], ActivityCurve.prototype, "_species", void 0);
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__vis_selection__["j" /* selectionProperty */])(),
@@ -2425,7 +2505,7 @@ __decorate([
 ], ActivityCurve.prototype, "_metric", void 0);
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__vis_selection__["j" /* selectionProperty */])(),
-    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__common__["j" /* Phenophase */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["j" /* Phenophase */]) === "function" && _b || Object)
+    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__common__["k" /* Phenophase */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["k" /* Phenophase */]) === "function" && _b || Object)
 ], ActivityCurve.prototype, "_phenophase", void 0);
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__vis_selection__["j" /* selectionProperty */])(),
@@ -2444,7 +2524,7 @@ var INTERPOLATE;
 ;
 var DECIMAL = function (v) { return v.toFixed(2); };
 var IDENTITY = function (o) { return o; };
-var SPECIES_TITLE_PIPE = new __WEBPACK_IMPORTED_MODULE_1__common__["m" /* SpeciesTitlePipe */]();
+var SPECIES_TITLE_PIPE = new __WEBPACK_IMPORTED_MODULE_1__common__["n" /* SpeciesTitlePipe */]();
 var SPECIES_TITLE = function (item, format) {
     return SPECIES_TITLE_PIPE.transform(item, format);
 };
@@ -3176,7 +3256,7 @@ ActivityCurvesComponent = __decorate([
         template: __webpack_require__("../../../../../../../../../../../../npn_common/visualizations/svg-visualization-base.component.html"),
         styles: [__webpack_require__("../../../../../../../../../../../../npn_common/visualizations/svg-visualization-base.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__common__["n" /* Window */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["n" /* Window */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__common__["d" /* LegendDoyPipe */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["d" /* LegendDoyPipe */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__common__["o" /* Window */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["o" /* Window */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__common__["d" /* LegendDoyPipe */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["d" /* LegendDoyPipe */]) === "function" && _d || Object])
 ], ActivityCurvesComponent);
 
 var _a, _b, _c, _d;
@@ -3401,7 +3481,7 @@ var CalendarSelectionFactory = (function () {
 CalendarSelectionFactory = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
     __param(3, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Inject */])(__WEBPACK_IMPORTED_MODULE_2__common__["f" /* NPN_CONFIGURATION */])),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__common__["a" /* CacheService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__common__["a" /* CacheService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__common__["m" /* SpeciesTitlePipe */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__common__["m" /* SpeciesTitlePipe */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_2__common__["i" /* NpnConfiguration */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__common__["i" /* NpnConfiguration */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__common__["a" /* CacheService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__common__["a" /* CacheService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__common__["n" /* SpeciesTitlePipe */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__common__["n" /* SpeciesTitlePipe */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_2__common__["i" /* NpnConfiguration */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__common__["i" /* NpnConfiguration */]) === "function" && _d || Object])
 ], CalendarSelectionFactory);
 
 var _a, _b, _c, _d;
@@ -4611,13 +4691,13 @@ __decorate([
 ], SpeciesPhenophaseInputComponent.prototype, "onColorChange", void 0);
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])('species'),
-    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_7__common__["k" /* Species */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__common__["k" /* Species */]) === "function" && _b || Object),
-    __metadata("design:paramtypes", [typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_7__common__["k" /* Species */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__common__["k" /* Species */]) === "function" && _c || Object])
+    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_7__common__["l" /* Species */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__common__["l" /* Species */]) === "function" && _b || Object),
+    __metadata("design:paramtypes", [typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_7__common__["l" /* Species */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__common__["l" /* Species */]) === "function" && _c || Object])
 ], SpeciesPhenophaseInputComponent.prototype, "species", null);
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])('phenophase'),
-    __metadata("design:type", typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_7__common__["j" /* Phenophase */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__common__["j" /* Phenophase */]) === "function" && _d || Object),
-    __metadata("design:paramtypes", [typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_7__common__["j" /* Phenophase */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__common__["j" /* Phenophase */]) === "function" && _e || Object])
+    __metadata("design:type", typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_7__common__["k" /* Phenophase */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__common__["k" /* Phenophase */]) === "function" && _d || Object),
+    __metadata("design:paramtypes", [typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_7__common__["k" /* Phenophase */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__common__["k" /* Phenophase */]) === "function" && _e || Object])
 ], SpeciesPhenophaseInputComponent.prototype, "phenophase", null);
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])('color'),
@@ -4630,7 +4710,7 @@ SpeciesPhenophaseInputComponent = __decorate([
         template: "\n    <mat-form-field class=\"species-input\">\n        <input matInput placeholder=\"Species\" aria-label=\"Species\"\n               [matAutocomplete]=\"sp\"\n               [formControl]=\"speciesControl\" [(ngModel)]=\"species\"/>\n        <mat-autocomplete #sp=\"matAutocomplete\" [displayWith]=\"speciesTitle.transform\">\n          <mat-option *ngFor=\"let s of filteredSpecies | async\" [value]=\"s\">\n            {{s | speciesTitle}} ({{s.number_observations}})\n          </mat-option>\n        </mat-autocomplete>\n        <mat-progress-bar *ngIf=\"!speciesList || !speciesList.length\" mode=\"query\"></mat-progress-bar>\n    </mat-form-field>\n\n    <mat-form-field class=\"phenophase-input\">\n        <mat-select placeholder=\"Phenophase\" [(ngModel)]=\"phenophase\" [disabled]=\"!phenophaseList.length\">\n          <mat-option *ngFor=\"let p of phenophaseList\" [value]=\"p\">{{p.phenophase_name}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n\n    <mat-form-field *ngIf=\"gatherColor\" class=\"color-input\">\n        <mat-select  placeholder=\"Color\" [(ngModel)]=\"color\">\n          <mat-select-trigger><div class=\"color-swatch\" [ngStyle]=\"{'background-color':color}\"></div></mat-select-trigger>\n          <mat-option *ngFor=\"let c of colorList\" [value]=\"c\"><div class=\"color-swatch\" [ngStyle]=\"{'background-color':c}\"></div></mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
         styles: ["\n        .species-input {\n            width: 300px;\n        }\n        .phenophase-input {\n            width: 400px;\n        }\n        .color-swatch {\n            display: inline-block;\n            width: 20px;\n            height: 20px;\n        }\n        .color-input {\n\n        }\n        .color-input /deep/ .mat-select-trigger {\n            //border: 1px solid red;\n        }\n    "]
     }),
-    __metadata("design:paramtypes", [typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_7__common__["l" /* SpeciesService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__common__["l" /* SpeciesService */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_7__common__["m" /* SpeciesTitlePipe */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__common__["m" /* SpeciesTitlePipe */]) === "function" && _g || Object])
+    __metadata("design:paramtypes", [typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_7__common__["m" /* SpeciesService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__common__["m" /* SpeciesService */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_7__common__["n" /* SpeciesTitlePipe */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__common__["n" /* SpeciesTitlePipe */]) === "function" && _g || Object])
 ], SpeciesPhenophaseInputComponent);
 
 var _a, _b, _c, _d, _e, _f, _g;
@@ -5288,9 +5368,8 @@ var _a;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ObservationFrequencySelectionFactory; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__common__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__observation_frequency_selection__ = __webpack_require__("../../../../../../../../../../../../npn_common/visualizations/observation-frequency/observation-frequency-selection.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__observation_frequency_selection__ = __webpack_require__("../../../../../../../../../../../../npn_common/visualizations/observation-frequency/observation-frequency-selection.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -5303,24 +5382,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var ObservationFrequencySelectionFactory = (function () {
-    function ObservationFrequencySelectionFactory(http, cacheService, networkService) {
-        this.http = http;
-        this.cacheService = cacheService;
+    function ObservationFrequencySelectionFactory(serviceUtils, networkService) {
+        this.serviceUtils = serviceUtils;
         this.networkService = networkService;
     }
     ObservationFrequencySelectionFactory.prototype.newSelection = function () {
-        return new __WEBPACK_IMPORTED_MODULE_3__observation_frequency_selection__["a" /* ObservationFrequencySelection */](this.http, this.cacheService, this.networkService);
+        return new __WEBPACK_IMPORTED_MODULE_2__observation_frequency_selection__["a" /* ObservationFrequencySelection */](this.serviceUtils, this.networkService);
     };
     return ObservationFrequencySelectionFactory;
 }());
 ObservationFrequencySelectionFactory = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__common__["a" /* CacheService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__common__["a" /* CacheService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__common__["g" /* NetworkService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__common__["g" /* NetworkService */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__common__["j" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["j" /* NpnServiceUtils */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__common__["g" /* NetworkService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["g" /* NetworkService */]) === "function" && _b || Object])
 ], ObservationFrequencySelectionFactory);
 
-var _a, _b, _c;
+var _a, _b;
 //# sourceMappingURL=observation-frequency-selection-factory.service.js.map
 
 /***/ }),
@@ -5354,10 +5431,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 // TODO is this always network wide or can they select specific stations
 var ObservationFrequencySelection = (function (_super) {
     __extends(ObservationFrequencySelection, _super);
-    function ObservationFrequencySelection(http, cacheService, networkService) {
+    function ObservationFrequencySelection(serviceUtils, networkService) {
         var _this = _super.call(this) || this;
-        _this.http = http;
-        _this.cacheService = cacheService;
+        _this.serviceUtils = serviceUtils;
         _this.networkService = networkService;
         _this.dataCnt = 0;
         return _this;
@@ -5367,48 +5443,20 @@ var ObservationFrequencySelection = (function (_super) {
     };
     ObservationFrequencySelection.prototype.getData = function () {
         var _this = this;
-        return new Promise(function (_resolve, _reject) {
-            _this.working = true;
-            var resolve = function (d) {
-                _this.working = false;
-                _resolve(d);
-            }, reject = function (e) {
-                _this.working = false;
-                _reject(e);
-            }, rint = function (min, max) {
-                min = Math.ceil(min);
-                max = Math.floor(max);
-                return Math.floor(Math.random() * (max - min)) + min;
+        return new Promise(function (resolve, reject) {
+            var url = _this.serviceUtils.apiUrl('/npn_portal/networks/getSiteVisitFrequency.json'), params = {
+                year: _this.year,
+                network_id: _this.networkIds[0]
             };
-            _this.networkService.getStations(_this.networkIds[0])
-                .then(function (stations) {
-                if (_this.stationIds && _this.stationIds.length) {
-                    stations = stations.filter(function (s) { return _this.stationIds.indexOf(s.station_id) !== -1; });
-                }
-                var response = {
-                    network_id: _this.networkIds[0],
-                    year: _this.year,
-                    stations: stations.map(function (s) {
-                        var d = {
-                            station_id: s.station_id,
-                            station_name: s.station_name,
-                            months: []
-                        };
-                        var max = 13;
-                        if (_this.year === (new Date()).getFullYear()) {
-                            // if it's this year then return up to this month
-                            max = (new Date()).getMonth() + 2;
-                        }
-                        for (var i = 1; i < max; i++) {
-                            d.months.push({
-                                month: i,
-                                number_site_visits: rint(0, 10)
-                            });
-                        }
-                        return d;
-                    })
-                };
-                resolve(response);
+            _this.serviceUtils.cachedGet(url, params)
+                .then(function (data) {
+                // massage data collapsing maps into simple arrays
+                data.stations = Object.keys(data.stations).map(function (key) { return data.stations[key]; });
+                data.stations.forEach(function (s) {
+                    var arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (i) { return s.months[i]; });
+                    s.months = arr;
+                });
+                resolve(data);
             })
                 .catch(reject);
         });
@@ -5427,7 +5475,7 @@ __decorate([
 /***/ "../../../../../../../../../../../../npn_common/visualizations/observation-frequency/observation-frequency.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"vis-container\">\n    <div class=\"vis-working\" *ngIf=\"selection.working\">\n        <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n    </div>\n    <div class=\"chart-container\">\n        <visualization-download *ngIf=\"!thumbnail\" svgWrapperId=\"{{id}}\" filename=\"{{filename}}\"></visualization-download>\n        <div [class]=\"clazz\" id=\"{{id}}\" [hidden]=\"thumbnailSrc\"><svg class=\"svg-visualization\"></svg></div>\n        <div [hidden]=\"!thumbnailSrc\">\n            <canvas class=\"thumbnail-canvas\" style=\"display: none;\"></canvas>\n            <img class=\"thumbnail-image\" />\n        </div>\n    </div>\n    <observation-frequency-station-control *ngIf=\"stations && stations.length > 1\" [stations]=\"stations\" [(station)]=\"station\" (onStationChange)=\"redrawSvg()\"></observation-frequency-station-control>\n    <div *ngIf=\"disclaimer && !thumbnail\" class=\"vis-disclaimer\">{{disclaimer}}</div>\n</div>\n<!--pre *ngIf=\"record\">{{record | json}}</pre-->\n"
+module.exports = "<div class=\"vis-container\">\n    <div class=\"vis-working\" *ngIf=\"selection.working\">\n        <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n    </div>\n    <div class=\"chart-container\">\n        <visualization-download *ngIf=\"!thumbnail\" svgWrapperId=\"{{id}}\" filename=\"{{filename}}\"></visualization-download>\n        <div [class]=\"clazz\" id=\"{{id}}\" [hidden]=\"thumbnailSrc\"><svg class=\"svg-visualization\"></svg></div>\n        <div [hidden]=\"!thumbnailSrc\">\n            <canvas class=\"thumbnail-canvas\" style=\"display: none;\"></canvas>\n            <img class=\"thumbnail-image\" />\n        </div>\n    </div>\n    <observation-frequency-station-control *ngIf=\"!thumbnail && stations && stations.length > 1\" [stations]=\"stations\" [(station)]=\"station\" (onStationChange)=\"redrawSvg()\"></observation-frequency-station-control>\n    <div *ngIf=\"disclaimer && !thumbnail\" class=\"vis-disclaimer\">{{disclaimer}}</div>\n</div>\n<!--pre *ngIf=\"record\">{{record | json}}</pre-->\n"
 
 /***/ }),
 
@@ -5535,6 +5583,9 @@ var ObservationFrequencyComponent = (function (_super) {
         var _this = this;
         console.debug('ObservationFrequencyComponent.update');
         this.reset();
+        delete this.data;
+        delete this.stations;
+        delete this.station;
         this.selection.getData()
             .then(function (data) {
             _this.data = data;
@@ -5565,8 +5616,8 @@ var ObservationFrequencyComponent = (function (_super) {
         if (!station) {
             return;
         }
-        var sizing = this.sizing, bars = station.months.slice(), total = bars.reduce(function (sum, d) { return sum + d.number_site_visits; }, 0), max = bars.reduce(function (max, d) { return (d.number_site_visits > max) ? d.number_site_visits : max; }, 0);
-        this.title.text(TITLE + ", \"TODO: Refuge Name\", " + this.selection.year + " [Station: \"" + station.station_name + "\" Total: " + total + "]");
+        var sizing = this.sizing, bars = station.months.slice(), total = bars.reduce(function (sum, d) { return sum + d; }, 0), max = bars.reduce(function (max, d) { return (d > max) ? d : max; }, 0);
+        this.title.text(TITLE + " (" + this.selection.year + ") \"" + station.station_name + "\" Total: " + total);
         console.debug('ObservationFrequencyComponent.redrawStation:bars', bars);
         // update x axis with months+total
         this.x.domain(__WEBPACK_IMPORTED_MODULE_6_d3__["l" /* range */](0, bars.length));
@@ -5583,9 +5634,9 @@ var ObservationFrequencyComponent = (function (_super) {
             .data(bars)
             .enter().append('rect')
             .attr('x', function (d, i) { return _this.x(i); })
-            .attr('y', function (d) { return _this.y(d.number_site_visits); }) // not right
-            .attr('title', function (d) { return d.number_site_visits; })
-            .attr('height', function (d) { return sizing.height - _this.y(d.number_site_visits); })
+            .attr('y', function (d) { return _this.y(d); })
+            .attr('title', function (d) { return d; })
+            .attr('height', function (d) { return sizing.height - _this.y(d); })
             .attr('width', this.x.bandwidth());
         // update bar labels
         this.chart.selectAll('g .bar-labels').remove();
@@ -5598,8 +5649,8 @@ var ObservationFrequencyComponent = (function (_super) {
             .attr('text-anchor', 'middle')
             .attr('dy', '-0.25em')
             .attr('x', function (d, i) { return _this.x(i) + (_this.x.bandwidth() / 2); })
-            .attr('y', function (d) { return _this.y(d.number_site_visits); })
-            .text(function (d) { return d.number_site_visits; });
+            .attr('y', function (d) { return _this.y(d); })
+            .text(function (d) { return d; });
     };
     return ObservationFrequencyComponent;
 }(__WEBPACK_IMPORTED_MODULE_2__svg_visualization_base_component__["b" /* SvgVisualizationBaseComponent */]));
@@ -5615,7 +5666,7 @@ ObservationFrequencyComponent = __decorate([
         template: __webpack_require__("../../../../../../../../../../../../npn_common/visualizations/observation-frequency/observation-frequency.component.html"),
         styles: [__webpack_require__("../../../../../../../../../../../../npn_common/visualizations/svg-visualization-base.component.scss")],
     }),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__common__["n" /* Window */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["n" /* Window */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__common__["o" /* Window */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["o" /* Window */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _c || Object])
 ], ObservationFrequencyComponent);
 
 var ObvervationFrequencyStationControlComponent = (function () {
@@ -5760,9 +5811,8 @@ var _a;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ObserverActivitySelectionFactory; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__common__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__observer_activity_selection__ = __webpack_require__("../../../../../../../../../../../../npn_common/visualizations/observer-activity/observer-activity-selection.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__observer_activity_selection__ = __webpack_require__("../../../../../../../../../../../../npn_common/visualizations/observer-activity/observer-activity-selection.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -5775,23 +5825,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var ObserverActivitySelectionFactory = (function () {
-    function ObserverActivitySelectionFactory(http, cacheService) {
-        this.http = http;
-        this.cacheService = cacheService;
+    function ObserverActivitySelectionFactory(serviceUtils) {
+        this.serviceUtils = serviceUtils;
     }
     ObserverActivitySelectionFactory.prototype.newSelection = function () {
-        return new __WEBPACK_IMPORTED_MODULE_3__observer_activity_selection__["a" /* ObserverActivitySelection */](this.http, this.cacheService);
+        return new __WEBPACK_IMPORTED_MODULE_2__observer_activity_selection__["a" /* ObserverActivitySelection */](this.serviceUtils);
     };
     return ObserverActivitySelectionFactory;
 }());
 ObserverActivitySelectionFactory = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__common__["a" /* CacheService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__common__["a" /* CacheService */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__common__["j" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["j" /* NpnServiceUtils */]) === "function" && _a || Object])
 ], ObserverActivitySelectionFactory);
 
-var _a, _b;
+var _a;
 //# sourceMappingURL=observer-activity-selection-factory.service.js.map
 
 /***/ }),
@@ -5812,6 +5860,14 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -5825,10 +5881,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 // TODO is this always network wide or can they select specific stations
 var ObserverActivitySelection = (function (_super) {
     __extends(ObserverActivitySelection, _super);
-    function ObserverActivitySelection(http, cacheService) {
+    function ObserverActivitySelection(serviceUtils) {
         var _this = _super.call(this) || this;
-        _this.http = http;
-        _this.cacheService = cacheService;
+        _this.serviceUtils = serviceUtils;
         _this.dataCnt = 0;
         return _this;
     }
@@ -5837,39 +5892,50 @@ var ObserverActivitySelection = (function (_super) {
     };
     ObserverActivitySelection.prototype.getData = function () {
         var _this = this;
-        return new Promise(function (resolve) {
+        // /npn_portal/networks/getObserversByMonth.json?year=2015&network_id=69
+        var url = this.serviceUtils.apiUrl('/npn_portal/networks/getObserversByMonth.json'), params = {
+            year: this.year,
+            network_id: this.networkIds[0]
+        };
+        return new Promise(function (resolve, reject) {
+            _this.serviceUtils.cachedGet(url, params)
+                .then(function (data) {
+                var months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (i) {
+                    return __assign({ month: i }, data.months[i]);
+                });
+                data.months = months;
+                resolve(data);
+            })
+                .catch(reject);
+            /*
             // mocked up randomly generated response
-            var response = {
-                network_id: _this.networkIds[0],
+            let response:any = {
+                network_id: this.networkIds[0],
                 months: []
-            }, rint = function (min, max) {
+            },
+            rint = (min,max) => {
                 min = Math.ceil(min);
                 max = Math.floor(max);
-                return Math.floor(Math.random() * (max - min)) + min;
+                return Math.floor(Math.random() * (max-min)) + min;
             };
             // mock up a bogus response
             // every other return a full year and then a partial year
-            var max = 13;
-            if (_this.year === (new Date()).getFullYear()) {
+            let max = 13;
+            if(this.year === (new Date()).getFullYear()) {
                 // if it's this year then return up to this month
-                max = (new Date()).getMonth() + 2;
+                max = (new Date()).getMonth()+2
             }
-            for (var i = 1; i < max; i++) {
-                var nobs = rint(0, 10);
+            for(let i = 1; i < max; i++) {
+                let nobs = rint(0,10);
                 response.months.push({
                     month: i,
                     //month_name: 'ignore',
                     number_new_observers: nobs,
-                    number_active_observers: rint(nobs, 20)
+                    number_active_observers: rint(nobs,20)
                 });
             }
-            /* doesn't make sense since the vis can calculate and doesn't include the
-               parallel active sum.
-            response.annual_number_new_observers = response.months.reduce((sum,month) => {
-                return sum+month.number_new_observers;
-            },0);*/
-            console.log("" + JSON.stringify(response));
             resolve(response);
+            */
         });
     };
     return ObserverActivitySelection;
@@ -6065,13 +6131,18 @@ var ObserverActivityComponent = (function (_super) {
             .data(__WEBPACK_IMPORTED_MODULE_6_d3__["n" /* stack */]().keys(this.keys)(data))
             .enter().append('g')
             .attr('fill', function (d) { return _this.zDarker(d.key); })
-            .selectAll('rect')
+            .selectAll('text')
             .data(function (d) { return d; })
             .enter().append('text')
             .attr('text-anchor', 'middle')
             .attr('dy', '-0.25em')
             .attr('x', function (d, i) { return _this.x(i) + (_this.x.bandwidth() / 2); })
-            .attr('y', function (d) { return _this.y(d[1]); })
+            .attr('y', function (d, i) {
+            //console.log(`y.d[${i}]`,d[1],d);
+            // TODO when one is 0 d[1] isn't the number we're looking for
+            // needs adjustment in text below as well.
+            return _this.y(d[1]);
+        })
             .text(function (d) { return "" + d[1]; });
         this.legend.selectAll('text')
             .each((function (nSum, aSum, labels) {
@@ -6094,7 +6165,7 @@ ObserverActivityComponent = __decorate([
         template: __webpack_require__("../../../../../../../../../../../../npn_common/visualizations/svg-visualization-base.component.html"),
         styles: [__webpack_require__("../../../../../../../../../../../../npn_common/visualizations/svg-visualization-base.component.scss")],
     }),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__common__["n" /* Window */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["n" /* Window */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__common__["o" /* Window */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["o" /* Window */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _c || Object])
 ], ObserverActivityComponent);
 
 var _a, _b, _c;
@@ -6645,7 +6716,7 @@ ScatterPlotComponent = __decorate([
         template: __webpack_require__("../../../../../../../../../../../../npn_common/visualizations/svg-visualization-base.component.html"),
         styles: [__webpack_require__("../../../../../../../../../../../../npn_common/visualizations/svg-visualization-base.component.scss")],
     }),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__common__["n" /* Window */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["n" /* Window */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__common__["m" /* SpeciesTitlePipe */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["m" /* SpeciesTitlePipe */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__common__["o" /* Window */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["o" /* Window */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__common__["n" /* SpeciesTitlePipe */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["n" /* SpeciesTitlePipe */]) === "function" && _d || Object])
 ], ScatterPlotComponent);
 
 var RegressionLine = (function () {
@@ -7494,7 +7565,7 @@ VisualizationBaseComponent = __decorate([
         template: __webpack_require__("../../../../../../../../../../../../npn_common/visualizations/visualization-base.component.html"),
         styles: [__webpack_require__("../../../../../../../../../../../../npn_common/visualizations/visualization-base.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__common__["n" /* Window */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["n" /* Window */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__common__["o" /* Window */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["o" /* Window */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _c || Object])
 ], VisualizationBaseComponent);
 
 var VisualizationMargins = (function () {
