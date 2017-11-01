@@ -51,7 +51,7 @@ exports.i(__webpack_require__("../../../../css-loader/index.js?{\"sourceMap\":fa
 exports.i(__webpack_require__("../../../../css-loader/index.js?{\"sourceMap\":false,\"importLoaders\":1}!../../../../postcss-loader/index.js?{\"ident\":\"postcss\"}!../../../../ng2-dnd/style.css"), "");
 
 // module
-exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\nnpn-visualization {\n  margin: 0px;\n  display: block;\n  width: 100%; }\n\nlabel {\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\n  color: rgba(0, 0, 0, 0.87); }\n\nbody.page-dashboard refuge-dashboard {\n  margin-top: 100px; }\n\nbody.page-dashboard footer {\n  display: none; }\n\nbody.page-dashboard div#messages {\n  display: none; }\n", ""]);
+exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\nnpn-visualization {\n  margin: 0px;\n  display: block;\n  width: 100%; }\n\nlabel {\n  font-family: Roboto,\"Helvetica Neue\",sans-serif;\n  color: rgba(0, 0, 0, 0.87); }\n\nbody.node-type-refuge .refuge-content {\n  margin: 0px;\n  width: 100%; }\n", ""]);
 
 // exports
 

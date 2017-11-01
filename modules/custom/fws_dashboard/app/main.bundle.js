@@ -1103,7 +1103,7 @@ NpnGriddedModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_4__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_platform_browser__["a" /* BrowserModule */],
             __WEBPACK_IMPORTED_MODULE_2__angular_forms__["e" /* FormsModule */], __WEBPACK_IMPORTED_MODULE_2__angular_forms__["j" /* ReactiveFormsModule */],
-            __WEBPACK_IMPORTED_MODULE_5__angular_material__["r" /* MatSliderModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["s" /* MatSliderModule */],
             __WEBPACK_IMPORTED_MODULE_9__common__["h" /* NpnCommonModule */]
         ],
         declarations: [
@@ -4929,9 +4929,9 @@ VisualizationsModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_13__angular_platform_browser__["a" /* BrowserModule */],
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["a" /* CommonModule */],
             __WEBPACK_IMPORTED_MODULE_2__angular_forms__["e" /* FormsModule */], __WEBPACK_IMPORTED_MODULE_2__angular_forms__["j" /* ReactiveFormsModule */],
-            __WEBPACK_IMPORTED_MODULE_15__angular_material__["j" /* MatFormFieldModule */], __WEBPACK_IMPORTED_MODULE_15__angular_material__["c" /* MatButtonModule */], __WEBPACK_IMPORTED_MODULE_15__angular_material__["e" /* MatCheckboxModule */], __WEBPACK_IMPORTED_MODULE_15__angular_material__["q" /* MatSelectModule */],
-            __WEBPACK_IMPORTED_MODULE_15__angular_material__["o" /* MatProgressSpinnerModule */], __WEBPACK_IMPORTED_MODULE_15__angular_material__["i" /* MatExpansionModule */], __WEBPACK_IMPORTED_MODULE_15__angular_material__["b" /* MatAutocompleteModule */],
-            __WEBPACK_IMPORTED_MODULE_15__angular_material__["l" /* MatInputModule */], __WEBPACK_IMPORTED_MODULE_15__angular_material__["r" /* MatSliderModule */], __WEBPACK_IMPORTED_MODULE_15__angular_material__["n" /* MatProgressBarModule */],
+            __WEBPACK_IMPORTED_MODULE_15__angular_material__["k" /* MatFormFieldModule */], __WEBPACK_IMPORTED_MODULE_15__angular_material__["c" /* MatButtonModule */], __WEBPACK_IMPORTED_MODULE_15__angular_material__["f" /* MatCheckboxModule */], __WEBPACK_IMPORTED_MODULE_15__angular_material__["r" /* MatSelectModule */],
+            __WEBPACK_IMPORTED_MODULE_15__angular_material__["p" /* MatProgressSpinnerModule */], __WEBPACK_IMPORTED_MODULE_15__angular_material__["j" /* MatExpansionModule */], __WEBPACK_IMPORTED_MODULE_15__angular_material__["b" /* MatAutocompleteModule */],
+            __WEBPACK_IMPORTED_MODULE_15__angular_material__["m" /* MatInputModule */], __WEBPACK_IMPORTED_MODULE_15__angular_material__["s" /* MatSliderModule */], __WEBPACK_IMPORTED_MODULE_15__angular_material__["o" /* MatProgressBarModule */],
             __WEBPACK_IMPORTED_MODULE_16__agm_core__["a" /* AgmCoreModule */],
             __WEBPACK_IMPORTED_MODULE_17__common__["h" /* NpnCommonModule */], __WEBPACK_IMPORTED_MODULE_18__gridded__["a" /* NpnGriddedModule */],
         ],
@@ -7843,21 +7843,23 @@ webpackEmptyAsyncContext.id = "../../../../../src/$$_gendir lazy recursive";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__ = __webpack_require__("../../../../../../../../../../../../npn_common/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__refuge_dashboard_component__ = __webpack_require__("../../../../../src/app/refuge-dashboard.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__new_visualization_dialog_component__ = __webpack_require__("../../../../../src/app/new-visualization-dialog.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__refuge_service__ = __webpack_require__("../../../../../src/app/refuge.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__angular_platform_browser_animations__ = __webpack_require__("../../../platform-browser/@angular/platform-browser/animations.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__node_modules_npn_common_environments_environment__ = __webpack_require__("../../../../../../../../../../../../npn_common/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__agm_core__ = __webpack_require__("../../../../@agm/core/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_ng2_dnd__ = __webpack_require__("../../../../ng2-dnd/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__findings_component__ = __webpack_require__("../../../../../src/app/findings.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__refuge_dashboard_component__ = __webpack_require__("../../../../../src/app/refuge-dashboard.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__new_visualization_dialog_component__ = __webpack_require__("../../../../../src/app/new-visualization-dialog.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__refuge_service__ = __webpack_require__("../../../../../src/app/refuge.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_platform_browser_animations__ = __webpack_require__("../../../platform-browser/@angular/platform-browser/animations.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__node_modules_npn_common_environments_environment__ = __webpack_require__("../../../../../../../../../../../../npn_common/environments/environment.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__agm_core__ = __webpack_require__("../../../../@agm/core/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_ng2_dnd__ = __webpack_require__("../../../../ng2-dnd/index.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -7879,36 +7881,37 @@ var AppModule = (function () {
 AppModule = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["L" /* NgModule */])({
         declarations: [
-            __WEBPACK_IMPORTED_MODULE_4__refuge_dashboard_component__["a" /* RefugeDashboardComponent */],
-            __WEBPACK_IMPORTED_MODULE_5__new_visualization_dialog_component__["a" /* NewVisualizationBuilderComponent */],
-            __WEBPACK_IMPORTED_MODULE_5__new_visualization_dialog_component__["c" /* VisualizationScopeSelectionComponent */],
-            __WEBPACK_IMPORTED_MODULE_5__new_visualization_dialog_component__["b" /* NewVisualizationDialogComponent */]
+            __WEBPACK_IMPORTED_MODULE_5__refuge_dashboard_component__["a" /* RefugeDashboardComponent */],
+            __WEBPACK_IMPORTED_MODULE_4__findings_component__["a" /* FindingsComponent */],
+            __WEBPACK_IMPORTED_MODULE_6__new_visualization_dialog_component__["a" /* NewVisualizationBuilderComponent */],
+            __WEBPACK_IMPORTED_MODULE_6__new_visualization_dialog_component__["c" /* VisualizationScopeSelectionComponent */],
+            __WEBPACK_IMPORTED_MODULE_6__new_visualization_dialog_component__["b" /* NewVisualizationDialogComponent */]
         ],
         entryComponents: [
-            __WEBPACK_IMPORTED_MODULE_5__new_visualization_dialog_component__["b" /* NewVisualizationDialogComponent */]
+            __WEBPACK_IMPORTED_MODULE_6__new_visualization_dialog_component__["b" /* NewVisualizationDialogComponent */]
         ],
         imports: [
-            __WEBPACK_IMPORTED_MODULE_8__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
+            __WEBPACK_IMPORTED_MODULE_9__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
             __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["i" /* NpnLibModule */],
             __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["p" /* VisualizationsModule */],
             __WEBPACK_IMPORTED_MODULE_2__angular_http__["c" /* HttpModule */],
-            __WEBPACK_IMPORTED_MODULE_7__angular_forms__["e" /* FormsModule */], __WEBPACK_IMPORTED_MODULE_7__angular_forms__["j" /* ReactiveFormsModule */],
-            __WEBPACK_IMPORTED_MODULE_9__angular_material__["e" /* MatCheckboxModule */], __WEBPACK_IMPORTED_MODULE_9__angular_material__["k" /* MatGridListModule */],
-            __WEBPACK_IMPORTED_MODULE_9__angular_material__["d" /* MatCardModule */], __WEBPACK_IMPORTED_MODULE_9__angular_material__["m" /* MatListModule */],
-            __WEBPACK_IMPORTED_MODULE_9__angular_material__["v" /* MatTooltipModule */], __WEBPACK_IMPORTED_MODULE_9__angular_material__["t" /* MatSnackBarModule */],
-            __WEBPACK_IMPORTED_MODULE_9__angular_material__["g" /* MatDialogModule */], __WEBPACK_IMPORTED_MODULE_9__angular_material__["u" /* MatStepperModule */],
-            __WEBPACK_IMPORTED_MODULE_9__angular_material__["c" /* MatButtonModule */], __WEBPACK_IMPORTED_MODULE_9__angular_material__["p" /* MatRadioModule */],
-            __WEBPACK_IMPORTED_MODULE_9__angular_material__["o" /* MatProgressSpinnerModule */], __WEBPACK_IMPORTED_MODULE_9__angular_material__["q" /* MatSelectModule */],
-            __WEBPACK_IMPORTED_MODULE_9__angular_material__["l" /* MatInputModule */], __WEBPACK_IMPORTED_MODULE_9__angular_material__["j" /* MatFormFieldModule */],
-            __WEBPACK_IMPORTED_MODULE_11__agm_core__["a" /* AgmCoreModule */].forRoot({
-                apiKey: __WEBPACK_IMPORTED_MODULE_10__node_modules_npn_common_environments_environment__["a" /* environment */].googleMapsApiKey
+            __WEBPACK_IMPORTED_MODULE_8__angular_forms__["e" /* FormsModule */], __WEBPACK_IMPORTED_MODULE_8__angular_forms__["j" /* ReactiveFormsModule */],
+            __WEBPACK_IMPORTED_MODULE_10__angular_material__["f" /* MatCheckboxModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["l" /* MatGridListModule */],
+            __WEBPACK_IMPORTED_MODULE_10__angular_material__["e" /* MatCardModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["n" /* MatListModule */],
+            __WEBPACK_IMPORTED_MODULE_10__angular_material__["x" /* MatTooltipModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["u" /* MatSnackBarModule */],
+            __WEBPACK_IMPORTED_MODULE_10__angular_material__["h" /* MatDialogModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["v" /* MatStepperModule */],
+            __WEBPACK_IMPORTED_MODULE_10__angular_material__["c" /* MatButtonModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["q" /* MatRadioModule */],
+            __WEBPACK_IMPORTED_MODULE_10__angular_material__["p" /* MatProgressSpinnerModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["r" /* MatSelectModule */],
+            __WEBPACK_IMPORTED_MODULE_10__angular_material__["m" /* MatInputModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["k" /* MatFormFieldModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["w" /* MatTabsModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["d" /* MatButtonToggleModule */],
+            __WEBPACK_IMPORTED_MODULE_12__agm_core__["a" /* AgmCoreModule */].forRoot({
+                apiKey: __WEBPACK_IMPORTED_MODULE_11__node_modules_npn_common_environments_environment__["a" /* environment */].googleMapsApiKey
             }),
-            __WEBPACK_IMPORTED_MODULE_12_ng2_dnd__["a" /* DndModule */].forRoot()
+            __WEBPACK_IMPORTED_MODULE_13_ng2_dnd__["a" /* DndModule */].forRoot()
         ],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_4__refuge_dashboard_component__["a" /* RefugeDashboardComponent */]],
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_5__refuge_dashboard_component__["a" /* RefugeDashboardComponent */]],
         providers: [
-            __WEBPACK_IMPORTED_MODULE_6__refuge_service__["b" /* RefugeService */],
+            __WEBPACK_IMPORTED_MODULE_7__refuge_service__["b" /* RefugeService */],
             { provide: __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["e" /* NPN_BASE_HREF */], useValue: npn_base_href },
             { provide: __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["f" /* NPN_CONFIGURATION */], useValue: npn_configuration }
         ]
@@ -7922,6 +7925,237 @@ console.debug = noop;
 console.info = noop;
 */
 //# sourceMappingURL=app.module.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/findings.component.scss":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ":host {\n  position: relative;\n  display: block; }\n  :host.adminMode {\n    padding-left: 100px; }\n\n.visualizations {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n      -ms-flex-flow: row wrap;\n          flex-flow: row wrap; }\n  .visualizations mat-card {\n    margin: 10px auto;\n    padding: 20px;\n    -webkit-box-flex: 0;\n        -ms-flex: 0 1 28%;\n            flex: 0 1 28%;\n    /* a non flex layout attempt\n        box-sizing: border-box;\n        width: 100%;\n        padding: 2px;\n        margin: 10px 0px;\n        display: block;\n        @media(min-width: $screen-sm-min) {\n            padding: 10px;\n        }\n        @media(min-width: $screen-mat-min) {\n            padding: 20px;\n            display: inline-block;\n            width: 48%;\n            margin: 5px;\n        }\n        @media(min-width: $screen-lg-min) {\n            width: 30%;\n        }\n\n        &:first-of-type {\n            @media(min-width: $screen-mat-min) {\n                margin: auto;\n                display: block;\n                width: 95%;\n            }\n        }*/\n    vertical-align: top;\n    position: relative;\n    overflow: hidden; }\n    .visualizations mat-card:first-of-type {\n      -webkit-box-flex: 0;\n          -ms-flex: 0 1 95%;\n              flex: 0 1 95%; }\n    .visualizations mat-card .visualization-title {\n      font-size: 2em;\n      margin-bottom: 10px;\n      text-align: center; }\n    .visualizations mat-card .visualization-description {\n      color: #aaa;\n      font-size: 0.8em;\n      text-align: center; }\n    .visualizations mat-card > .cover {\n      position: absolute;\n      top: 0;\n      left: 0;\n      width: 100%;\n      height: 100%;\n      z-index: 2;\n      text-align: center; }\n      .visualizations mat-card > .cover:hover {\n        cursor: pointer;\n        background-color: rgba(0, 0, 0, 0.25); }\n        .visualizations mat-card > .cover:hover .visualization-title {\n          display: inherit; }\n      .visualizations mat-card > .cover .visualization-title {\n        font-size: 1.25em;\n        color: #fff;\n        text-shadow: 1px 1px 2px #000;\n        display: none;\n        position: absolute;\n        top: 50%;\n        left: 50%;\n        -webkit-transform: translate(-50%, -50%);\n                transform: translate(-50%, -50%); }\n    .visualizations mat-card.new-vis-placeholder {\n      height: 200px;\n      background-color: #eee; }\n      .visualizations mat-card.new-vis-placeholder:before {\n        content: 'Drop New Visualization Here';\n        position: absolute;\n        top: 50%;\n        left: 50%;\n        -webkit-transform: translate(-50%, -50%);\n                transform: translate(-50%, -50%); }\n\nmat-list.new-vis-list {\n  position: fixed;\n  top: 55px;\n  left: 0px;\n  width: 200px;\n  margin-left: 8px;\n  background-color: rgba(0, 0, 0, 0.25);\n  z-index: 5000;\n  padding: 100px 0px;\n  height: 100vh; }\n  mat-list.new-vis-list mat-list-item.vis-template {\n    border: 1px dotted black;\n    margin-bottom: 10px; }\n    mat-list.new-vis-list mat-list-item.vis-template /deep/ .mat-list-item-content {\n      height: auto;\n      padding: 0px; }\n      mat-list.new-vis-list mat-list-item.vis-template /deep/ .mat-list-item-content img {\n        width: 100%; }\n  mat-list.new-vis-list mat-list-item.trash, mat-list.new-vis-list mat-list-item.save {\n    position: relative;\n    margin-top: 20px; }\n    mat-list.new-vis-list mat-list-item.trash:before, mat-list.new-vis-list mat-list-item.save:before {\n      font-family: 'FontAwesome';\n      font-size: 2em;\n      position: absolute;\n      top: 50%;\n      left: 50%;\n      -webkit-transform: translate(-50%, -50%);\n              transform: translate(-50%, -50%); }\n  mat-list.new-vis-list mat-list-item.trash:before {\n    content: '\\F1F8'; }\n  mat-list.new-vis-list mat-list-item.save:hover {\n    cursor: pointer; }\n  mat-list.new-vis-list mat-list-item.save:before {\n    content: '\\F0C7'; }\n\n.select-refuge {\n  width: 400px; }\n\n.admin-toggle:before {\n  font-family: 'FontAwesome';\n  content: '\\F073';\n  margin-right: 5px; }\n", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/findings.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FindingsComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__refuge_service__ = __webpack_require__("../../../../../src/app/refuge.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__ = __webpack_require__("../../../../../../../../../../../../npn_common/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__new_visualization_dialog_component__ = __webpack_require__("../../../../../src/app/new-visualization-dialog.component.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
+
+
+
+
+var VIS_TEMPLATES = [{
+        $class: 'ActivityCurvesSelection',
+        $thumbnail: 'assets/activity-curves.png',
+        $tooltip: 'Add Activity Curves'
+    }, {
+        $class: 'ScatterPlotSelection',
+        $thumbnail: 'assets/scatter-plot.png',
+        $tooltip: 'Add Scatter Plot'
+    }, {
+        $class: 'CalendarSelection',
+        $thumbnail: 'assets/calendar.png',
+        $tooltip: 'Add Calendar'
+    }, {
+        $class: 'ObserverActivitySelection',
+        $thumbnail: 'assets/observer-activity.png',
+        $tooltip: 'Add Observer Activity Metrics'
+    }, {
+        $class: 'ClippedWmsMapSelection',
+        $thumbnail: 'assets/clipped-wms-map.png',
+        $tooltip: 'Add Map'
+    }, {
+        $class: 'ObservationFrequencySelection',
+        $thumbnail: 'assets/observation-frequency.png',
+        $tooltip: 'Add Observation Frequency'
+    }];
+var FindingsComponent = (function () {
+    function FindingsComponent(refugeService, selectionFactory, dialog, snackBar, baseHref) {
+        this.refugeService = refugeService;
+        this.selectionFactory = selectionFactory;
+        this.dialog = dialog;
+        this.snackBar = snackBar;
+        this.baseHref = baseHref;
+        this.userIsAdmin = false;
+        this.trash = [];
+        this.adminMode = false;
+        this.maxVisualizations = 7;
+        this.visTemplates = VIS_TEMPLATES;
+    }
+    FindingsComponent.prototype.toggleAdminMode = function ($event) {
+        this.adminMode = !this.adminMode;
+        this.resizeAllAfterDelay();
+    };
+    FindingsComponent.prototype.setRefuge = function (refuge) {
+        this.refuge = refuge;
+        refuge.selections.forEach(function (s, i) {
+            //s.debug = (i === 0);
+            s.update();
+        });
+        this.guidOrder = refuge.selections.map(function (s) { return s.guid; });
+    };
+    FindingsComponent.prototype.ngOnInit = function () {
+        this.setRefuge(this.refuge);
+    };
+    FindingsComponent.prototype.resizeAll = function () {
+        this.refuge.selections.forEach(function (s, i) {
+            //s.debug = i === 0;
+            s.resize();
+        });
+    };
+    FindingsComponent.prototype.resizeAllAfterDelay = function () {
+        var _this = this;
+        setTimeout(function () {
+            _this.resizeAll();
+        });
+    };
+    FindingsComponent.prototype.makeCurrent = function (s) {
+        var selections = this.refuge.selections, index = selections.indexOf(s);
+        if (index) {
+            console.log('MAKE CURRENT', index);
+            // swap the currently selected with the newly selected
+            selections[index] = selections[0];
+            selections[0] = s;
+            this.reorderVisualizations();
+        }
+    };
+    FindingsComponent.prototype.addVisualization = function ($event) {
+        var _this = this;
+        console.log('add.$event', $event);
+        var s = this.selectionFactory.newSelection($event.dragData);
+        console.log('add.selection', s);
+        var dialogRef = this.dialog.open(__WEBPACK_IMPORTED_MODULE_4__new_visualization_dialog_component__["b" /* NewVisualizationDialogComponent */], {
+            height: '90vh',
+            width: '90vw',
+            disableClose: true,
+            data: {
+                refuge: this.refuge,
+                selection: s
+            }
+        });
+        dialogRef.afterClosed().subscribe(function (selection) {
+            if (selection) {
+                _this.refuge.selections.push(selection);
+                _this.save();
+            }
+        });
+    };
+    FindingsComponent.prototype.isReordered = function () {
+        var _this = this;
+        if (this.guidOrder && this.guidOrder.length === this.refuge.selections.length) {
+            return this.refuge.selections.reduce(function (reordered, s, i) {
+                return reordered || (s.guid !== _this.guidOrder[i] ? true : false);
+            }, false);
+        }
+        return false;
+    };
+    FindingsComponent.prototype.reorderVisualizations = function () {
+        var _this = this;
+        setTimeout(function () {
+            _this.resizeAll();
+        });
+    };
+    FindingsComponent.prototype.save = function (noSnackBar) {
+        var _this = this;
+        this.refugeService.saveRefuge(this.refuge)
+            .then(function (refuge) {
+            _this.setRefuge(refuge);
+            if (!noSnackBar) {
+                _this.snackBar.open('Visualizations saved', null, { duration: 2000 });
+            }
+        })
+            .catch(function (e) { return _this.handleError(e); });
+    };
+    // capture where a selection was at drag start so it can be restored to its position
+    // for undo trash
+    FindingsComponent.prototype.dragStart = function ($event) {
+        // this seems inconstent but it seems that $event in the onDragStart/End
+        // events is the dragData, unlike onDragSuccess
+        this.dragStartIndex = $event ? this.refuge.selections.indexOf($event) : undefined;
+        console.log('dragStart.$event', $event, this.dragStartIndex);
+    };
+    FindingsComponent.prototype.trashVisualization = function ($event) {
+        var _this = this;
+        console.log('trash.$event', $event);
+        var selection = $event.dragData, index = this.refuge.selections.indexOf(selection);
+        console.log("trashing selection " + index);
+        this.refuge.selections.splice(index, 1);
+        this.refugeService.saveRefuge(this.refuge)
+            .then(function (refuge) {
+            _this.setRefuge(refuge);
+            _this.snackBar.open('Visualization Deleted', 'Undo', {
+                duration: 5000,
+            }).onAction().subscribe(function () {
+                // issue because of the drag re-order selections normally get put back
+                // at index #1, may need to keep track of index on selection object
+                // change on resize or some such
+                index = typeof (_this.dragStartIndex) !== 'undefined' ? _this.dragStartIndex : index;
+                console.log("restoring selection " + index);
+                _this.refuge.selections.splice(index, 0, _this.selectionFactory.cloneSelection(selection));
+                _this.save(true);
+            });
+        })
+            .catch(function (e) { return _this.handleError(e); });
+    };
+    FindingsComponent.prototype.handleError = function (e) {
+        console.error(e);
+        this.snackBar.open('Something went wrong', null, { duration: 5000 });
+    };
+    return FindingsComponent;
+}());
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])(),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__refuge_service__["a" /* Refuge */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__refuge_service__["a" /* Refuge */]) === "function" && _a || Object)
+], FindingsComponent.prototype, "refuge", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])(),
+    __metadata("design:type", Boolean)
+], FindingsComponent.prototype, "userIsAdmin", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["y" /* HostBinding */])('class.adminMode'),
+    __metadata("design:type", Boolean)
+], FindingsComponent.prototype, "adminMode", void 0);
+FindingsComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'refuge-findings',
+        template: "\n<mat-list *ngIf=\"adminMode\" class=\"new-vis-list\">\n  <mat-list-item class=\"vis-template\"\n                *ngFor=\"let template of visTemplates\"\n                [matTooltip]=\"template.$tooltip\"\n                matTooltipPosition=\"right\"\n                dnd-draggable [dragData]=\"template\"\n                [dropZones]=\"['newvis-dropZone']\">\n    <img src=\"{{baseHref}}{{template.$thumbnail}}\" />\n  </mat-list-item>\n  <mat-list-item class=\"trash\"\n                matTooltip=\"Drag and drop visualization here to remove\"\n                dnd-droppable [dropZones]=\"['trash-dropZone']\"\n                (onDropSuccess)=\"trashVisualization($event)\"></mat-list-item>\n  <mat-list-item class=\"save\" *ngIf=\"isReordered()\" matTooltip=\"Save current visualization order\" (click)=\"save()\">\n  </mat-list-item>\n</mat-list>\n\n<div class=\"visualizations\" *ngIf=\"refuge\" dnd-sortable-container [sortableData]=\"refuge.selections\" [dropZones]=\"['list-dropZone','trash-dropZone']\" >\n    <mat-card  *ngFor=\"let selection of refuge.selections; first as isFirst; let i = index\"\n              dnd-sortable [sortableIndex]=\"i\"\n              [dragEnabled]=\"adminMode\"\n              [dragData]=\"selection\"\n              (onDragStart)=\"dragStart($event)\"\n              (onDropSuccess)=\"reorderVisualizations()\">\n        <div *ngIf=\"!isFirst\" class=\"cover\" (click)=\"makeCurrent(selection)\">\n            <span class=\"visualization-title\">{{selection.meta.title}}</span>\n        </div>\n        <div *ngIf=\"isFirst\" class=\"visualization-details\">\n            <div class=\"visualization-title\">{{selection.meta.title}}</div>\n            <p *ngIf=\"selection.meta.description\" class=\"visualization-description\">{{selection.meta.description}}</p>\n        </div>\n        <npn-visualization [selection]=\"selection\" [thumbnail]=\"i > 0\"></npn-visualization>\n    </mat-card>\n    <mat-card *ngIf=\"adminMode && refuge.selections.length < maxVisualizations\" class=\"new-vis-placeholder\"\n        dnd-droppable [dropZones]=\"['newvis-dropZone']\"\n        (onDropSuccess)=\"addVisualization($event)\"></mat-card>\n</div>\n<mat-button-toggle *ngIf=\"userIsAdmin\" (change)=\"toggleAdminMode($event)\"><span class=\"admin-toggle\">Customize</span></mat-button-toggle>\n<!--mat-checkbox *ngIf=\"userIsAdmin\" [(ngModel)]=\"adminMode\" (change)=\"resizeAllAfterDelay()\">Admin mode</mat-checkbox-->\n  ",
+        styles: [__webpack_require__("../../../../../src/app/findings.component.scss")]
+    }),
+    __param(4, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["R" /* Optional */])()), __param(4, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Inject */])(__WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["e" /* NPN_BASE_HREF */])),
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__refuge_service__["b" /* RefugeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__refuge_service__["b" /* RefugeService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["o" /* VisualizationSelectionFactory */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["o" /* VisualizationSelectionFactory */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialog */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["t" /* MatSnackBar */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["t" /* MatSnackBar */]) === "function" && _e || Object, String])
+], FindingsComponent);
+
+var _a, _b, _c, _d, _e;
+//# sourceMappingURL=findings.component.js.map
 
 /***/ }),
 
@@ -8009,7 +8243,7 @@ NewVisualizationDialogComponent = __decorate([
         styles: ["\n        .visualization-title,\n        .visualization-description {\n            display: block;\n            width: 100%;\n        }\n        .visualization-description textarea {\n            height: 5em;\n        }\n    "]
     }),
     __param(2, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__angular_material__["a" /* MAT_DIALOG_DATA */])),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_forms__["b" /* FormBuilder */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_forms__["b" /* FormBuilder */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["h" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["h" /* MatDialogRef */]) === "function" && _b || Object, Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_forms__["b" /* FormBuilder */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_forms__["b" /* FormBuilder */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["i" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["i" /* MatDialogRef */]) === "function" && _b || Object, Object])
 ], NewVisualizationDialogComponent);
 
 var NewVisualizationBuilderComponent = (function () {
@@ -8125,7 +8359,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ":host {\n  position: relative;\n  display: block; }\n  :host.adminMode {\n    padding-left: 220px; }\n\n.visualizations {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n      -ms-flex-flow: row wrap;\n          flex-flow: row wrap; }\n  .visualizations mat-card {\n    margin: 10px auto;\n    padding: 20px;\n    -webkit-box-flex: 0;\n        -ms-flex: 0 1 28%;\n            flex: 0 1 28%;\n    /* a non flex layout attempt\n        box-sizing: border-box;\n        width: 100%;\n        padding: 2px;\n        margin: 10px 0px;\n        display: block;\n        @media(min-width: $screen-sm-min) {\n            padding: 10px;\n        }\n        @media(min-width: $screen-mat-min) {\n            padding: 20px;\n            display: inline-block;\n            width: 48%;\n            margin: 5px;\n        }\n        @media(min-width: $screen-lg-min) {\n            width: 30%;\n        }\n\n        &:first-of-type {\n            @media(min-width: $screen-mat-min) {\n                margin: auto;\n                display: block;\n                width: 95%;\n            }\n        }*/\n    vertical-align: top;\n    position: relative;\n    overflow: hidden; }\n    .visualizations mat-card:first-of-type {\n      -webkit-box-flex: 0;\n          -ms-flex: 0 1 95%;\n              flex: 0 1 95%; }\n    .visualizations mat-card .visualization-title {\n      font-size: 2em;\n      margin-bottom: 10px;\n      text-align: center; }\n    .visualizations mat-card .visualization-description {\n      color: #aaa;\n      font-size: 0.8em;\n      text-align: center; }\n    .visualizations mat-card > .cover {\n      position: absolute;\n      top: 0;\n      left: 0;\n      width: 100%;\n      height: 100%;\n      z-index: 2;\n      text-align: center; }\n      .visualizations mat-card > .cover:hover {\n        cursor: pointer;\n        background-color: rgba(0, 0, 0, 0.25); }\n        .visualizations mat-card > .cover:hover .visualization-title {\n          display: inherit; }\n      .visualizations mat-card > .cover .visualization-title {\n        font-size: 1.25em;\n        color: #fff;\n        text-shadow: 1px 1px 2px #000;\n        display: none;\n        position: absolute;\n        top: 50%;\n        left: 50%;\n        -webkit-transform: translate(-50%, -50%);\n                transform: translate(-50%, -50%); }\n    .visualizations mat-card.new-vis-placeholder {\n      height: 200px;\n      background-color: #eee; }\n      .visualizations mat-card.new-vis-placeholder:before {\n        content: 'Drop New Visualization Here';\n        position: absolute;\n        top: 50%;\n        left: 50%;\n        -webkit-transform: translate(-50%, -50%);\n                transform: translate(-50%, -50%); }\n\nmat-list.new-vis-list {\n  position: fixed;\n  top: 140px;\n  left: 0px;\n  width: 200px;\n  margin-left: 8px; }\n  mat-list.new-vis-list mat-list-item.vis-template {\n    border: 1px dotted black;\n    margin-bottom: 10px; }\n    mat-list.new-vis-list mat-list-item.vis-template /deep/ .mat-list-item-content {\n      height: auto;\n      padding: 0px; }\n      mat-list.new-vis-list mat-list-item.vis-template /deep/ .mat-list-item-content img {\n        width: 100%; }\n  mat-list.new-vis-list mat-list-item.trash, mat-list.new-vis-list mat-list-item.save {\n    position: relative;\n    margin-top: 20px; }\n    mat-list.new-vis-list mat-list-item.trash:before, mat-list.new-vis-list mat-list-item.save:before {\n      font-family: 'FontAwesome';\n      font-size: 2em;\n      position: absolute;\n      top: 50%;\n      left: 50%;\n      -webkit-transform: translate(-50%, -50%);\n              transform: translate(-50%, -50%); }\n  mat-list.new-vis-list mat-list-item.trash:before {\n    content: '\\F1F8'; }\n  mat-list.new-vis-list mat-list-item.save:hover {\n    cursor: pointer; }\n  mat-list.new-vis-list mat-list-item.save:before {\n    content: '\\F0C7'; }\n\n.select-refuge {\n  width: 400px; }\n", ""]);
+exports.push([module.i, ":host {\n  display: block;\n  background-color: #fff;\n  border-left: 2px solid #ddd;\n  border-right: 2px solid #ddd; }\n\n.rd-tab-label {\n  /*\n    display: block;\n    width: 100%;\n    background-color: #ff0000;\n    */\n  text-transform: uppercase; }\n  .rd-tab-label:before {\n    font-family: 'FontAwesome'; }\n  .rd-tab-label.focal-species:before {\n    content: '\\F1B0'; }\n  .rd-tab-label.findings:before {\n    content: '\\F002'; }\n  .rd-tab-label.resources:before {\n    content: '\\F02D'; }\n\n.rd-tab-content {\n  min-height: 800px;\n  padding: 20px;\n  color: #000; }\n", ""]);
 
 // exports
 
@@ -8141,10 +8375,7 @@ module.exports = module.exports.toString();
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RefugeDashboardComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__refuge_service__ = __webpack_require__("../../../../../src/app/refuge.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__ = __webpack_require__("../../../../../../../../../../../../npn_common/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__new_visualization_dialog_component__ = __webpack_require__("../../../../../src/app/new-visualization-dialog.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__refuge_service__ = __webpack_require__("../../../../../src/app/refuge.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8154,194 +8385,37 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 
 
-
-
-
-var VIS_TEMPLATES = [{
-        $class: 'ActivityCurvesSelection',
-        $thumbnail: 'assets/activity-curves.png',
-        $tooltip: 'Add Activity Curves'
-    }, {
-        $class: 'ScatterPlotSelection',
-        $thumbnail: 'assets/scatter-plot.png',
-        $tooltip: 'Add Scatter Plot'
-    }, {
-        $class: 'CalendarSelection',
-        $thumbnail: 'assets/calendar.png',
-        $tooltip: 'Add Calendar'
-    }, {
-        $class: 'ObserverActivitySelection',
-        $thumbnail: 'assets/observer-activity.png',
-        $tooltip: 'Add Observer Activity Metrics'
-    }, {
-        $class: 'ClippedWmsMapSelection',
-        $thumbnail: 'assets/clipped-wms-map.png',
-        $tooltip: 'Add Map'
-    }, {
-        $class: 'ObservationFrequencySelection',
-        $thumbnail: 'assets/observation-frequency.png',
-        $tooltip: 'Add Observation Frequency'
-    }];
 var RefugeDashboardComponent = (function () {
-    function RefugeDashboardComponent(element, refugeService, selectionFactory, dialog, snackBar, baseHref) {
+    function RefugeDashboardComponent(element, refugeService) {
         this.element = element;
         this.refugeService = refugeService;
-        this.selectionFactory = selectionFactory;
-        this.dialog = dialog;
-        this.snackBar = snackBar;
-        this.baseHref = baseHref;
-        this.trash = [];
-        this.adminMode = false;
-        this.maxVisualizations = 7;
-        this.visTemplates = VIS_TEMPLATES;
         this.userIsAdmin = false;
+        this.selectedTabIndex = 0;
         var e = element.nativeElement;
         this.refuge_id = e.getAttribute('refuge_id');
         this.userIsAdmin = e.getAttribute('user_is_admin') !== null;
     }
-    RefugeDashboardComponent.prototype.setRefuge = function (refuge) {
-        console.log('INIT REFUGE', refuge);
-        this.refuge = refuge;
-        refuge.selections.forEach(function (s, i) {
-            //s.debug = (i === 0);
-            s.update();
-        });
-        this.guidOrder = refuge.selections.map(function (s) { return s.guid; });
-    };
-    RefugeDashboardComponent.prototype.loadRefuge = function (refuge_id) {
-        var _this = this;
-        this.refugeService.getRefuge(this.refuge_id)
-            .then(function (refuge) { return _this.setRefuge(refuge); });
-    };
     RefugeDashboardComponent.prototype.ngOnInit = function () {
-        this.loadRefuge(this.refuge_id);
-    };
-    RefugeDashboardComponent.prototype.resizeAll = function () {
-        this.refuge.selections.forEach(function (s, i) {
-            //s.debug = i === 0;
-            s.resize();
-        });
-    };
-    RefugeDashboardComponent.prototype.resizeAllAfterDelay = function () {
         var _this = this;
-        setTimeout(function () {
-            _this.resizeAll();
-        });
+        this.refugeService.getRefuge(this.refuge_id).then(function (refuge) { return _this.refuge = refuge; });
     };
-    RefugeDashboardComponent.prototype.makeCurrent = function (s) {
-        var selections = this.refuge.selections, index = selections.indexOf(s);
-        if (index) {
-            console.log('MAKE CURRENT', index);
-            // swap the currently selected with the newly selected
-            selections[index] = selections[0];
-            selections[0] = s;
-            this.reorderVisualizations();
-        }
-    };
-    RefugeDashboardComponent.prototype.addVisualization = function ($event) {
-        var _this = this;
-        console.log('add.$event', $event);
-        var s = this.selectionFactory.newSelection($event.dragData);
-        console.log('add.selection', s);
-        var dialogRef = this.dialog.open(__WEBPACK_IMPORTED_MODULE_4__new_visualization_dialog_component__["b" /* NewVisualizationDialogComponent */], {
-            height: '90vh',
-            width: '90vw',
-            disableClose: true,
-            data: {
-                refuge: this.refuge,
-                selection: s
-            }
-        });
-        dialogRef.afterClosed().subscribe(function (selection) {
-            if (selection) {
-                _this.refuge.selections.push(selection);
-                _this.save();
-            }
-        });
-    };
-    RefugeDashboardComponent.prototype.isReordered = function () {
-        var _this = this;
-        if (this.guidOrder && this.guidOrder.length === this.refuge.selections.length) {
-            return this.refuge.selections.reduce(function (reordered, s, i) {
-                return reordered || (s.guid !== _this.guidOrder[i] ? true : false);
-            }, false);
-        }
-        return false;
-    };
-    RefugeDashboardComponent.prototype.reorderVisualizations = function () {
-        var _this = this;
-        setTimeout(function () {
-            _this.resizeAll();
-        });
-    };
-    RefugeDashboardComponent.prototype.save = function (noSnackBar) {
-        var _this = this;
-        this.refugeService.saveRefuge(this.refuge)
-            .then(function (refuge) {
-            _this.setRefuge(refuge);
-            if (!noSnackBar) {
-                _this.snackBar.open('Visualizations saved', null, { duration: 2000 });
-            }
-        })
-            .catch(function (e) { return _this.handleError(e); });
-    };
-    // capture where a selection was at drag start so it can be restored to its position
-    // for undo trash
-    RefugeDashboardComponent.prototype.dragStart = function ($event) {
-        // this seems inconstent but it seems that $event in the onDragStart/End
-        // events is the dragData, unlike onDragSuccess
-        this.dragStartIndex = $event ? this.refuge.selections.indexOf($event) : undefined;
-        console.log('dragStart.$event', $event, this.dragStartIndex);
-    };
-    RefugeDashboardComponent.prototype.trashVisualization = function ($event) {
-        var _this = this;
-        console.log('trash.$event', $event);
-        var selection = $event.dragData, index = this.refuge.selections.indexOf(selection);
-        console.log("trashing selection " + index);
-        this.refuge.selections.splice(index, 1);
-        this.refugeService.saveRefuge(this.refuge)
-            .then(function (refuge) {
-            _this.setRefuge(refuge);
-            _this.snackBar.open('Visualization Deleted', 'Undo', {
-                duration: 5000,
-            }).onAction().subscribe(function () {
-                // issue because of the drag re-order selections normally get put back
-                // at index #1, may need to keep track of index on selection object
-                // change on resize or some such
-                index = typeof (_this.dragStartIndex) !== 'undefined' ? _this.dragStartIndex : index;
-                console.log("restoring selection " + index);
-                _this.refuge.selections.splice(index, 0, _this.selectionFactory.cloneSelection(selection));
-                _this.save(true);
-            });
-        })
-            .catch(function (e) { return _this.handleError(e); });
-    };
-    RefugeDashboardComponent.prototype.handleError = function (e) {
-        console.error(e);
-        this.snackBar.open('Something went wrong', null, { duration: 5000 });
+    RefugeDashboardComponent.prototype.selectedTabChange = function ($event) {
+        this.selectedTabIndex = $event.index;
     };
     return RefugeDashboardComponent;
 }());
-__decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["y" /* HostBinding */])('class.adminMode'),
-    __metadata("design:type", Boolean)
-], RefugeDashboardComponent.prototype, "adminMode", void 0);
 RefugeDashboardComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'refuge-dashboard',
-        template: "\n<mat-checkbox style=\"float: right;\" *ngIf=\"userIsAdmin\" [(ngModel)]=\"adminMode\" (change)=\"resizeAllAfterDelay()\">Admin mode</mat-checkbox>&nbsp;&nbsp;\n<h1 *ngIf=\"refuge\">{{refuge.title}}</h1>\n<mat-list *ngIf=\"adminMode\" class=\"new-vis-list\">\n  <mat-list-item class=\"vis-template\"\n                *ngFor=\"let template of visTemplates\"\n                [matTooltip]=\"template.$tooltip\"\n                matTooltipPosition=\"right\"\n                dnd-draggable [dragData]=\"template\"\n                [dropZones]=\"['newvis-dropZone']\">\n    <img src=\"{{baseHref}}{{template.$thumbnail}}\" />\n  </mat-list-item>\n  <mat-list-item class=\"trash\"\n                matTooltip=\"Drag and drop visualization here to remove\"\n                dnd-droppable [dropZones]=\"['trash-dropZone']\"\n                (onDropSuccess)=\"trashVisualization($event)\"></mat-list-item>\n  <mat-list-item class=\"save\" *ngIf=\"isReordered()\" matTooltip=\"Save current visualization order\" (click)=\"save()\">\n  </mat-list-item>\n</mat-list>\n\n<div class=\"visualizations\" *ngIf=\"refuge\" dnd-sortable-container [sortableData]=\"refuge.selections\" [dropZones]=\"['list-dropZone','trash-dropZone']\" >\n    <mat-card  *ngFor=\"let selection of refuge.selections; first as isFirst; let i = index\"\n              dnd-sortable [sortableIndex]=\"i\"\n              [dragEnabled]=\"adminMode\"\n              [dragData]=\"selection\"\n              (onDragStart)=\"dragStart($event)\"\n              (onDropSuccess)=\"reorderVisualizations()\">\n        <div *ngIf=\"!isFirst\" class=\"cover\" (click)=\"makeCurrent(selection)\">\n            <span class=\"visualization-title\">{{selection.meta.title}}</span>\n        </div>\n        <div *ngIf=\"isFirst\" class=\"visualization-details\">\n            <div class=\"visualization-title\">{{selection.meta.title}}</div>\n            <p *ngIf=\"selection.meta.description\" class=\"visualization-description\">{{selection.meta.description}}</p>\n        </div>\n        <npn-visualization [selection]=\"selection\" [thumbnail]=\"i > 0\"></npn-visualization>\n    </mat-card>\n    <mat-card *ngIf=\"adminMode && refuge.selections.length < maxVisualizations\" class=\"new-vis-placeholder\"\n        dnd-droppable [dropZones]=\"['newvis-dropZone']\"\n        (onDropSuccess)=\"addVisualization($event)\"></mat-card>\n</div>\n  ",
+        template: "\n  <mat-tab-group class=\"refuge-dashboard-tabs\" (selectedTabChange)=\"selectedTabChange($event)\">\n    <mat-tab label=\"Focal Species\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label focal-species\">\n                Focal Species\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"selectedTabIndex === 0\">\n            <h3>Focal Species</h3>\n            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id facilisis ex. Etiam mattis dictum purus a feugiat. Donec laoreet, enim ac sodales ornare, lacus quam ultricies turpis, ut malesuada dui erat in augue. Aenean massa nisi, porttitor et lacus ac, gravida pulvinar quam. Donec pulvinar erat a urna blandit, quis interdum tortor porttitor. Mauris erat lorem, pretium id vehicula vitae, pretium ac lorem. Nullam a augue tortor. Praesent malesuada, ipsum nec interdum aliquam, turpis sapien pharetra diam, a commodo mi felis nec elit. Fusce rutrum placerat malesuada. Donec hendrerit massa at eros tincidunt bibendum. Duis fermentum augue quis ex lacinia, quis pharetra turpis cursus. Donec ullamcorper elementum nibh sed tristique. Donec placerat ligula eget tortor fringilla lacinia.</p>\n        </div>\n    </mat-tab>\n\n    <mat-tab label=\"What we're finding\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label findings\">\n                What we're finding\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"selectedTabIndex === 1\">\n            <refuge-findings *ngIf=\"refuge\" [refuge]=\"refuge\" [userIsAdmin]=\"userIsAdmin\"></refuge-findings>\n        </div>\n    </mat-tab>\n\n    <mat-tab label=\"Resources for observers\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label resources\">\n                Resources for observers\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"selectedTabIndex === 2\">\n            <h3>Resources for observers</h3>\n            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id facilisis ex. Etiam mattis dictum purus a feugiat. Donec laoreet, enim ac sodales ornare, lacus quam ultricies turpis, ut malesuada dui erat in augue. Aenean massa nisi, porttitor et lacus ac, gravida pulvinar quam. Donec pulvinar erat a urna blandit, quis interdum tortor porttitor. Mauris erat lorem, pretium id vehicula vitae, pretium ac lorem. Nullam a augue tortor. Praesent malesuada, ipsum nec interdum aliquam, turpis sapien pharetra diam, a commodo mi felis nec elit. Fusce rutrum placerat malesuada. Donec hendrerit massa at eros tincidunt bibendum. Duis fermentum augue quis ex lacinia, quis pharetra turpis cursus. Donec ullamcorper elementum nibh sed tristique. Donec placerat ligula eget tortor fringilla lacinia.</p>\n        </div>\n    </mat-tab>\n  </mat-tab-group>\n  ",
         styles: [__webpack_require__("../../../../../src/app/refuge-dashboard.component.scss")]
     }),
-    __param(5, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["R" /* Optional */])()), __param(5, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Inject */])(__WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["e" /* NPN_BASE_HREF */])),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__refuge_service__["b" /* RefugeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__refuge_service__["b" /* RefugeService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["o" /* VisualizationSelectionFactory */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["o" /* VisualizationSelectionFactory */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["f" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["f" /* MatDialog */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["s" /* MatSnackBar */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["s" /* MatSnackBar */]) === "function" && _e || Object, String])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__refuge_service__["b" /* RefugeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__refuge_service__["b" /* RefugeService */]) === "function" && _b || Object])
 ], RefugeDashboardComponent);
 
-var _a, _b, _c, _d, _e;
+var _a, _b;
 //# sourceMappingURL=refuge-dashboard.component.js.map
 
 /***/ }),
