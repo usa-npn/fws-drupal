@@ -5442,24 +5442,11 @@ var ObservationFrequencySelection = (function (_super) {
         return !!this.year && this.networkIds.length === 1;
     };
     ObservationFrequencySelection.prototype.getData = function () {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            var url = _this.serviceUtils.apiUrl('/npn_portal/networks/getSiteVisitFrequency.json'), params = {
-                year: _this.year,
-                network_id: _this.networkIds[0]
-            };
-            _this.serviceUtils.cachedGet(url, params)
-                .then(function (data) {
-                // massage data collapsing maps into simple arrays
-                data.stations = Object.keys(data.stations).map(function (key) { return data.stations[key]; });
-                data.stations.forEach(function (s) {
-                    var arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (i) { return s.months[i]; });
-                    s.months = arr;
-                });
-                resolve(data);
-            })
-                .catch(reject);
-        });
+        var url = this.serviceUtils.apiUrl('/npn_portal/networks/getSiteVisitFrequency.json'), params = {
+            year: this.year,
+            network_id: this.networkIds[0]
+        };
+        return this.serviceUtils.cachedGet(url, params);
     };
     return ObservationFrequencySelection;
 }(__WEBPACK_IMPORTED_MODULE_0__vis_selection__["g" /* StationAwareVisSelection */]));
