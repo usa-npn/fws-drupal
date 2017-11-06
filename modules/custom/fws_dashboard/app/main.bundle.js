@@ -832,7 +832,7 @@ DateExtentUtil = __decorate([
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return WMS_CAPABILITIES_URL; });
 var MAP_LAYERS = {
     "geo_server": {
-        "url": "//geoserver.usanpn.org/geoserver"
+        "url": "//geoserver-dev.usanpn.org/geoserver"
     },
     "description": "",
     "categories": [{
