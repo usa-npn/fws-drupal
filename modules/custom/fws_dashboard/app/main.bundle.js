@@ -448,8 +448,9 @@ var NpnServiceUtils = (function () {
     NpnServiceUtils.prototype.dataApiUrl = function (suffix) {
         return "" + this.config.dataApiRoot + suffix;
     };
-    NpnServiceUtils.prototype.cachedGet = function (url, params) {
+    NpnServiceUtils.prototype.cachedGet = function (url, params, asText) {
         var _this = this;
+        params = params || {};
         return new Promise(function (resolve, reject) {
             var cacheKey = {
                 u: url,
@@ -462,7 +463,8 @@ var NpnServiceUtils = (function () {
                 _this.http.get(url, { params: params })
                     .toPromise()
                     .then(function (response) {
-                    data = response.json();
+                    data = asText ?
+                        response.text() : response.json();
                     _this.cache.set(cacheKey, data);
                     resolve(data);
                 })
@@ -1317,15 +1319,12 @@ var _a, _b, _c, _d, _e, _f, _g;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WmsMapLayerService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__ = __webpack_require__("../../../../rxjs/add/operator/toPromise.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery__ = __webpack_require__("../../../../jquery/dist/jquery.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__date_extent_util_service__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/date-extent-util.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__common__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__gridded_common__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/gridded-common.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__wms_map_layer__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/wms-map-layer.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery__ = __webpack_require__("../../../../jquery/dist/jquery.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_jquery__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__date_extent_util_service__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/date-extent-util.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__common__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__gridded_common__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/gridded-common.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__wms_map_layer__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/wms-map-layer.ts");
 var __assign = (this && this.__assign) || Object.assign || function(t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
         s = arguments[i];
@@ -1349,13 +1348,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
-
 var DEEP_COPY = function (o) { return JSON.parse(JSON.stringify(o)); };
 var WmsMapLayerService = (function () {
-    function WmsMapLayerService(http, cache, dateExtentUtil) {
-        this.http = http;
-        this.cache = cache;
+    function WmsMapLayerService(serviceUtils, dateExtentUtil) {
+        this.serviceUtils = serviceUtils;
         this.dateExtentUtil = dateExtentUtil;
     }
     WmsMapLayerService.prototype.getLayers = function (map) {
@@ -1366,7 +1362,7 @@ var WmsMapLayerService = (function () {
                 var copy = DEEP_COPY(definitions);
                 copy.categories.forEach(function (cat) {
                     // replace layer definitions with actual layers
-                    cat.layers = cat.layers.map(function (l) { return new __WEBPACK_IMPORTED_MODULE_7__wms_map_layer__["a" /* WmsMapLayer */](map, l); });
+                    cat.layers = cat.layers.map(function (l) { return new __WEBPACK_IMPORTED_MODULE_5__wms_map_layer__["a" /* WmsMapLayer */](map, l); });
                 });
                 resolve(copy);
             })
@@ -1376,7 +1372,7 @@ var WmsMapLayerService = (function () {
     WmsMapLayerService.prototype.getLayerDefinitions = function () {
         var _this = this;
         function mergeLayersIntoConfig(wms_layer_defs) {
-            var result = DEEP_COPY(__WEBPACK_IMPORTED_MODULE_6__gridded_common__["c" /* MAP_LAYERS */]), base_description = result.description;
+            var result = DEEP_COPY(__WEBPACK_IMPORTED_MODULE_4__gridded_common__["c" /* MAP_LAYERS */]), base_description = result.description;
             result.categories.forEach(function (category) {
                 // layers can inherit config like filters (if all in common) from
                 // the base category
@@ -1396,10 +1392,9 @@ var WmsMapLayerService = (function () {
                 resolve(_this.layerDefs);
             }
             else {
-                _this.http.get(__WEBPACK_IMPORTED_MODULE_6__gridded_common__["e" /* WMS_CAPABILITIES_URL */])
-                    .toPromise()
-                    .then(function (response) {
-                    var wms_capabilities = __WEBPACK_IMPORTED_MODULE_3_jquery__(__WEBPACK_IMPORTED_MODULE_3_jquery__["parseXML"](response.text()));
+                _this.serviceUtils.cachedGet(__WEBPACK_IMPORTED_MODULE_4__gridded_common__["e" /* WMS_CAPABILITIES_URL */], null, true /*as text*/)
+                    .then(function (xml) {
+                    var wms_capabilities = __WEBPACK_IMPORTED_MODULE_1_jquery__(__WEBPACK_IMPORTED_MODULE_1_jquery__["parseXML"](xml));
                     console.debug('WmsMapLayerService:capabilities', wms_capabilities);
                     var wms_layer_defs = _this._getLayers(wms_capabilities.find('Layer'));
                     console.debug('WmsMapLayerService:wms layer definitions', wms_layer_defs);
@@ -1444,7 +1439,7 @@ var WmsMapLayerService = (function () {
         }, {});
     };
     WmsMapLayerService.prototype._layerToObject = function (layer) {
-        var l = __WEBPACK_IMPORTED_MODULE_3_jquery__(layer), o = {
+        var l = __WEBPACK_IMPORTED_MODULE_1_jquery__(layer), o = {
             name: l.find('Name').first().text(),
             // redmine #761
             title: l.find('Title').first().text().replace(/\((.+?)\)/g, ''),
@@ -1458,7 +1453,7 @@ var WmsMapLayerService = (function () {
         return o;
     };
     WmsMapLayerService.prototype._parseStyle = function (style) {
-        var s = __WEBPACK_IMPORTED_MODULE_3_jquery__(style);
+        var s = __WEBPACK_IMPORTED_MODULE_1_jquery__(style);
         return {
             name: s.find('Name').first().text(),
             // redmine #761
@@ -1506,10 +1501,10 @@ var WmsMapLayerService = (function () {
 }());
 WmsMapLayerService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_5__common__["a" /* CacheService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__common__["a" /* CacheService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__date_extent_util_service__["a" /* DateExtentUtil */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__date_extent_util_service__["a" /* DateExtentUtil */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__common__["j" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__common__["j" /* NpnServiceUtils */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__date_extent_util_service__["a" /* DateExtentUtil */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__date_extent_util_service__["a" /* DateExtentUtil */]) === "function" && _b || Object])
 ], WmsMapLayerService);
 
-var _a, _b, _c;
+var _a, _b;
 //# sourceMappingURL=wms-map-layer.service.js.map
 
 /***/ }),
@@ -1813,16 +1808,13 @@ var _a, _b, _c;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WmsMapLegendService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__ = __webpack_require__("../../../../rxjs/add/operator/toPromise.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery__ = __webpack_require__("../../../../jquery/dist/jquery.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__wms_pipe_factory_service__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/wms-pipe-factory.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__wms_map_layer_service__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/wms-map-layer.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__common__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__wms_map_legend__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/wms-map-legend.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__gridded_common__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/gridded-common.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery__ = __webpack_require__("../../../../jquery/dist/jquery.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_jquery__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__wms_pipe_factory_service__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/wms-pipe-factory.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__wms_map_layer_service__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/wms-map-layer.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__common__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__wms_map_legend__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/wms-map-legend.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__gridded_common__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/gridded-common.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1839,13 +1831,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
-
 var WmsMapLegendService = (function () {
-    function WmsMapLegendService(wmsPipeFactory, http, cache, layerService) {
+    function WmsMapLegendService(wmsPipeFactory, serviceUtils, layerService) {
         this.wmsPipeFactory = wmsPipeFactory;
-        this.http = http;
-        this.cache = cache;
+        this.serviceUtils = serviceUtils;
         this.layerService = layerService;
         this.legends = {};
     }
@@ -1860,23 +1849,20 @@ var WmsMapLegendService = (function () {
                 if (!layerDefinition) {
                     return reject("layer definition for " + layerName + " not found.");
                 }
-                _this.http.get(__WEBPACK_IMPORTED_MODULE_8__gridded_common__["d" /* WMS_BASE_URL */], {
-                    params: {
-                        service: 'wms',
-                        request: 'GetStyles',
-                        version: __WEBPACK_IMPORTED_MODULE_8__gridded_common__["f" /* WMS_VERSION */],
-                        layers: layerName
-                    }
-                })
-                    .toPromise()
-                    .then(function (response) {
-                    var xml = response.text(), legend_data = __WEBPACK_IMPORTED_MODULE_3_jquery__(__WEBPACK_IMPORTED_MODULE_3_jquery__["parseXML"](xml)), color_map = legend_data.find('ColorMap');
+                _this.serviceUtils.cachedGet(__WEBPACK_IMPORTED_MODULE_6__gridded_common__["d" /* WMS_BASE_URL */], {
+                    service: 'wms',
+                    request: 'GetStyles',
+                    version: __WEBPACK_IMPORTED_MODULE_6__gridded_common__["f" /* WMS_VERSION */],
+                    layers: layerName
+                }, true /* as text*/)
+                    .then(function (xml) {
+                    var legend_data = __WEBPACK_IMPORTED_MODULE_1_jquery__(__WEBPACK_IMPORTED_MODULE_1_jquery__["parseXML"](xml)), color_map = legend_data.find('ColorMap');
                     if (color_map.length === 0) {
                         // FF
                         color_map = legend_data.find('sld\\:ColorMap');
                     }
                     var l = color_map.length !== 0 ?
-                        new __WEBPACK_IMPORTED_MODULE_7__wms_map_legend__["a" /* WmsMapLegend */](_this.wmsPipeFactory, __WEBPACK_IMPORTED_MODULE_3_jquery__(color_map.toArray()[0]), layerDefinition, legend_data) : undefined;
+                        new __WEBPACK_IMPORTED_MODULE_5__wms_map_legend__["a" /* WmsMapLegend */](_this.wmsPipeFactory, __WEBPACK_IMPORTED_MODULE_1_jquery__(color_map.toArray()[0]), layerDefinition, legend_data) : undefined;
                     _this.legends[layerName] = l;
                     resolve(l);
                 })
@@ -1888,10 +1874,10 @@ var WmsMapLegendService = (function () {
 }());
 WmsMapLegendService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__wms_pipe_factory_service__["a" /* WmsPipeFactory */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__wms_pipe_factory_service__["a" /* WmsPipeFactory */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_6__common__["a" /* CacheService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__common__["a" /* CacheService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_5__wms_map_layer_service__["a" /* WmsMapLayerService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__wms_map_layer_service__["a" /* WmsMapLayerService */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__wms_pipe_factory_service__["a" /* WmsPipeFactory */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__wms_pipe_factory_service__["a" /* WmsPipeFactory */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__common__["j" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__common__["j" /* NpnServiceUtils */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__wms_map_layer_service__["a" /* WmsMapLayerService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__wms_map_layer_service__["a" /* WmsMapLayerService */]) === "function" && _c || Object])
 ], WmsMapLegendService);
 
-var _a, _b, _c, _d;
+var _a, _b, _c;
 //# sourceMappingURL=wms-map-legend.service.js.map
 
 /***/ }),
