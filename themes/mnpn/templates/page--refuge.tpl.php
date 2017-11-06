@@ -240,11 +240,11 @@ endif; ?>
 							<div class = 'refuge-content'>
 								<!-- Page content -->
 								<?php echo $node->body['und'][0]['value']; ?>
-								<?php
-								$block = module_invoke('fws_dashboard','block_view','refuge_dashboard');
-								print $block['content'];
-								?>
 							</div>
+							<?php
+							$block = module_invoke('fws_dashboard','block_view','refuge_dashboard');
+							print $block['content'];
+							?>
 						</div>
 
 						<?php if ( $page['sidebar_second'] ) : ?>
