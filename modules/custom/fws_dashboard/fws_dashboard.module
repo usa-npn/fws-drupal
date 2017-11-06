@@ -6,9 +6,11 @@ define('REFUGE_DASHBOARD','dashboard');
 define('REFUGE_DASHBOARD_THEME','refuge_dashboard');
 
 define('NPN_API_ROOT','npn_api_root');
-define('NPN_API_ROOT_DEFAULT','http://www-dev.usanpn.org');
+define('NPN_API_ROOT_DEFAULT','//www-dev.usanpn.org');
 define('NPN_DATA_API_ROOT','npn_data_api_root');
-define('NPN_DATA_API_ROOT_DEFAULT','http://data-dev.usanpn.org:3006');
+define('NPN_DATA_API_ROOT_DEFAULT','//data-dev.usanpn.org:3006');
+define('NPN_GEOSERVER_ROOT','npn_geoserver_root');
+define('NPN_GEOSERVER_ROOT_DEFAULT','//geoserver-dev.usanpn.org/geoserver');
 
 /**
  * Implements hook_menu
@@ -59,6 +61,13 @@ function fws_dashboard_settings_form() {
             '#required' => TRUE,
             '#size' => 100,
         ),
+        NPN_GEOSERVER_ROOT => array(
+            '#type' => 'textfield',
+            '#title' => t('URL of the NPN geo server (defaults to: "'.NPN_GEOSERVER_ROOT_DEFAULT.'")'),
+            '#default_value' => variable_get(NPN_GEOSERVER_ROOT,NPN_GEOSERVER_ROOT_DEFAULT),
+            '#required' => TRUE,
+            '#size' => 100,
+        ),
     ));
 }
 
@@ -84,15 +93,16 @@ function fws_dashboard_block_view($delta='') {
         $refuge_id = $refuge->nid->value();
         $module_path = drupal_get_path('module','fws_dashboard');
         $user_is_admin = fws_dashboard_user_is_admin($refuge) ? ' user_is_admin' :'';
-        $api_root = variable_get(NPN_API_ROOT,NPN_API_ROOT_DEFAULT);
-        $data_api_root = variable_get(NPN_DATA_API_ROOT,NPN_DATA_API_ROOT_DEFAULT);
+        $npn_configuration = array(
+            'apiRoot' => variable_get(NPN_API_ROOT,NPN_API_ROOT_DEFAULT),
+            'dataApiRoot' => variable_get(NPN_DATA_API_ROOT,NPN_DATA_API_ROOT_DEFAULT),
+            'geoServerRoot' => variable_get(NPN_GEOSERVER_ROOT,NPN_GEOSERVER_ROOT_DEFAULT),
+        );
+        $npn_configuration_json = drupal_json_encode($npn_configuration);
         $html = <<<EOT
 <script>
 var npn_base_href = '/$module_path/app/',
-    npn_configuration = {
-        apiRoot: '$api_root',
-        dataApiRoot: '$data_api_root'
-    };
+    npn_configuration = $npn_configuration_json;
 </script>
 <refuge-dashboard refuge_id="$refuge_id"$user_is_admin></refuge-dashboard>
 <script type="text/javascript" src="$module_path/app/inline.bundle.js"></script>

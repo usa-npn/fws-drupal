@@ -252,8 +252,9 @@ NpnCommonModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_6__legend_doy_pipe__["a" /* LegendDoyPipe */],
             { provide: NPN_BASE_HREF, useValue: '/' },
             { provide: __WEBPACK_IMPORTED_MODULE_8__config__["a" /* NPN_CONFIGURATION */], useValue: {
-                    apiRoot: 'http://www-dev.usanpn.org',
-                    dataApiRoot: 'http://data-dev.usanpn.org:3006',
+                    apiRoot: '//www-dev.usanpn.org',
+                    dataApiRoot: '//data-dev.usanpn.org:3006',
+                    geoServerRoot: '//geoserver-dev.usanpn.org/geoserver'
                 } }
         ]
     })
@@ -823,13 +824,27 @@ DateExtentUtil = __decorate([
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return MAP_LAYERS; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return WMS_VERSION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return MAP_LAYERS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return WMS_VERSION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return BOX_SIZE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BASE_WMS_ARGS; });
-/* unused harmony export GEOSERVER_URL */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return WMS_BASE_URL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return WMS_CAPABILITIES_URL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return GriddedUrls; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common__ = __webpack_require__("../../../../../../../../../../../../npn_common/common/index.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
+
 var MAP_LAYERS = {
     "geo_server": {
         "url": "//geoserver-dev.usanpn.org/geoserver"
@@ -1042,10 +1057,22 @@ var BASE_WMS_ARGS = {
     width: BOX_SIZE,
     srs: 'EPSG:3857' // 'EPSG:4326'
 };
-var GEOSERVER_URL = MAP_LAYERS.geo_server.url; // should this go to the environment?
-// should this go to the environment?
-var WMS_BASE_URL = GEOSERVER_URL + "/wms";
-var WMS_CAPABILITIES_URL = WMS_BASE_URL + "?service=wms&version=" + WMS_VERSION + "&request=GetCapabilities";
+var GriddedUrls = (function () {
+    function GriddedUrls(config) {
+        this.config = config;
+        this.geoServerUrl = config.geoServerRoot;
+        this.wmsBaseUrl = this.geoServerUrl + "/wms";
+        this.wmsCapabilitiesUrl = this.wmsBaseUrl + "?service=wms&version=" + WMS_VERSION + "&request=GetCapabilities";
+    }
+    return GriddedUrls;
+}());
+GriddedUrls = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
+    __param(0, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__common__["f" /* NPN_CONFIGURATION */])),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__common__["i" /* NpnConfiguration */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__common__["i" /* NpnConfiguration */]) === "function" && _a || Object])
+], GriddedUrls);
+
+var _a;
 //# sourceMappingURL=gridded-common.js.map
 
 /***/ }),
@@ -1068,9 +1095,10 @@ var WMS_CAPABILITIES_URL = WMS_BASE_URL + "?service=wms&version=" + WMS_VERSION 
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__date_extent_util_service__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/date-extent-util.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__wms_map_legend_component__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/wms-map-legend.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__wms_map_opacity_control_component__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/wms-map-opacity-control.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__pipes__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/pipes.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__gridded_common__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/gridded-common.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__pipes__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/pipes.ts");
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__wms_map_legend__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/wms-map-legend.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__wms_map_legend__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/wms-map-legend.ts");
 /* unused harmony namespace reexport */
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_8__wms_map_legend_service__["a"]; });
 /* unused harmony reexport WmsMapSupportsOpacity */
@@ -1080,6 +1108,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -1119,11 +1148,12 @@ NpnGriddedModule = __decorate([
         providers: [
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["c" /* DatePipe */], __WEBPACK_IMPORTED_MODULE_1__angular_common__["d" /* DecimalPipe */],
             __WEBPACK_IMPORTED_MODULE_10__date_extent_util_service__["a" /* DateExtentUtil */],
-            __WEBPACK_IMPORTED_MODULE_13__pipes__["f" /* LegendGddUnitsPipe */], __WEBPACK_IMPORTED_MODULE_13__pipes__["a" /* AgddDefaultTodayElevationPipe */], __WEBPACK_IMPORTED_MODULE_13__pipes__["d" /* LegendAgddAnomalyPipe */],
-            __WEBPACK_IMPORTED_MODULE_13__pipes__["b" /* AgddDefaultTodayTimePipe */], __WEBPACK_IMPORTED_MODULE_13__pipes__["g" /* LegendSixAnomalyPipe */], __WEBPACK_IMPORTED_MODULE_13__pipes__["e" /* LegendDoyPipe */], __WEBPACK_IMPORTED_MODULE_13__pipes__["c" /* ExtentDatesPipe */],
+            __WEBPACK_IMPORTED_MODULE_14__pipes__["f" /* LegendGddUnitsPipe */], __WEBPACK_IMPORTED_MODULE_14__pipes__["a" /* AgddDefaultTodayElevationPipe */], __WEBPACK_IMPORTED_MODULE_14__pipes__["d" /* LegendAgddAnomalyPipe */],
+            __WEBPACK_IMPORTED_MODULE_14__pipes__["b" /* AgddDefaultTodayTimePipe */], __WEBPACK_IMPORTED_MODULE_14__pipes__["g" /* LegendSixAnomalyPipe */], __WEBPACK_IMPORTED_MODULE_14__pipes__["e" /* LegendDoyPipe */], __WEBPACK_IMPORTED_MODULE_14__pipes__["c" /* ExtentDatesPipe */],
             __WEBPACK_IMPORTED_MODULE_6__wms_pipe_factory_service__["a" /* WmsPipeFactory */],
             __WEBPACK_IMPORTED_MODULE_7__wms_map_layer_service__["a" /* WmsMapLayerService */],
-            __WEBPACK_IMPORTED_MODULE_8__wms_map_legend_service__["a" /* WmsMapLegendService */]
+            __WEBPACK_IMPORTED_MODULE_8__wms_map_legend_service__["a" /* WmsMapLegendService */],
+            __WEBPACK_IMPORTED_MODULE_13__gridded_common__["c" /* GriddedUrls */]
         ]
     })
 ], NpnGriddedModule);
@@ -1350,9 +1380,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 var DEEP_COPY = function (o) { return JSON.parse(JSON.stringify(o)); };
 var WmsMapLayerService = (function () {
-    function WmsMapLayerService(serviceUtils, dateExtentUtil) {
+    function WmsMapLayerService(serviceUtils, dateExtentUtil, urls) {
         this.serviceUtils = serviceUtils;
         this.dateExtentUtil = dateExtentUtil;
+        this.urls = urls;
     }
     WmsMapLayerService.prototype.getLayers = function (map) {
         var _this = this;
@@ -1362,7 +1393,7 @@ var WmsMapLayerService = (function () {
                 var copy = DEEP_COPY(definitions);
                 copy.categories.forEach(function (cat) {
                     // replace layer definitions with actual layers
-                    cat.layers = cat.layers.map(function (l) { return new __WEBPACK_IMPORTED_MODULE_5__wms_map_layer__["a" /* WmsMapLayer */](map, l); });
+                    cat.layers = cat.layers.map(function (l) { return new __WEBPACK_IMPORTED_MODULE_5__wms_map_layer__["a" /* WmsMapLayer */](map, l, _this.urls.wmsBaseUrl); });
                 });
                 resolve(copy);
             })
@@ -1372,7 +1403,7 @@ var WmsMapLayerService = (function () {
     WmsMapLayerService.prototype.getLayerDefinitions = function () {
         var _this = this;
         function mergeLayersIntoConfig(wms_layer_defs) {
-            var result = DEEP_COPY(__WEBPACK_IMPORTED_MODULE_4__gridded_common__["c" /* MAP_LAYERS */]), base_description = result.description;
+            var result = DEEP_COPY(__WEBPACK_IMPORTED_MODULE_4__gridded_common__["d" /* MAP_LAYERS */]), base_description = result.description;
             result.categories.forEach(function (category) {
                 // layers can inherit config like filters (if all in common) from
                 // the base category
@@ -1392,7 +1423,7 @@ var WmsMapLayerService = (function () {
                 resolve(_this.layerDefs);
             }
             else {
-                _this.serviceUtils.cachedGet(__WEBPACK_IMPORTED_MODULE_4__gridded_common__["e" /* WMS_CAPABILITIES_URL */], null, true /*as text*/)
+                _this.serviceUtils.cachedGet(_this.urls.wmsCapabilitiesUrl, null, true /*as text*/)
                     .then(function (xml) {
                     var wms_capabilities = __WEBPACK_IMPORTED_MODULE_1_jquery__(__WEBPACK_IMPORTED_MODULE_1_jquery__["parseXML"](xml));
                     console.debug('WmsMapLayerService:capabilities', wms_capabilities);
@@ -1501,10 +1532,10 @@ var WmsMapLayerService = (function () {
 }());
 WmsMapLayerService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__common__["j" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__common__["j" /* NpnServiceUtils */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__date_extent_util_service__["a" /* DateExtentUtil */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__date_extent_util_service__["a" /* DateExtentUtil */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__common__["j" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__common__["j" /* NpnServiceUtils */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__date_extent_util_service__["a" /* DateExtentUtil */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__date_extent_util_service__["a" /* DateExtentUtil */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__gridded_common__["c" /* GriddedUrls */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__gridded_common__["c" /* GriddedUrls */]) === "function" && _c || Object])
 ], WmsMapLayerService);
 
-var _a, _b;
+var _a, _b, _c;
 //# sourceMappingURL=wms-map-layer.service.js.map
 
 /***/ }),
@@ -1530,10 +1561,11 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 // this will compile but is useless...
 function $filter(name) { }
 var WmsMapLayer = (function () {
-    function WmsMapLayer(map, layer_def) {
+    function WmsMapLayer(map, layer_def, wmsBaseUrl) {
         var _this = this;
         this.map = map;
         this.layer_def = layer_def;
+        this.wmsBaseUrl = wmsBaseUrl;
         if (layer_def.extent_values_filter) {
             console.debug('layer ' + layer_def.name + ' has an extent_values_filter, processing', layer_def.extent_values_filter);
             var valuesFilter = $filter(layer_def.extent_values_filter.name), extentValues = layer_def.extent.values.map(function (e) { return e.value; }), filterArgs = [extentValues].concat(layer_def.extent_values_filter.args || []), filteredValues_1;
@@ -1569,7 +1601,7 @@ var WmsMapLayer = (function () {
                     args.sld_body = _this.sldBody;
                 }
                 var all_args = __assign({}, base, _this.wmsArgs, args);
-                return __WEBPACK_IMPORTED_MODULE_0__gridded_common__["d" /* WMS_BASE_URL */] + '?' + encodeHttpParams(all_args);
+                return _this.wmsBaseUrl + '?' + encodeHttpParams(all_args);
             },
             tileSize: new google.maps.Size(__WEBPACK_IMPORTED_MODULE_0__gridded_common__["b" /* BOX_SIZE */], __WEBPACK_IMPORTED_MODULE_0__gridded_common__["b" /* BOX_SIZE */]),
             //isPng: true,
@@ -1832,10 +1864,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var WmsMapLegendService = (function () {
-    function WmsMapLegendService(wmsPipeFactory, serviceUtils, layerService) {
+    function WmsMapLegendService(wmsPipeFactory, serviceUtils, layerService, urls) {
         this.wmsPipeFactory = wmsPipeFactory;
         this.serviceUtils = serviceUtils;
         this.layerService = layerService;
+        this.urls = urls;
         this.legends = {};
     }
     WmsMapLegendService.prototype.getLegend = function (layerName) {
@@ -1849,10 +1882,10 @@ var WmsMapLegendService = (function () {
                 if (!layerDefinition) {
                     return reject("layer definition for " + layerName + " not found.");
                 }
-                _this.serviceUtils.cachedGet(__WEBPACK_IMPORTED_MODULE_6__gridded_common__["d" /* WMS_BASE_URL */], {
+                _this.serviceUtils.cachedGet(_this.urls.wmsBaseUrl, {
                     service: 'wms',
                     request: 'GetStyles',
-                    version: __WEBPACK_IMPORTED_MODULE_6__gridded_common__["f" /* WMS_VERSION */],
+                    version: __WEBPACK_IMPORTED_MODULE_6__gridded_common__["e" /* WMS_VERSION */],
                     layers: layerName
                 }, true /* as text*/)
                     .then(function (xml) {
@@ -1874,10 +1907,10 @@ var WmsMapLegendService = (function () {
 }());
 WmsMapLegendService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__wms_pipe_factory_service__["a" /* WmsPipeFactory */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__wms_pipe_factory_service__["a" /* WmsPipeFactory */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__common__["j" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__common__["j" /* NpnServiceUtils */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__wms_map_layer_service__["a" /* WmsMapLayerService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__wms_map_layer_service__["a" /* WmsMapLayerService */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__wms_pipe_factory_service__["a" /* WmsPipeFactory */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__wms_pipe_factory_service__["a" /* WmsPipeFactory */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__common__["j" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__common__["j" /* NpnServiceUtils */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__wms_map_layer_service__["a" /* WmsMapLayerService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__wms_map_layer_service__["a" /* WmsMapLayerService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_6__gridded_common__["c" /* GriddedUrls */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__gridded_common__["c" /* GriddedUrls */]) === "function" && _d || Object])
 ], WmsMapLegendService);
 
-var _a, _b, _c;
+var _a, _b, _c, _d;
 //# sourceMappingURL=wms-map-legend.service.js.map
 
 /***/ }),
