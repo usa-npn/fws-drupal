@@ -2126,7 +2126,7 @@ var _a, _b, _c, _d, _e, _f, _g;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return NpnLibModule; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return NpnLibModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__("../../../platform-browser/@angular/platform-browser.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
@@ -2139,17 +2139,19 @@ var _a, _b, _c, _d, _e, _f, _g;
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_5__common__["e"]; });
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "f", function() { return __WEBPACK_IMPORTED_MODULE_5__common__["f"]; });
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "h", function() { return __WEBPACK_IMPORTED_MODULE_5__common__["g"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "i", function() { return __WEBPACK_IMPORTED_MODULE_5__common__["h"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "n", function() { return __WEBPACK_IMPORTED_MODULE_5__common__["m"]; });
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["a"]; });
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["b"]; });
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["c"]; });
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "g", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["d"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "j", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["e"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "k", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["f"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "l", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["g"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "m", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["h"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "n", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["i"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "o", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["j"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "p", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["k"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "k", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["e"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "l", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["f"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "m", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["g"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "o", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["h"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "p", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["i"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "q", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["j"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "r", function() { return __WEBPACK_IMPORTED_MODULE_3__visualizations__["k"]; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7852,22 +7854,24 @@ webpackEmptyAsyncContext.id = "../../../../../src/$$_gendir lazy recursive";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__ = __webpack_require__("../../../../../../../../../../../../npn_common/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__findings_component__ = __webpack_require__("../../../../../src/app/findings.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__refuge_dashboard_component__ = __webpack_require__("../../../../../src/app/refuge-dashboard.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__new_visualization_dialog_component__ = __webpack_require__("../../../../../src/app/new-visualization-dialog.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__refuge_service__ = __webpack_require__("../../../../../src/app/refuge.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_platform_browser_animations__ = __webpack_require__("../../../platform-browser/@angular/platform-browser/animations.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__node_modules_npn_common_environments_environment__ = __webpack_require__("../../../../../../../../../../../../npn_common/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__agm_core__ = __webpack_require__("../../../../@agm/core/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_ng2_dnd__ = __webpack_require__("../../../../ng2-dnd/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__focal_species_component__ = __webpack_require__("../../../../../src/app/focal-species.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__findings_component__ = __webpack_require__("../../../../../src/app/findings.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__refuge_dashboard_component__ = __webpack_require__("../../../../../src/app/refuge-dashboard.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__new_visualization_dialog_component__ = __webpack_require__("../../../../../src/app/new-visualization-dialog.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__refuge_service__ = __webpack_require__("../../../../../src/app/refuge.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__angular_platform_browser_animations__ = __webpack_require__("../../../platform-browser/@angular/platform-browser/animations.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__node_modules_npn_common_environments_environment__ = __webpack_require__("../../../../../../../../../../../../npn_common/environments/environment.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__agm_core__ = __webpack_require__("../../../../@agm/core/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_ng2_dnd__ = __webpack_require__("../../../../ng2-dnd/index.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -7890,37 +7894,39 @@ var AppModule = (function () {
 AppModule = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["L" /* NgModule */])({
         declarations: [
-            __WEBPACK_IMPORTED_MODULE_5__refuge_dashboard_component__["a" /* RefugeDashboardComponent */],
-            __WEBPACK_IMPORTED_MODULE_4__findings_component__["a" /* FindingsComponent */],
-            __WEBPACK_IMPORTED_MODULE_6__new_visualization_dialog_component__["a" /* NewVisualizationBuilderComponent */],
-            __WEBPACK_IMPORTED_MODULE_6__new_visualization_dialog_component__["c" /* VisualizationScopeSelectionComponent */],
-            __WEBPACK_IMPORTED_MODULE_6__new_visualization_dialog_component__["b" /* NewVisualizationDialogComponent */]
+            __WEBPACK_IMPORTED_MODULE_6__refuge_dashboard_component__["a" /* RefugeDashboardComponent */],
+            __WEBPACK_IMPORTED_MODULE_4__focal_species_component__["a" /* FocalSpeciesComponent */],
+            __WEBPACK_IMPORTED_MODULE_5__findings_component__["a" /* FindingsComponent */],
+            __WEBPACK_IMPORTED_MODULE_7__new_visualization_dialog_component__["a" /* NewVisualizationBuilderComponent */],
+            __WEBPACK_IMPORTED_MODULE_7__new_visualization_dialog_component__["c" /* VisualizationScopeSelectionComponent */],
+            __WEBPACK_IMPORTED_MODULE_7__new_visualization_dialog_component__["b" /* NewVisualizationDialogComponent */]
         ],
         entryComponents: [
-            __WEBPACK_IMPORTED_MODULE_6__new_visualization_dialog_component__["b" /* NewVisualizationDialogComponent */]
+            __WEBPACK_IMPORTED_MODULE_7__new_visualization_dialog_component__["b" /* NewVisualizationDialogComponent */]
         ],
         imports: [
-            __WEBPACK_IMPORTED_MODULE_9__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
+            __WEBPACK_IMPORTED_MODULE_10__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
-            __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["i" /* NpnLibModule */],
-            __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["p" /* VisualizationsModule */],
+            __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["j" /* NpnLibModule */],
+            __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["r" /* VisualizationsModule */],
+            __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["i" /* NpnCommonModule */],
             __WEBPACK_IMPORTED_MODULE_2__angular_http__["c" /* HttpModule */],
-            __WEBPACK_IMPORTED_MODULE_8__angular_forms__["e" /* FormsModule */], __WEBPACK_IMPORTED_MODULE_8__angular_forms__["j" /* ReactiveFormsModule */],
-            __WEBPACK_IMPORTED_MODULE_10__angular_material__["f" /* MatCheckboxModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["l" /* MatGridListModule */],
-            __WEBPACK_IMPORTED_MODULE_10__angular_material__["e" /* MatCardModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["n" /* MatListModule */],
-            __WEBPACK_IMPORTED_MODULE_10__angular_material__["x" /* MatTooltipModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["u" /* MatSnackBarModule */],
-            __WEBPACK_IMPORTED_MODULE_10__angular_material__["h" /* MatDialogModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["v" /* MatStepperModule */],
-            __WEBPACK_IMPORTED_MODULE_10__angular_material__["c" /* MatButtonModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["q" /* MatRadioModule */],
-            __WEBPACK_IMPORTED_MODULE_10__angular_material__["p" /* MatProgressSpinnerModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["r" /* MatSelectModule */],
-            __WEBPACK_IMPORTED_MODULE_10__angular_material__["m" /* MatInputModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["k" /* MatFormFieldModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["w" /* MatTabsModule */], __WEBPACK_IMPORTED_MODULE_10__angular_material__["d" /* MatButtonToggleModule */],
-            __WEBPACK_IMPORTED_MODULE_12__agm_core__["a" /* AgmCoreModule */].forRoot({
-                apiKey: __WEBPACK_IMPORTED_MODULE_11__node_modules_npn_common_environments_environment__["a" /* environment */].googleMapsApiKey
+            __WEBPACK_IMPORTED_MODULE_9__angular_forms__["e" /* FormsModule */], __WEBPACK_IMPORTED_MODULE_9__angular_forms__["j" /* ReactiveFormsModule */],
+            __WEBPACK_IMPORTED_MODULE_11__angular_material__["f" /* MatCheckboxModule */], __WEBPACK_IMPORTED_MODULE_11__angular_material__["l" /* MatGridListModule */],
+            __WEBPACK_IMPORTED_MODULE_11__angular_material__["e" /* MatCardModule */], __WEBPACK_IMPORTED_MODULE_11__angular_material__["n" /* MatListModule */],
+            __WEBPACK_IMPORTED_MODULE_11__angular_material__["x" /* MatTooltipModule */], __WEBPACK_IMPORTED_MODULE_11__angular_material__["u" /* MatSnackBarModule */],
+            __WEBPACK_IMPORTED_MODULE_11__angular_material__["h" /* MatDialogModule */], __WEBPACK_IMPORTED_MODULE_11__angular_material__["v" /* MatStepperModule */],
+            __WEBPACK_IMPORTED_MODULE_11__angular_material__["c" /* MatButtonModule */], __WEBPACK_IMPORTED_MODULE_11__angular_material__["q" /* MatRadioModule */],
+            __WEBPACK_IMPORTED_MODULE_11__angular_material__["p" /* MatProgressSpinnerModule */], __WEBPACK_IMPORTED_MODULE_11__angular_material__["r" /* MatSelectModule */],
+            __WEBPACK_IMPORTED_MODULE_11__angular_material__["m" /* MatInputModule */], __WEBPACK_IMPORTED_MODULE_11__angular_material__["k" /* MatFormFieldModule */], __WEBPACK_IMPORTED_MODULE_11__angular_material__["w" /* MatTabsModule */], __WEBPACK_IMPORTED_MODULE_11__angular_material__["d" /* MatButtonToggleModule */],
+            __WEBPACK_IMPORTED_MODULE_13__agm_core__["a" /* AgmCoreModule */].forRoot({
+                apiKey: __WEBPACK_IMPORTED_MODULE_12__node_modules_npn_common_environments_environment__["a" /* environment */].googleMapsApiKey
             }),
-            __WEBPACK_IMPORTED_MODULE_13_ng2_dnd__["a" /* DndModule */].forRoot()
+            __WEBPACK_IMPORTED_MODULE_14_ng2_dnd__["a" /* DndModule */].forRoot()
         ],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_5__refuge_dashboard_component__["a" /* RefugeDashboardComponent */]],
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_6__refuge_dashboard_component__["a" /* RefugeDashboardComponent */]],
         providers: [
-            __WEBPACK_IMPORTED_MODULE_7__refuge_service__["b" /* RefugeService */],
+            __WEBPACK_IMPORTED_MODULE_8__refuge_service__["b" /* RefugeService */],
             { provide: __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["e" /* NPN_BASE_HREF */], useValue: npn_base_href },
             { provide: __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["f" /* NPN_CONFIGURATION */], useValue: npn_configuration }
         ]
@@ -8160,11 +8166,62 @@ FindingsComponent = __decorate([
         styles: [__webpack_require__("../../../../../src/app/findings.component.scss")]
     }),
     __param(4, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["R" /* Optional */])()), __param(4, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Inject */])(__WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["e" /* NPN_BASE_HREF */])),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__refuge_service__["b" /* RefugeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__refuge_service__["b" /* RefugeService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["o" /* VisualizationSelectionFactory */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["o" /* VisualizationSelectionFactory */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialog */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["t" /* MatSnackBar */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["t" /* MatSnackBar */]) === "function" && _e || Object, String])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__refuge_service__["b" /* RefugeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__refuge_service__["b" /* RefugeService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["q" /* VisualizationSelectionFactory */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["q" /* VisualizationSelectionFactory */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialog */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["t" /* MatSnackBar */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["t" /* MatSnackBar */]) === "function" && _e || Object, String])
 ], FindingsComponent);
 
 var _a, _b, _c, _d, _e;
 //# sourceMappingURL=findings.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/focal-species.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FocalSpeciesComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_npn_common__ = __webpack_require__("../../../../../../../../../../../../npn_common/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__refuge_service__ = __webpack_require__("../../../../../src/app/refuge.service.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var FocalSpeciesComponent = (function () {
+    function FocalSpeciesComponent(speciesService) {
+        this.speciesService = speciesService;
+    }
+    FocalSpeciesComponent.prototype.ngOnChanges = function (changes) {
+        var _this = this;
+        if (changes.refuge && changes.refuge.currentValue) {
+            this.speciesService.getAllSpecies({ 'network_id[0]': changes.refuge.currentValue.network_id })
+                .then(function (list) { return _this.speciesList = list; })
+                .catch(function (e) { return console.error(e); });
+        }
+    };
+    return FocalSpeciesComponent;
+}());
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])(),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__refuge_service__["a" /* Refuge */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__refuge_service__["a" /* Refuge */]) === "function" && _a || Object)
+], FocalSpeciesComponent.prototype, "refuge", void 0);
+FocalSpeciesComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'focal-species',
+        template: "\n    <div *ngIf=\"refuge\">\n        <h3>Focal Species for {{refuge.title}}</h3>\n        <ul *ngIf=\"speciesList && speciesList.length\">\n            <li *ngFor=\"let s of speciesList\">\n            <a target=\"_blank\" [href]=\"'https://usanpn.org/nn/'+s.genus+'_'+s.species\">{{s | speciesTitle:'common-name'}} ({{s | speciesTitle:'scientific-name'}})</a>\n            </li>\n        </ul>\n    </div>\n    "
+    }),
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__node_modules_npn_common__["n" /* SpeciesService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__node_modules_npn_common__["n" /* SpeciesService */]) === "function" && _b || Object])
+], FocalSpeciesComponent);
+
+var _a, _b;
+//# sourceMappingURL=focal-species.component.js.map
 
 /***/ }),
 
@@ -8220,7 +8277,7 @@ var NewVisualizationDialogComponent = (function () {
         // introspection.  VisSelection has class extensions Network/StationAwareVisSelection
         // that selections can extend, if use cases get more complex then may instead need
         // to use the `'stationIds' in s` kind of logic instead.
-        this.stationAware = s instanceof __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["m" /* StationAwareVisSelection */]; // || 'stationIds' in s;
+        this.stationAware = s instanceof __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["o" /* StationAwareVisSelection */]; // || 'stationIds' in s;
         this.showVis = !this.stationAware ? 1 : 0;
         if (s instanceof __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["g" /* NetworkAwareVisSelection */]) {
             s.networkIds = [this.refuge.network_id];
@@ -8264,16 +8321,16 @@ var NewVisualizationBuilderComponent = (function () {
         if (s instanceof __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["a" /* ActivityCurvesSelection */]) {
             this.activity = s;
         }
-        else if (s instanceof __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["l" /* ScatterPlotSelection */]) {
+        else if (s instanceof __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["m" /* ScatterPlotSelection */]) {
             this.scatter = s;
         }
         else if (s instanceof __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["c" /* CalendarSelection */]) {
             this.calendar = s;
         }
-        else if (s instanceof __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["k" /* ObserverActivitySelection */]) {
+        else if (s instanceof __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["l" /* ObserverActivitySelection */]) {
             this.observer = s;
         }
-        else if (s instanceof __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["j" /* ObservationFrequencySelection */]) {
+        else if (s instanceof __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["k" /* ObservationFrequencySelection */]) {
             this.observationFreq = s;
         }
         else if (s instanceof __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["d" /* ClippedWmsMapSelection */]) {
@@ -8286,7 +8343,7 @@ var NewVisualizationBuilderComponent = (function () {
 }());
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])(),
-    __metadata("design:type", typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["n" /* VisSelection */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["n" /* VisSelection */]) === "function" && _c || Object)
+    __metadata("design:type", typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["p" /* VisSelection */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["p" /* VisSelection */]) === "function" && _c || Object)
 ], NewVisualizationBuilderComponent.prototype, "selection", void 0);
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])(),
@@ -8340,7 +8397,7 @@ var VisualizationScopeSelectionComponent = (function () {
 }());
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])(),
-    __metadata("design:type", typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["n" /* VisSelection */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["n" /* VisSelection */]) === "function" && _e || Object)
+    __metadata("design:type", typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["p" /* VisSelection */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["p" /* VisSelection */]) === "function" && _e || Object)
 ], VisualizationScopeSelectionComponent.prototype, "selection", void 0);
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])(),
@@ -8440,7 +8497,7 @@ __decorate([
 RefugeDashboardComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'refuge-dashboard',
-        template: "\n  <mat-tab-group class=\"refuge-dashboard-tabs\" (selectedTabChange)=\"selectedTabChange($event)\">\n    <mat-tab label=\"Focal Species\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label focal-species\">\n                <label>Focal Species</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderFocalSpecies\">\n            <h3>Focal Species</h3>\n            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id facilisis ex. Etiam mattis dictum purus a feugiat. Donec laoreet, enim ac sodales ornare, lacus quam ultricies turpis, ut malesuada dui erat in augue. Aenean massa nisi, porttitor et lacus ac, gravida pulvinar quam. Donec pulvinar erat a urna blandit, quis interdum tortor porttitor. Mauris erat lorem, pretium id vehicula vitae, pretium ac lorem. Nullam a augue tortor. Praesent malesuada, ipsum nec interdum aliquam, turpis sapien pharetra diam, a commodo mi felis nec elit. Fusce rutrum placerat malesuada. Donec hendrerit massa at eros tincidunt bibendum. Duis fermentum augue quis ex lacinia, quis pharetra turpis cursus. Donec ullamcorper elementum nibh sed tristique. Donec placerat ligula eget tortor fringilla lacinia.</p>\n        </div>\n    </mat-tab>\n\n    <mat-tab label=\"What we're finding\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label findings\">\n                <label>What we're finding</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderVisualizations\">\n            <refuge-findings *ngIf=\"refuge\" [refuge]=\"refuge\" [userIsAdmin]=\"userIsAdmin\"></refuge-findings>\n        </div>\n    </mat-tab>\n\n    <mat-tab label=\"Resources for observers\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label resources\">\n                <label>Resources for observers</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderResources\">\n            <h3>Resources for observers</h3>\n            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id facilisis ex. Etiam mattis dictum purus a feugiat. Donec laoreet, enim ac sodales ornare, lacus quam ultricies turpis, ut malesuada dui erat in augue. Aenean massa nisi, porttitor et lacus ac, gravida pulvinar quam. Donec pulvinar erat a urna blandit, quis interdum tortor porttitor. Mauris erat lorem, pretium id vehicula vitae, pretium ac lorem. Nullam a augue tortor. Praesent malesuada, ipsum nec interdum aliquam, turpis sapien pharetra diam, a commodo mi felis nec elit. Fusce rutrum placerat malesuada. Donec hendrerit massa at eros tincidunt bibendum. Duis fermentum augue quis ex lacinia, quis pharetra turpis cursus. Donec ullamcorper elementum nibh sed tristique. Donec placerat ligula eget tortor fringilla lacinia.</p>\n        </div>\n    </mat-tab>\n  </mat-tab-group>\n  ",
+        template: "\n  <mat-tab-group class=\"refuge-dashboard-tabs\" (selectedTabChange)=\"selectedTabChange($event)\">\n    <mat-tab label=\"Focal Species\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label focal-species\">\n                <label>Focal Species</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderFocalSpecies\">\n            <focal-species [refuge]=\"refuge\"></focal-species>\n        </div>\n    </mat-tab>\n\n    <mat-tab label=\"What we're finding\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label findings\">\n                <label>What we're finding</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderVisualizations\">\n            <refuge-findings *ngIf=\"refuge\" [refuge]=\"refuge\" [userIsAdmin]=\"userIsAdmin\"></refuge-findings>\n        </div>\n    </mat-tab>\n\n    <mat-tab label=\"Resources for observers\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label resources\">\n                <label>Resources for observers</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderResources\">\n            <h3>Resources for observers</h3>\n            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id facilisis ex. Etiam mattis dictum purus a feugiat. Donec laoreet, enim ac sodales ornare, lacus quam ultricies turpis, ut malesuada dui erat in augue. Aenean massa nisi, porttitor et lacus ac, gravida pulvinar quam. Donec pulvinar erat a urna blandit, quis interdum tortor porttitor. Mauris erat lorem, pretium id vehicula vitae, pretium ac lorem. Nullam a augue tortor. Praesent malesuada, ipsum nec interdum aliquam, turpis sapien pharetra diam, a commodo mi felis nec elit. Fusce rutrum placerat malesuada. Donec hendrerit massa at eros tincidunt bibendum. Duis fermentum augue quis ex lacinia, quis pharetra turpis cursus. Donec ullamcorper elementum nibh sed tristique. Donec placerat ligula eget tortor fringilla lacinia.</p>\n        </div>\n    </mat-tab>\n  </mat-tab-group>\n  ",
         styles: [__webpack_require__("../../../../../src/app/refuge-dashboard.component.scss")]
     }),
     __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__refuge_service__["b" /* RefugeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__refuge_service__["b" /* RefugeService */]) === "function" && _c || Object])
@@ -8556,7 +8613,7 @@ var RefugeService = (function () {
 }());
 RefugeService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["b" /* CacheService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["b" /* CacheService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["o" /* VisualizationSelectionFactory */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["o" /* VisualizationSelectionFactory */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["b" /* CacheService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["b" /* CacheService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["q" /* VisualizationSelectionFactory */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["q" /* VisualizationSelectionFactory */]) === "function" && _c || Object])
 ], RefugeService);
 
 var Refuge = (function () {
