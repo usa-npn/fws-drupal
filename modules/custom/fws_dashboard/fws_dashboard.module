@@ -193,12 +193,14 @@ function _fws_dashboard_refuge_s11n($refuge) {
     $selections = $refuge->field_saved_visualizations->value();
     $path_alias = drupal_get_path_alias('node/'.$refuge->nid->value());
     $url_opts = array('absolute'=>TRUE);
+    $resources = $refuge->field_resources_for_observers->value();
     $return = array(
          'id' => $path_alias,
          'title' => $refuge->label(),
          'network_id' => intval($refuge->field_network_id->value()),
          'boundary_id' => $refuge->field_refuge_boundary->value(),
          'selections' => $selections ? drupal_json_decode($selections) : array(),
+         'resources' => $resources ? $resources['value'] : NULL,
          'links' => array(
              'self' => url(REFUGE_API.'/'.$path_alias,$url_opts),
              'dashboard' => url(REFUGE_DASHBOARD.'/'.$path_alias,$url_opts),
