@@ -6443,6 +6443,7 @@ var ScatterPlotSelection = (function (_super) {
     __extends(ScatterPlotSelection, _super);
     function ScatterPlotSelection() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.start = 2010;
         _this.regressionLines = false;
         _this.axis = AXIS[0];
         _this.plots = [];
