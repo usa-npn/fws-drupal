@@ -4144,11 +4144,11 @@ var ClippedWmsMapSelection = (function (_super) {
                     _this.features = map.data.addGeoJson(geoJson);
                     map.data.setStyle(function (feature) {
                         return {
-                            strokeColor: '#FF0000',
+                            strokeColor: '#000000',
                             strokeOpacity: 0.8,
                             strokeWeight: 2,
                             fillColor: '#FF0000',
-                            fillOpacity: 0.15,
+                            fillOpacity: 0.0,
                         };
                     });
                 }
