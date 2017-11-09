@@ -5452,7 +5452,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
-// TODO is this always network wide or can they select specific stations
 var ObservationFrequencySelection = (function (_super) {
     __extends(ObservationFrequencySelection, _super);
     function ObservationFrequencySelection(serviceUtils, networkService) {
@@ -5462,6 +5461,17 @@ var ObservationFrequencySelection = (function (_super) {
         _this.dataCnt = 0;
         return _this;
     }
+    Object.defineProperty(ObservationFrequencySelection.prototype, "year", {
+        get: function () {
+            return this._year;
+        },
+        set: function (y) {
+            this._year = y;
+            delete this.defaultStation; // reset default station if there is one.
+        },
+        enumerable: true,
+        configurable: true
+    });
     ObservationFrequencySelection.prototype.isValid = function () {
         return !!this.year && this.networkIds.length === 1;
     };
@@ -5473,12 +5483,16 @@ var ObservationFrequencySelection = (function (_super) {
         return this.serviceUtils.cachedGet(url, params);
     };
     return ObservationFrequencySelection;
-}(__WEBPACK_IMPORTED_MODULE_0__vis_selection__["g" /* StationAwareVisSelection */]));
+}(__WEBPACK_IMPORTED_MODULE_0__vis_selection__["c" /* NetworkAwareVisSelection */]));
 
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__vis_selection__["j" /* selectionProperty */])(),
     __metadata("design:type", Number)
-], ObservationFrequencySelection.prototype, "year", void 0);
+], ObservationFrequencySelection.prototype, "_year", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__vis_selection__["j" /* selectionProperty */])(),
+    __metadata("design:type", Number)
+], ObservationFrequencySelection.prototype, "defaultStation", void 0);
 //# sourceMappingURL=observation-frequency-selection.js.map
 
 /***/ }),
@@ -5486,7 +5500,7 @@ __decorate([
 /***/ "../../../../../../../../../../../../npn_common/visualizations/observation-frequency/observation-frequency.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"vis-container\">\n    <div class=\"vis-working\" *ngIf=\"selection.working\">\n        <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n    </div>\n    <div class=\"chart-container\">\n        <visualization-download *ngIf=\"!thumbnail\" svgWrapperId=\"{{id}}\" filename=\"{{filename}}\"></visualization-download>\n        <div [class]=\"clazz\" id=\"{{id}}\" [hidden]=\"thumbnailSrc\"><svg class=\"svg-visualization\"></svg></div>\n        <div [hidden]=\"!thumbnailSrc\">\n            <canvas class=\"thumbnail-canvas\" style=\"display: none;\"></canvas>\n            <img class=\"thumbnail-image\" />\n        </div>\n    </div>\n    <observation-frequency-station-control *ngIf=\"!thumbnail && stations && stations.length > 1\" [stations]=\"stations\" [(station)]=\"station\" (onStationChange)=\"redrawSvg()\"></observation-frequency-station-control>\n    <div *ngIf=\"disclaimer && !thumbnail\" class=\"vis-disclaimer\">{{disclaimer}}</div>\n</div>\n<!--pre *ngIf=\"record\">{{record | json}}</pre-->\n"
+module.exports = "<div class=\"vis-container\">\n    <div class=\"vis-working\" *ngIf=\"selection.working\">\n        <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n    </div>\n    <div class=\"chart-container\">\n        <visualization-download *ngIf=\"!thumbnail\" svgWrapperId=\"{{id}}\" filename=\"{{filename}}\"></visualization-download>\n        <div [class]=\"clazz\" id=\"{{id}}\" [hidden]=\"thumbnailSrc\"><svg class=\"svg-visualization\"></svg></div>\n        <div [hidden]=\"!thumbnailSrc\">\n            <canvas class=\"thumbnail-canvas\" style=\"display: none;\"></canvas>\n            <img class=\"thumbnail-image\" />\n        </div>\n    </div>\n    <observation-frequency-station-control *ngIf=\"!thumbnail && stations && stations.length > 1\" [stations]=\"stations\" [(station)]=\"station\" (onStationChange)=\"redrawSvg()\"></observation-frequency-station-control>\n    <div *ngIf=\"stations && stations.length > 1 && selection.editMode\" class=\"vis-disclaimer\">Note: The station selected here will be the initial station shown for visitors.</div>\n</div>\n<!--pre *ngIf=\"record\">{{record | json}}</pre-->\n"
 
 /***/ }),
 
@@ -5548,6 +5562,22 @@ var ObservationFrequencyComponent = (function (_super) {
         _this.margins = __assign({}, __WEBPACK_IMPORTED_MODULE_2__svg_visualization_base_component__["a" /* DEFAULT_MARGINS */], { top: 80, left: 80 });
         return _this;
     }
+    Object.defineProperty(ObservationFrequencyComponent.prototype, "station", {
+        get: function () {
+            return this._station;
+        },
+        set: function (s) {
+            this._station = s;
+            if (this.selection.editMode) {
+                delete this.selection.defaultStation;
+                if (this._station) {
+                    this.selection.defaultStation = this._station.station_id;
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     ObservationFrequencyComponent.prototype.getMonthFormat = function () {
         if (this.sizing && this.sizing.width < 800) {
             return '%b';
@@ -5555,7 +5585,7 @@ var ObservationFrequencyComponent = (function (_super) {
         return '%B';
     };
     ObservationFrequencyComponent.prototype.reset = function () {
-        console.debug('ObservationFrequencyComponent.update');
+        console.debug('ObservationFrequencyComponent.reset');
         _super.prototype.reset.call(this);
         var chart = this.chart, sizing = this.sizing, d3_month_fmt = __WEBPACK_IMPORTED_MODULE_6_d3__["o" /* timeFormat */](this.getMonthFormat()), fontSize = this.baseFontSize();
         this.title = chart.append('g')
@@ -5606,12 +5636,20 @@ var ObservationFrequencyComponent = (function (_super) {
             .catch(this.handleError);
     };
     ObservationFrequencyComponent.prototype.redrawSvg = function () {
+        var _this = this;
         console.debug('ObservationFrequencyComponent.redrawSvg:data', this.data);
-        if (!this.stations) {
+        if (!this.stations || !this.stations.length) {
             return;
         }
         if (!this.station) {
-            this.station = this.stations && this.stations.length ? this.stations[0] : undefined;
+            if (this.selection.defaultStation) {
+                this.station = this.stations.reduce(function (found, s) {
+                    return found || (s.station_id === _this.selection.defaultStation ? s : undefined);
+                }, undefined);
+            }
+            if (!this.station) {
+                this.station = this.stations[0];
+            }
         }
         this.redrawStation();
         this.commonUpdates();
@@ -5707,11 +5745,17 @@ var ObvervationFrequencyStationControlComponent = (function () {
         if (idx > 0) {
             this.station = this.stations[idx - 1];
         }
+        else {
+            this.station = this.stations[this.stations.length - 1]; // loop around to last station
+        }
     };
     ObvervationFrequencyStationControlComponent.prototype.next = function () {
         var idx = this.stations.indexOf(this.station);
         if (idx < this.stations.length - 1) {
             this.station = this.stations[idx + 1];
+        }
+        else {
+            this.station = this.stations[0]; // loop around to the first station.
         }
     };
     return ObvervationFrequencyStationControlComponent;
@@ -5736,7 +5780,7 @@ __decorate([
 ObvervationFrequencyStationControlComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'observation-frequency-station-control',
-        template: "\n    <button mat-button (click)=\"prev()\"\n        [disabled]=\"!stations || !station || stations.indexOf(station) === 0\">&lt; Previous</button>\n    <mat-form-field class=\"station-input\">\n        <mat-select placeholder=\"Station\" [(ngModel)]=\"station\" [disabled]=\"!stations || !stations.length\">\n            <mat-option *ngFor=\"let s of stations\" [value]=\"s\">{{s.station_name}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    <button mat-button (click)=\"next()\"\n        [disabled]=\"!stations || !station || stations.indexOf(station) === stations.length-1\">Next &gt;</button>\n    ",
+        template: "\n    <button mat-button (click)=\"prev()\">&lt; Previous</button>\n    <mat-form-field class=\"station-input\">\n        <mat-select placeholder=\"Station\" [(ngModel)]=\"station\" [disabled]=\"!stations || !stations.length\">\n            <mat-option *ngFor=\"let s of stations\" [value]=\"s\">{{s.station_name}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    <button mat-button (click)=\"next()\">Next &gt;</button>\n    ",
         styles: ["\n        .station-input {\n            width: 300px;\n        }\n    "]
     })
 ], ObvervationFrequencyStationControlComponent);
@@ -7040,7 +7084,17 @@ var SvgVisualizationBaseComponent = (function (_super) {
         this.reset();
         this.redraw();
     };
+    // this used to be in ngAfterViewInit and most time it would succeed from there
+    // but very occasionally ngAfterViewInit would be called BEFORE the underlying
+    // elements exist in the DOM.  No time to understand cleanly why so these selections
+    // are now made whever asking about sizing which is the FIRST thing necessary to
+    // render an SVG visualization so it should be safe.
+    SvgVisualizationBaseComponent.prototype.selectElements = function () {
+        this.visRoot = __WEBPACK_IMPORTED_MODULE_2_d3__["m" /* select */]('#' + this.id);
+        this.svg = this.visRoot.select('svg');
+    };
     SvgVisualizationBaseComponent.prototype.getSizeInfo = function (minWidth) {
+        this.selectElements();
         return _super.prototype.getSizeInfo.call(this, this.minWidth);
     };
     /**
@@ -7075,8 +7129,7 @@ var SvgVisualizationBaseComponent = (function (_super) {
         }
     };
     SvgVisualizationBaseComponent.prototype.ngAfterViewInit = function () {
-        this.visRoot = __WEBPACK_IMPORTED_MODULE_2_d3__["m" /* select */]('#' + this.id);
-        this.svg = this.visRoot.select('svg');
+        this.selectElements();
         // sets up common handlers
         _super.prototype.ngAfterViewInit.call(this);
     };
@@ -7281,6 +7334,10 @@ var VisSelection = (function (_super) {
         _this.meta = {}; // a place for non selection specific info to be held
         _this.debug = false;
         _this.working = false;
+        // this flag is not persisted but can be used by a visualization if it
+        // would like to have a control pick "default state" while the visualization
+        // is being built.
+        _this.editMode = false;
         _this.INVALID_SELECTION = REJECT_INVALID_SELECTION;
         _this.lastEmit = {};
         _this.firstSubscriber = new Promise(function (resolve) {
@@ -8276,6 +8333,8 @@ var NewVisualizationDialogComponent = (function () {
     }
     NewVisualizationDialogComponent.prototype.ngOnInit = function () {
         var s = this.selection;
+        s.editMode = true;
+        //s.debug = true; // uncomment to show the selection for dev purposes
         // NOTE: TS support for interfaces doesn't extend to actual runtime type
         // introspection.  VisSelection has class extensions Network/StationAwareVisSelection
         // that selections can extend, if use cases get more complex then may instead need
