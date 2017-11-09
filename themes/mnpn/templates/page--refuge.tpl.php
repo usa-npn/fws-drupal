@@ -104,7 +104,7 @@ endif; ?>
 
 
 <div id="page-wrapper" class="page-wrapper">
-	<div id="page" class="page">
+	<div id="page" class="page refuge">
 
 		<!-- Header
 		======================================================================================= -->

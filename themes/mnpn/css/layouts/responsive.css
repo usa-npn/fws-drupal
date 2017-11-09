@@ -730,6 +730,12 @@ img::-moz-selection {
 #block-system-main-menu {
   display: none;
 }
+
+.refuge .header-section-2{
+	position:absolute;
+}
+
+
 .show-menu {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-decoration: none;
@@ -1795,6 +1801,12 @@ div.messages .dismiss:hover {
 }
 
 
+.not-front .footer-wrapper{
+	display:none;
+}
+
+
+
 .footer-wrapper a {
   color: #fff;
 }
@@ -2549,6 +2561,23 @@ div.messages .dismiss:hover {
 4. Mobile portrait
 ===========================================================================*/
 @media (max-width: 479px) {
+	/*
+	.mat-tab-labels{
+		flex-wrap:wrap;
+		justify-content:center;
+	}
+	
+	.mat-tab-label{
+		display:block;
+		width:100%;
+	}
+	
+	
+	.rd-tab-label[_ngcontent-c0]::before {
+		position:static;
+		margin-right:10px;
+	}
+	*/
 	
 	#block-superfish-1 .block__title{
 	   	display:none;
