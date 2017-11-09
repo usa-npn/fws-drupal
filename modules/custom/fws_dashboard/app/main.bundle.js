@@ -3386,18 +3386,28 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var THIS_YEAR = (new Date()).getFullYear();
+var VALID_YEARS = (function () {
+    var max = THIS_YEAR + 1, current = 1900, years = [];
+    while (current < max) {
+        years.push(current++);
+    }
+    return years;
+})();
 var CalendarControlComponent = (function () {
     function CalendarControlComponent() {
         this.maxYears = 5;
         this.updateSent = false;
-        this.validStarts = (function () {
-            var max = THIS_YEAR + 1, current = 1900, years = [];
-            while (current < max) {
-                years.push(current++);
-            }
-            return years;
-        })();
     }
+    CalendarControlComponent.prototype.selectableYears = function (y) {
+        var _this = this;
+        if (y) {
+            // validYears including y but excluding any others in the selection
+            return VALID_YEARS.filter(function (yr) {
+                return yr === y || _this.selection.years.indexOf(yr) === -1;
+            });
+        }
+        return VALID_YEARS;
+    };
     CalendarControlComponent.prototype.ngOnInit = function () {
         if (this.selection.years.length === 0) {
             this.addYear();
@@ -3435,7 +3445,11 @@ var CalendarControlComponent = (function () {
         this.updateChange();
     };
     CalendarControlComponent.prototype.addYear = function () {
-        this.selection.years.push(THIS_YEAR);
+        var y = THIS_YEAR;
+        while (this.selection.years.indexOf(y) !== -1) {
+            y--;
+        }
+        this.selection.years.push(y);
         this.updateChange();
     };
     CalendarControlComponent.prototype.removeYear = function (index) {
@@ -3454,7 +3468,7 @@ __decorate([
 CalendarControlComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'calendar-control',
-        template: "\n    <div>\n        <div class=\"year-input-wrapper\" *ngFor=\"let plotYear of selection.years;index as idx\">\n            <mat-form-field class=\"year-input\" >\n                <mat-select placeholder=\"Year\" [(ngModel)]=\"selection.years[idx]\" (change)=\"updateChange()\">\n                    <mat-option *ngFor=\"let y of validStarts\" [value]=\"y\">{{y}}</mat-option>\n                </mat-select>\n            </mat-form-field>\n            <button *ngIf=\"idx > 0\" mat-button class=\"remove-year\" (click)=\"removeYear(idx)\">Remove</button>\n            <button *ngIf=\"selection.years.length < 6 && idx === (selection.years.length-1)\" mat-button class=\"add-year\" (click)=\"addYear()\">Add</button>\n        </div>\n    </div>\n\n    <div class=\"phenophase-input-wrapper\" *ngFor=\"let spi of selection.plots; index as idx\">\n        <species-phenophase-input\n            [(species)]=\"spi.species\" [(phenophase)]=\"spi.phenophase\" [(color)]=\"spi.color\"\n            [selection]=\"selection\"\n            [gatherColor]=\"true\"\n            (onSpeciesChange)=\"updateChange()\"\n            (onPhenophaseChange)=\"updateChange()\"\n            (onColorChange)=\"redrawChange($event)\"></species-phenophase-input>\n        <button *ngIf=\"idx > 0\" mat-button class=\"remove-plot\" (click)=\"removePlot(idx)\">Remove</button>\n        <button *ngIf=\"idx === (selection.plots.length-1)\" mat-button class=\"add-plot\" [disabled]=\"!plotsValid()\" (click)=\"addPlot()\">Add</button>\n    </div>\n\n    <mat-checkbox [(ngModel)]=\"selection.negative\" (change)=\"redrawChange()\">Display negative data</mat-checkbox>\n\n    <label for=\"label-size-input\">Label size\n        <mat-slider id=\"label-size-input\" min=\"0\" max=\"10\" step=\"0.25\" [(ngModel)]=\"selection.fontSizeDelta\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-position-input\">Label position\n        <mat-slider id=\"label-position-input\" min=\"0\" max=\"100\" step=\"1\" [(ngModel)]=\"selection.labelOffset\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-band-size-input\">Band size\n        <mat-slider invert id=\"label-band-size-input\" min=\"0\" max=\"0.95\" step=\"0.05\" [(ngModel)]=\"selection.bandPadding\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n    ",
+        template: "\n    <div>\n        <div class=\"year-input-wrapper\" *ngFor=\"let plotYear of selection.years;index as idx\">\n            <mat-form-field class=\"year-input\">\n                <mat-select placeholder=\"Year {{idx+1}}\" [(ngModel)]=\"selection.years[idx]\" (change)=\"updateChange()\" id=\"year_{{idx}}\">\n                    <mat-option *ngFor=\"let y of selectableYears(selection.years[idx])\" [value]=\"y\">{{y}}</mat-option>\n                </mat-select>\n            </mat-form-field>\n            <button *ngIf=\"idx > 0\" mat-button class=\"remove-year\" (click)=\"removeYear(idx)\">Remove</button>\n            <button *ngIf=\"selection.years.length < 6 && idx === (selection.years.length-1)\" mat-button class=\"add-year\" (click)=\"addYear()\">Add</button>\n        </div>\n    </div>\n\n    <div class=\"phenophase-input-wrapper\" *ngFor=\"let spi of selection.plots; index as idx\">\n        <species-phenophase-input\n            [(species)]=\"spi.species\" [(phenophase)]=\"spi.phenophase\" [(color)]=\"spi.color\"\n            [selection]=\"selection\"\n            [gatherColor]=\"true\"\n            (onSpeciesChange)=\"updateChange()\"\n            (onPhenophaseChange)=\"updateChange()\"\n            (onColorChange)=\"redrawChange($event)\"></species-phenophase-input>\n        <button *ngIf=\"idx > 0\" mat-button class=\"remove-plot\" (click)=\"removePlot(idx)\">Remove</button>\n        <button *ngIf=\"idx === (selection.plots.length-1)\" mat-button class=\"add-plot\" [disabled]=\"!plotsValid()\" (click)=\"addPlot()\">Add</button>\n    </div>\n\n    <mat-checkbox [(ngModel)]=\"selection.negative\" (change)=\"redrawChange()\">Display negative data</mat-checkbox>\n\n    <label for=\"label-size-input\">Label size\n        <mat-slider id=\"label-size-input\" min=\"0\" max=\"10\" step=\"0.25\" [(ngModel)]=\"selection.fontSizeDelta\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-position-input\">Label position\n        <mat-slider id=\"label-position-input\" min=\"0\" max=\"100\" step=\"1\" [(ngModel)]=\"selection.labelOffset\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-band-size-input\">Band size\n        <mat-slider invert id=\"label-band-size-input\" min=\"0\" max=\"0.95\" step=\"0.05\" [(ngModel)]=\"selection.bandPadding\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n    ",
         styles: ["\n        .year-input-wrapper {\n            display: inline-block;\n            margin-right: 15px;\n        }\n        .phenophase-input-wrapper {\n            display: block;\n            margin-top: 15px;\n        }\n        label[for=\"label-size-input\"] {\n            margin-left: 15px;\n        }\n    "]
     })
 ], CalendarControlComponent);
