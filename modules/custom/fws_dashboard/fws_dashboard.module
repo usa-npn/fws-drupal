@@ -138,13 +138,73 @@ function fws_dashboard_refuge_load($refuge_id) {
 }
 
 /**
+ * Fetches the list of administrator UIDS for $refuge
+ */
+function _fws_dashboard_refuge_admin_uids($refuge) {
+    $network_id = $refuge->field_network_id->value();
+    $cache_key = 'fws_dashboard_admins_'.$network_id;
+    // look in Drupal's cache first to avoid a webservice call if possible.
+    if($cache_data = cache_get($cache_key)) {
+        return $cache_data->data;
+    }
+    $api = variable_get(NPN_API_ROOT,NPN_API_ROOT_DEFAULT);
+    // if the config has left the scheme off then default to https
+    if(preg_match('/^\/\//',$api)) {
+        $api = 'https:'.$api;
+    }
+    $api_url = "${api}/npn_portal/networks/getAdminsForNetwork.json?network_id=${network_id}";
+    watchdog('fws_dashboard','Asking webservice for refuge administrators via %URL',
+        array(
+            '%URL' => $api_url
+        ),WATCHDOG_INFO);
+    $api_response = drupal_http_request($api_url,array('method'=>'GET'));
+    if($api_response->code != 200) {
+        $msg = "Error asking web services for administrators for refuge %NETWORK_ID.";
+        $msg .= ' RC: %RC';
+        $msg .= ' MESSAGE: %MESSAGE';
+        $vars = array(
+            '%NETWORK_ID' => $network_id,
+            '%RC' => $api_response->code,
+            '%MESSAGE' => $api_response->status_message,
+        );
+        watchdog('fws_dashboard',$msg,$vars,WATCHDOG_ERROR);
+        return FALSE; // can't verify one way or the other.
+    }
+    $uids = drupal_json_decode($api_response->data);
+    if(!is_array($uids)) {
+        watchdog('fws_dashboard','Unexpected response from %URL.  %DATA',
+            array(
+                '%URL' => $api_url,
+                '%DATA' => $api_response->data,
+            ),WATCHDOG_ERROR);
+        $uids = array();
+    }
+    watchdog('fws_dashboard','Caching administrative uids from %URL %UIDS',
+        array(
+            '%URL' => $api_url,
+            '%UIDS' => drupal_json_encode($uids),
+        ),WATCHDOG_INFO);
+    // put it in the cache for a time
+    $one_hour = 3600;
+    cache_set($cache_key,$uids,'cache',time()+$one_hour);
+    return $uids;
+}
+
+/**
  * Tests whether the current user is a refuge admin
  */
 function fws_dashboard_user_is_admin($refuge) {
     global $user;
-    //dd($user,'USER');
-    // TODO this is just site admin
-    return ($user->uid && is_array($user->roles) && in_array('administrator',$user->roles));
+    if(!$user->uid) {
+        return FALSE; // anonymous, just avoid any other logic
+    }
+    if(is_array($user->roles) && in_array('administrator',$user->roles)) {
+        return TRUE; // site admin avoid any other logic
+    }
+    // some other logged in, non site admin user
+    // test if that user is an administrator for this refuge
+    $admin_uids = _fws_dashboard_refuge_admin_uids($refuge);
+    return in_array($user->uid,$admin_uids);
 }
 
 /**
