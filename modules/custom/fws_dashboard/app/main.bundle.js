@@ -4301,7 +4301,7 @@ ClippedWmsMapStatisticsComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'clipped-wms-map-statistics',
         template: "\n    <table>\n        <tbody>\n            <tr><td>Date</td><td>{{statistics.date | date:'longDate'}}</td></tr>\n            <tr><td>Count</td><td>{{statistics.count}}</td></tr>\n            <tr><td>Mean</td><td>{{statistics.mean | number:'1.3-3'}}</td></tr>\n            <tr><td>Std Dev</td><td>{{statistics.stddev | number:'1.3-3'}}</td></tr>\n            <tr><td>Min</td><td>{{statistics.min}}</td></tr>\n            <tr><td>Max</td><td>{{statistics.max}}</td></tr>\n            <tr><td>Complete</td><td>{{statistics.percentComplete | number:'1.0-2'}}%</td></tr>\n        </tbody>\n    </table>\n    ",
-        styles: ["\n        tr td:first-of-type {\n            font-weight: bold;\n            text-align: right;\n            padding-right: 5px;\n        }\n        tr td:first-of-type:after {\n            content: ':';\n        }\n    "]
+        styles: ["\n        :host {\n            line-height: 12px;\n        }\n        tr td:first-of-type {\n            font-weight: bold;\n            text-align: right;\n            padding-right: 5px;\n        }\n        tr td:first-of-type:after {\n            content: ':';\n        }\n    "]
     })
 ], ClippedWmsMapStatisticsComponent);
 
