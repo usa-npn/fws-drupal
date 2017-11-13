@@ -4347,7 +4347,7 @@ ClippedWmsMapStatisticsComponent = __decorate([
 /***/ "../../../../../../../../../../../../npn_common/visualizations/clipped-wms-map/clipped-wms-map.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"vis-container\">\n    <div class=\"vis-working\" *ngIf=\"selection.working\">\n        <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n    </div>\n    <div class=\"map-wrapper\">\n        <agm-map (mapReady)=\"mapReady($event)\"></agm-map>\n        <wms-map-legend *ngIf=\"!thumbnail\" [legend]=\"selection.legend\"></wms-map-legend>\n        <clipped-wms-map-statistics *ngIf=\"!thumbnail && selection && selection.data && selection.data.statistics\"\n            [statistics]=\"selection.data.statistics\"></clipped-wms-map-statistics>\n    </div>\n    <wms-map-opacity-control *ngIf=\"!thumbnail\" [supportsOpacity]=\"selection.overlay\"></wms-map-opacity-control>\n</div>\n"
+module.exports = "<div class=\"vis-container\">\n    <div class=\"vis-working\" *ngIf=\"selection.working\">\n        <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n    </div>\n    <div class=\"map-wrapper\">\n        <agm-map (mapReady)=\"mapReady($event)\"  [streetViewControl]=\"false\"  [styles]=\"mapStyles\"></agm-map>\n        <wms-map-legend *ngIf=\"!thumbnail\" [legend]=\"selection.legend\"></wms-map-legend>\n        <clipped-wms-map-statistics *ngIf=\"!thumbnail && selection && selection.data && selection.data.statistics\"\n            [statistics]=\"selection.data.statistics\"></clipped-wms-map-statistics>\n    </div>\n    <wms-map-opacity-control *ngIf=\"!thumbnail\" [supportsOpacity]=\"selection.overlay\"></wms-map-opacity-control>\n</div>\n"
 
 /***/ }),
 
@@ -5086,7 +5086,7 @@ VisualizationsModule = __decorate([
 /***/ "../../../../../../../../../../../../npn_common/visualizations/map-visualization-base.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"vis-container\">\n    <div class=\"vis-working\" *ngIf=\"selection.working\">\n        <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n    </div>\n    <agm-map (mapReady)=\"mapReady($event)\"></agm-map>\n</div>\n"
+module.exports = "<div class=\"vis-container\">\n    <div class=\"vis-working\" *ngIf=\"selection.working\">\n        <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n    </div>\n    <agm-map (mapReady)=\"mapReady($event)\" [streetViewControl]=\"false\" [styles]=\"mapStyles\"></agm-map>\n</div>\n"
 
 /***/ }),
 
@@ -5143,6 +5143,23 @@ var MapVisualizationBaseComponent = (function (_super) {
         _this.getMapPromise = new Promise(function (resolve) {
             _this.getMapResolver = resolve;
         });
+        _this.mapStyles = [{
+                featureType: 'poi',
+                elementType: 'labels',
+                stylers: [{ visibility: 'off' }]
+            }, {
+                featureType: 'transit.station',
+                elementType: 'labels',
+                stylers: [{ visibility: 'off' }]
+            },
+            {
+                featureType: 'poi.park',
+                stylers: [{ visibility: 'off' }]
+            },
+            {
+                featureType: 'landscape',
+                stylers: [{ visibility: 'off' }]
+            }];
         return _this;
     }
     MapVisualizationBaseComponent.prototype.mapReady = function (map) {
