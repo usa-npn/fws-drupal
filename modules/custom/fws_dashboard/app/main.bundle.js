@@ -2656,7 +2656,7 @@ __decorate([
 ActivityCurvesControlComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'activity-curves-control',
-        template: "\n    <div class=\"curve one\">\n        <label [ngStyle]=\"{'color': selection.curves[0].color}\">Curve 1</label>\n        <curve-selection-control [selection]=\"selection\" [curve]=\"selection.curves[0]\"></curve-selection-control>\n    </div>\n    <div class=\"curve two\">\n        <label [ngStyle]=\"{'color': selection.curves[1].color}\">Curve 2</label>\n        <curve-selection-control [selection]=\"selection\"  [curve]=\"selection.curves[1]\"></curve-selection-control>\n    </div>\n    <div class=\"curve-common\">\n        <mat-form-field class=\"date-interval\">\n            <mat-select placeholder=\"Date Interval\" [(ngModel)]=\"selection.frequency\">\n                <mat-option *ngFor=\"let f of frequencies\" [value]=\"f\">{{f.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n\n        <mat-form-field class=\"line-interpolateion\">\n            <mat-select placeholder=\"Line Interpolation\" [(ngModel)]=\"selection.interpolate\">\n                <mat-option *ngFor=\"let i of interpolates\" [value]=\"i.value\">{{i.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n    </div>\n    ",
+        template: "\n    <div class=\"curve one\">\n        <label [ngStyle]=\"{'color': selection.curves[0].color}\">Curve 1</label>\n        <curve-selection-control [selection]=\"selection\" [curve]=\"selection.curves[0]\"></curve-selection-control>\n    </div>\n    <div class=\"curve two\">\n        <label [ngStyle]=\"{'color': selection.curves[1].color}\">Curve 2</label>\n        <curve-selection-control [selection]=\"selection\"  [curve]=\"selection.curves[1]\" [disabled]=\"!selection.curves[0].isValid()\" [required]=\"false\"></curve-selection-control>\n    </div>\n    <div class=\"curve-common\">\n        <mat-form-field class=\"date-interval\">\n            <mat-select placeholder=\"Date Interval\" [(ngModel)]=\"selection.frequency\">\n                <mat-option *ngFor=\"let f of frequencies\" [value]=\"f\">{{f.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n\n        <mat-form-field class=\"line-interpolateion\">\n            <mat-select placeholder=\"Line Interpolation\" [(ngModel)]=\"selection.interpolate\">\n                <mat-option *ngFor=\"let i of interpolates\" [value]=\"i.value\">{{i.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n    </div>\n    ",
         styles: ["\n        .curve >label:after {\n            content: ':';\n            margin-right: 10px;\n        }\n        .date-interval {\n            width: 125px;\n        }\n        .line-interpolateion {\n            width: 150px;\n        }\n    "]
     })
 ], ActivityCurvesControlComponent);
@@ -3294,8 +3294,9 @@ var _a, _b, _c, _d;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CurveControlComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__activity_curve__ = __webpack_require__("../../../../../../../../../../../../npn_common/visualizations/activity-curves/activity-curve.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__activity_curves_selection__ = __webpack_require__("../../../../../../../../../../../../npn_common/visualizations/activity-curves/activity-curves-selection.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__activity_curve__ = __webpack_require__("../../../../../../../../../../../../npn_common/visualizations/activity-curves/activity-curve.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__activity_curves_selection__ = __webpack_require__("../../../../../../../../../../../../npn_common/visualizations/activity-curves/activity-curves-selection.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -3308,8 +3309,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var CurveControlComponent = (function () {
     function CurveControlComponent() {
+        var _this = this;
+        this.required = true;
+        this.disabled = false;
+        this.yearControl = new __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormControl */](null, /*Validators.required*/ function (c) {
+            if (_this.required && !c.value) {
+                return {
+                    required: true
+                };
+            }
+            return null;
+        });
         this.validYears = (function () {
             var thisYear = (new Date()).getFullYear(), years = [], c = 2010;
             while (c < thisYear) {
@@ -3322,17 +3335,25 @@ var CurveControlComponent = (function () {
 }());
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])(),
-    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__activity_curves_selection__["b" /* ActivityCurvesSelection */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__activity_curves_selection__["b" /* ActivityCurvesSelection */]) === "function" && _a || Object)
+    __metadata("design:type", Boolean)
+], CurveControlComponent.prototype, "required", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])(),
+    __metadata("design:type", Boolean)
+], CurveControlComponent.prototype, "disabled", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])(),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__activity_curves_selection__["b" /* ActivityCurvesSelection */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__activity_curves_selection__["b" /* ActivityCurvesSelection */]) === "function" && _a || Object)
 ], CurveControlComponent.prototype, "selection", void 0);
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])(),
-    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__activity_curve__["a" /* ActivityCurve */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__activity_curve__["a" /* ActivityCurve */]) === "function" && _b || Object)
+    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__activity_curve__["a" /* ActivityCurve */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__activity_curve__["a" /* ActivityCurve */]) === "function" && _b || Object)
 ], CurveControlComponent.prototype, "curve", void 0);
 CurveControlComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'curve-selection-control',
-        template: "\n    <species-phenophase-input [(species)]=\"curve.species\" [(phenophase)]=\"curve.phenophase\" [selection]=\"selection\">\n    </species-phenophase-input>\n\n    <mat-form-field class=\"year-input\">\n        <mat-select placeholder=\"Year\" [(ngModel)]=\"curve.year\">\n            <mat-option *ngFor=\"let y of validYears\" [value]=\"y\">{{y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n\n    <mat-form-field class=\"metric-input\">\n        <mat-select placeholder=\"Metric\" [(ngModel)]=\"curve.metric\" [disabled]=\"!curve.validMetrics.length\">\n            <mat-option *ngFor=\"let m of curve.validMetrics\" [value]=\"m\">{{m.label}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
-        styles: ["\n        .metric-input {\n            width: 310px;\n        }\n    "]
+        template: "\n    <species-phenophase-input [(species)]=\"curve.species\" [(phenophase)]=\"curve.phenophase\" [selection]=\"selection\" [disabled]=\"disabled\" [required]=\"required\">\n    </species-phenophase-input>\n\n    <mat-form-field class=\"year-input\">\n        <mat-select [placeholder]=\"'Year'+(required ? ' *':'')\" [(ngModel)]=\"curve.year\" [disabled]=\"disabled\" [formControl]=\"yearControl\">\n            <mat-option *ngFor=\"let y of validYears\" [value]=\"y\">{{y}}</mat-option>\n        </mat-select>\n        <mat-error *ngIf=\"yearControl.errors && yearControl.errors.required\">Year is required</mat-error>\n    </mat-form-field>\n\n    <mat-form-field class=\"metric-input\">\n        <mat-select placeholder=\"Metric\" [(ngModel)]=\"curve.metric\" [disabled]=\"!curve.validMetrics.length\" [disabled]=\"disabled\">\n            <mat-option *ngFor=\"let m of curve.validMetrics\" [value]=\"m\">{{m.label}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
+        styles: ["\n        .year-input {\n            width: 75px;\n        }\n        .metric-input {\n            width: 255px;\n        }\n    "]
     })
 ], CurveControlComponent);
 
@@ -3469,7 +3490,7 @@ CalendarControlComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'calendar-control',
         template: "\n    <div>\n        <div class=\"year-input-wrapper\" *ngFor=\"let plotYear of selection.years;index as idx\">\n            <mat-form-field class=\"year-input\">\n                <mat-select placeholder=\"Year {{idx+1}}\" [(ngModel)]=\"selection.years[idx]\" (change)=\"updateChange()\" id=\"year_{{idx}}\">\n                    <mat-option *ngFor=\"let y of selectableYears(selection.years[idx])\" [value]=\"y\">{{y}}</mat-option>\n                </mat-select>\n            </mat-form-field>\n            <button *ngIf=\"idx > 0\" mat-button class=\"remove-year\" (click)=\"removeYear(idx)\">Remove</button>\n            <button *ngIf=\"selection.years.length < 6 && idx === (selection.years.length-1)\" mat-button class=\"add-year\" (click)=\"addYear()\">Add</button>\n        </div>\n    </div>\n\n    <div class=\"phenophase-input-wrapper\" *ngFor=\"let spi of selection.plots; index as idx\">\n        <species-phenophase-input\n            [(species)]=\"spi.species\" [(phenophase)]=\"spi.phenophase\" [(color)]=\"spi.color\"\n            [selection]=\"selection\"\n            [gatherColor]=\"true\"\n            (onSpeciesChange)=\"updateChange()\"\n            (onPhenophaseChange)=\"updateChange()\"\n            (onColorChange)=\"redrawChange($event)\"></species-phenophase-input>\n        <button *ngIf=\"idx > 0\" mat-button class=\"remove-plot\" (click)=\"removePlot(idx)\">Remove</button>\n        <button *ngIf=\"idx === (selection.plots.length-1)\" mat-button class=\"add-plot\" [disabled]=\"!plotsValid()\" (click)=\"addPlot()\">Add</button>\n    </div>\n\n    <mat-checkbox [(ngModel)]=\"selection.negative\" (change)=\"redrawChange()\">Display negative data</mat-checkbox>\n\n    <label for=\"label-size-input\">Label size\n        <mat-slider id=\"label-size-input\" min=\"0\" max=\"10\" step=\"0.25\" [(ngModel)]=\"selection.fontSizeDelta\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-position-input\">Label position\n        <mat-slider id=\"label-position-input\" min=\"0\" max=\"100\" step=\"1\" [(ngModel)]=\"selection.labelOffset\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-band-size-input\">Band size\n        <mat-slider invert id=\"label-band-size-input\" min=\"0\" max=\"0.95\" step=\"0.05\" [(ngModel)]=\"selection.bandPadding\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n    ",
-        styles: ["\n        .year-input-wrapper {\n            display: inline-block;\n            margin-right: 15px;\n        }\n        .phenophase-input-wrapper {\n            display: block;\n            margin-top: 15px;\n        }\n        label[for=\"label-size-input\"] {\n            margin-left: 15px;\n        }\n    "]
+        styles: ["\n        .year-input-wrapper {\n            display: inline-block;\n            margin-right: 15px;\n        }\n        .year-input {\n            width: 60px;\n        }\n        .phenophase-input-wrapper {\n            display: block;\n        }\n        label[for=\"label-size-input\"] {\n            margin-left: 15px;\n        }\n    "]
     })
 ], CalendarControlComponent);
 
@@ -4546,6 +4567,8 @@ var SpeciesPhenophaseInputComponent = (function () {
         var _this = this;
         this.speciesService = speciesService;
         this.speciesTitle = speciesTitle;
+        this.required = true;
+        this.disabled = false;
         this.speciesChange = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["w" /* EventEmitter */]();
         this.onSpeciesChange = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["w" /* EventEmitter */]();
         this.phenophaseChange = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["w" /* EventEmitter */]();
@@ -4554,11 +4577,19 @@ var SpeciesPhenophaseInputComponent = (function () {
         this.colorChange = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["w" /* EventEmitter */]();
         this.onColorChange = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["w" /* EventEmitter */]();
         this.colorList = COLORS;
-        this.speciesControl = new __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormControl */]();
+        this.requiredValidator = function (c) {
+            if (_this.required && !c.disabled && !c.value) {
+                return {
+                    required: true
+                };
+            }
+            return null;
+        };
+        this.speciesControl = new __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormControl */](null, this.requiredValidator);
+        this.colorControl = new __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormControl */](null, this.requiredValidator);
         this.phenophaseList = [];
         this.speciesParams = new __WEBPACK_IMPORTED_MODULE_2_rxjs_Subject__["Subject"]();
         this.filteredSpecies = this.speciesControl.valueChanges
-            .startWith(null)
             .map(function (s) {
             return s && _this.speciesList ?
                 _this.filterSpecies(s) :
@@ -4585,6 +4616,16 @@ var SpeciesPhenophaseInputComponent = (function () {
             });
         });
     };
+    SpeciesPhenophaseInputComponent.prototype.ngOnChanges = function (changes) {
+        if (changes.disabled) {
+            if (changes.disabled.currentValue) {
+                this.speciesControl.disable();
+            }
+            else {
+                this.speciesControl.enable();
+            }
+        }
+    };
     SpeciesPhenophaseInputComponent.prototype.ngDoCheck = function () {
         if (this.selection) {
             var params_1 = {}, paramsS = void 0;
@@ -4595,6 +4636,16 @@ var SpeciesPhenophaseInputComponent = (function () {
                 this.lastSpeciesParams = paramsS;
                 this.speciesParams.next(params_1);
             }
+        }
+    };
+    SpeciesPhenophaseInputComponent.prototype.speciesFocus = function () {
+        if (this.speciesList) {
+            this.speciesControl.setValue(' ');
+        }
+    };
+    SpeciesPhenophaseInputComponent.prototype.speciesBlur = function () {
+        if (typeof (this.speciesControl.value) === 'string' && this.speciesControl.value.trim() === '') {
+            this.speciesControl.setValue(null);
         }
     };
     SpeciesPhenophaseInputComponent.prototype.filterSpecies = function (s) {
@@ -4689,6 +4740,14 @@ var SpeciesPhenophaseInputComponent = (function () {
 }());
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])(),
+    __metadata("design:type", Boolean)
+], SpeciesPhenophaseInputComponent.prototype, "required", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])(),
+    __metadata("design:type", Boolean)
+], SpeciesPhenophaseInputComponent.prototype, "disabled", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])(),
     __metadata("design:type", Number)
 ], SpeciesPhenophaseInputComponent.prototype, "startYear", void 0);
 __decorate([
@@ -4745,8 +4804,8 @@ __decorate([
 SpeciesPhenophaseInputComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'species-phenophase-input',
-        template: "\n    <mat-form-field class=\"species-input\">\n        <input matInput placeholder=\"Species\" aria-label=\"Species\"\n               [matAutocomplete]=\"sp\"\n               [formControl]=\"speciesControl\" [(ngModel)]=\"species\"/>\n        <mat-autocomplete #sp=\"matAutocomplete\" [displayWith]=\"speciesTitle.transform\">\n          <mat-option *ngFor=\"let s of filteredSpecies | async\" [value]=\"s\">\n            {{s | speciesTitle}} ({{s.number_observations}})\n          </mat-option>\n        </mat-autocomplete>\n        <mat-progress-bar *ngIf=\"!speciesList || !speciesList.length\" mode=\"query\"></mat-progress-bar>\n    </mat-form-field>\n\n    <mat-form-field class=\"phenophase-input\">\n        <mat-select placeholder=\"Phenophase\" [(ngModel)]=\"phenophase\" [disabled]=\"!phenophaseList.length\">\n          <mat-option *ngFor=\"let p of phenophaseList\" [value]=\"p\">{{p.phenophase_name}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n\n    <mat-form-field *ngIf=\"gatherColor\" class=\"color-input\">\n        <mat-select  placeholder=\"Color\" [(ngModel)]=\"color\">\n          <mat-select-trigger><div class=\"color-swatch\" [ngStyle]=\"{'background-color':color}\"></div></mat-select-trigger>\n          <mat-option *ngFor=\"let c of colorList\" [value]=\"c\"><div class=\"color-swatch\" [ngStyle]=\"{'background-color':c}\"></div></mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
-        styles: ["\n        .species-input {\n            width: 300px;\n        }\n        .phenophase-input {\n            width: 400px;\n        }\n        .color-swatch {\n            display: inline-block;\n            width: 20px;\n            height: 20px;\n        }\n        .color-input {\n\n        }\n        .color-input /deep/ .mat-select-trigger {\n            //border: 1px solid red;\n        }\n    "]
+        template: "\n    <mat-form-field class=\"species-input\">\n        <input matInput [placeholder]=\"'Species'+(required ? ' *':'')\" aria-label=\"Species\"\n               [matAutocomplete]=\"sp\"\n               [formControl]=\"speciesControl\" [(ngModel)]=\"species\" (focus)=\"speciesFocus()\" (blur)=\"speciesBlur()\"/>\n        <mat-autocomplete #sp=\"matAutocomplete\" [displayWith]=\"speciesTitle.transform\">\n          <mat-option *ngFor=\"let s of filteredSpecies | async\" [value]=\"s\">\n            {{s | speciesTitle}} ({{s.number_observations}})\n          </mat-option>\n        </mat-autocomplete>\n        <mat-error *ngIf=\"speciesControl.errors && speciesControl.errors.required\">Species is required</mat-error>\n        <mat-progress-bar *ngIf=\"!speciesList || !speciesList.length\" mode=\"query\"></mat-progress-bar>\n    </mat-form-field>\n\n    <mat-form-field class=\"phenophase-input\">\n        <mat-select placeholder=\"Phenophase\" [(ngModel)]=\"phenophase\" [disabled]=\"disabled || !phenophaseList.length\">\n          <mat-option *ngFor=\"let p of phenophaseList\" [value]=\"p\">{{p.phenophase_name}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n\n    <mat-form-field *ngIf=\"gatherColor\" class=\"color-input\">\n        <mat-select  [placeholder]=\"'Color'+(required ? ' *':'')\" [(ngModel)]=\"color\" [disabled]=\"disabled\" [formControl]=\"colorControl\">\n          <mat-select-trigger><div class=\"color-swatch\" [ngStyle]=\"{'background-color':color}\"></div></mat-select-trigger>\n          <mat-option *ngFor=\"let c of colorList\" [value]=\"c\"><div class=\"color-swatch\" [ngStyle]=\"{'background-color':c}\"></div></mat-option>\n        </mat-select>\n        <mat-error *ngIf=\"colorControl.errors && colorControl.errors.required\">Color is required</mat-error>\n    </mat-form-field>\n    ",
+        styles: ["\n        .species-input {\n            width: 200px;\n        }\n        .phenophase-input {\n            width: 250px;\n        }\n        .color-swatch {\n            display: inline-block;\n            width: 20px;\n            height: 20px;\n        }\n        .color-input {\n            width: 60px;\n        }\n        .color-input /deep/ .mat-select-trigger {\n            //border: 1px solid red;\n        }\n    "]
     }),
     __metadata("design:paramtypes", [typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_7__common__["m" /* SpeciesService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__common__["m" /* SpeciesService */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_7__common__["n" /* SpeciesTitlePipe */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__common__["n" /* SpeciesTitlePipe */]) === "function" && _g || Object])
 ], SpeciesPhenophaseInputComponent);
@@ -4876,7 +4935,8 @@ __decorate([
 YearRangeInputComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'year-range-input',
-        template: "\n    <mat-form-field class=\"start-year\">\n        <mat-select placeholder=\"Start year\" [(ngModel)]=\"start\">\n            <mat-option *ngFor=\"let y of validStarts\" [value]=\"y\">{{y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    <mat-form-field class=\"end-year\">\n        <mat-select placeholder=\"End year\" [(ngModel)]=\"end\" [disabled]=\"!start\">\n            <mat-option *ngFor=\"let y of validEnds\" [value]=\"y\">{{y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    "
+        template: "\n    <mat-form-field class=\"start-year\">\n        <mat-select placeholder=\"Start year\" [(ngModel)]=\"start\">\n            <mat-option *ngFor=\"let y of validStarts\" [value]=\"y\">{{y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    <mat-form-field class=\"end-year\">\n        <mat-select placeholder=\"End year\" [(ngModel)]=\"end\" [disabled]=\"!start\">\n            <mat-option *ngFor=\"let y of validEnds\" [value]=\"y\">{{y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
+        styles: ["\n        .start-year,\n        .end-year {\n            width: 75px;\n        }\n    "]
     })
 ], YearRangeInputComponent);
 
@@ -5240,6 +5300,9 @@ var ObservationDateVisSelection = (function (_super) {
     };
     ObservationDateVisSelection.prototype.postProcessData = function (data) {
         var _this = this;
+        if (!data) {
+            return data;
+        }
         var response = new ObservationDateData(), vPlots = this.validPlots, y = (vPlots.length * this.years.length) - 1, addDoys = function (doys, color) {
             doys.forEach(function (doy) {
                 response.data.push({
@@ -5390,8 +5453,8 @@ __decorate([
 ObservationFrequencyControl = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'observation-frequency-control',
-        template: "\n    <mat-form-field>\n        <mat-select class=\"year-input\" placeholder=\"Year\" [(ngModel)]=\"selection.year\" (change)=\"selection.update()\">\n            <mat-option *ngFor=\"let y of validYears\" [value]=\"y\">{{y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
-        styles: ["\n    "]
+        template: "\n    <mat-form-field class=\"year-input\">\n        <mat-select placeholder=\"Year *\" [(ngModel)]=\"selection.year\" (change)=\"selection.update()\">\n            <mat-option *ngFor=\"let y of validYears\" [value]=\"y\">{{y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
+        styles: ["\n        .year-input {\n            width: 65px;\n        }\n    "]
     })
 ], ObservationFrequencyControl);
 
@@ -5864,8 +5927,8 @@ __decorate([
 ObserverActivityControl = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'observer-activity-control',
-        template: "\n    <mat-form-field>\n        <mat-select class=\"year-input\" placeholder=\"Year\" [(ngModel)]=\"selection.year\" (change)=\"selection.update()\">\n            <mat-option *ngFor=\"let y of validYears\" [value]=\"y\">{{y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
-        styles: ["\n    "]
+        template: "\n    <mat-form-field class=\"year-input\">\n        <mat-select placeholder=\"Year *\" [(ngModel)]=\"selection.year\" (change)=\"selection.update()\">\n            <mat-option *ngFor=\"let y of validYears\" [value]=\"y\">{{y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
+        styles: ["\n        .year-input {\n            width: 65px;\n        }\n    "]
     })
 ], ObserverActivityControl);
 
@@ -6458,6 +6521,7 @@ var ScatterPlotSelection = (function (_super) {
     function ScatterPlotSelection() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.start = 2010;
+        _this.end = (new Date()).getFullYear();
         _this.regressionLines = false;
         _this.axis = AXIS[0];
         _this.plots = [];
@@ -8237,7 +8301,7 @@ __decorate([
 FindingsComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'refuge-findings',
-        template: "\n<mat-list *ngIf=\"adminMode\" class=\"new-vis-list\">\n  <mat-list-item class=\"vis-template\"\n                *ngFor=\"let template of visTemplates\"\n                [matTooltip]=\"template.$tooltip\"\n                matTooltipPosition=\"right\"\n                dnd-draggable [dragData]=\"template\"\n                [dropZones]=\"['newvis-dropZone']\">\n    <img class=\"new-vis-thumbnail\" src=\"{{baseHref}}{{template.$thumbnail}}\" />\n  </mat-list-item>\n  <mat-list-item class=\"trash\"\n                matTooltip=\"Drag and drop visualization here to remove\"\n                dnd-droppable [dropZones]=\"['trash-dropZone']\"\n                (onDropSuccess)=\"trashVisualization($event)\"></mat-list-item>\n  <mat-list-item class=\"save\" *ngIf=\"isReordered()\" matTooltip=\"Save current visualization order\" (click)=\"save()\">\n  </mat-list-item>\n</mat-list>\n\n<div class=\"visualizations\" *ngIf=\"refuge\" dnd-sortable-container [sortableData]=\"refuge.selections\" [dropZones]=\"['list-dropZone','trash-dropZone']\" >\n    <mat-card  *ngFor=\"let selection of refuge.selections; first as isFirst; let i = index\"\n              dnd-sortable [sortableIndex]=\"i\"\n              [dragEnabled]=\"adminMode\"\n              [dragData]=\"selection\"\n              (onDragStart)=\"dragStart($event)\"\n              (onDropSuccess)=\"reorderVisualizations()\">\n        <div *ngIf=\"!isFirst\" class=\"cover\" (click)=\"makeCurrent(selection)\">\n            <span class=\"visualization-title\">{{selection.meta.title}}</span>\n        </div>\n        <div *ngIf=\"isFirst\" class=\"visualization-details\">\n            <div class=\"visualization-title\">{{selection.meta.title}}</div>\n            <p *ngIf=\"selection.meta.description\" class=\"visualization-description\">{{selection.meta.description}}</p>\n        </div>\n        <npn-visualization [selection]=\"selection\" [thumbnail]=\"i > 0\"></npn-visualization>\n    </mat-card>\n    <mat-card *ngIf=\"adminMode && refuge.selections.length < maxVisualizations\" class=\"new-vis-placeholder\"\n        dnd-droppable [dropZones]=\"['newvis-dropZone']\"\n        (onDropSuccess)=\"addVisualization($event)\"></mat-card>\n</div>\n<mat-button-toggle *ngIf=\"userIsAdmin\" (change)=\"toggleAdminMode($event)\"><span class=\"admin-toggle\">Customize</span></mat-button-toggle>\n<!--mat-checkbox *ngIf=\"userIsAdmin\" [(ngModel)]=\"adminMode\" (change)=\"resizeAllAfterDelay()\">Admin mode</mat-checkbox-->\n  ",
+        template: "\n<mat-list *ngIf=\"adminMode\" class=\"new-vis-list\">\n  <mat-list-item class=\"vis-template\"\n                *ngFor=\"let template of visTemplates\"\n                [matTooltip]=\"template.$tooltip\"\n                matTooltipPosition=\"right\"\n                dnd-draggable [dragData]=\"template\"\n                [dropZones]=\"['newvis-dropZone']\">\n    <img class=\"new-vis-thumbnail\" src=\"{{baseHref}}{{template.$thumbnail}}\" />\n  </mat-list-item>\n  <mat-list-item class=\"trash\"\n                matTooltip=\"Drag and drop visualization here to remove\"\n                matTooltipPosition=\"right\"\n                dnd-droppable [dropZones]=\"['trash-dropZone']\"\n                (onDropSuccess)=\"trashVisualization($event)\"></mat-list-item>\n  <mat-list-item class=\"save\" *ngIf=\"isReordered()\" matTooltip=\"Save current visualization order\" (click)=\"save()\">\n  </mat-list-item>\n</mat-list>\n\n<div class=\"visualizations\" *ngIf=\"refuge\" dnd-sortable-container [sortableData]=\"refuge.selections\" [dropZones]=\"['list-dropZone','trash-dropZone']\" >\n    <mat-card  *ngFor=\"let selection of refuge.selections; first as isFirst; let i = index\"\n              dnd-sortable [sortableIndex]=\"i\"\n              [dragEnabled]=\"adminMode\"\n              [dragData]=\"selection\"\n              (onDragStart)=\"dragStart($event)\"\n              (onDropSuccess)=\"reorderVisualizations()\">\n        <div *ngIf=\"!isFirst\" class=\"cover\" (click)=\"makeCurrent(selection)\">\n            <span class=\"visualization-title\">{{selection.meta.title}}</span>\n        </div>\n        <div *ngIf=\"isFirst\" class=\"visualization-details\">\n            <div class=\"visualization-title\">{{selection.meta.title}}</div>\n            <p *ngIf=\"selection.meta.description\" class=\"visualization-description\">{{selection.meta.description}}</p>\n        </div>\n        <npn-visualization [selection]=\"selection\" [thumbnail]=\"i > 0\"></npn-visualization>\n    </mat-card>\n    <mat-card *ngIf=\"adminMode && refuge.selections.length < maxVisualizations\" class=\"new-vis-placeholder\"\n        dnd-droppable [dropZones]=\"['newvis-dropZone']\"\n        (onDropSuccess)=\"addVisualization($event)\"></mat-card>\n</div>\n<mat-button-toggle *ngIf=\"userIsAdmin\" (change)=\"toggleAdminMode($event)\"><span class=\"admin-toggle\">Customize</span></mat-button-toggle>\n<!--mat-checkbox *ngIf=\"userIsAdmin\" [(ngModel)]=\"adminMode\" (change)=\"resizeAllAfterDelay()\">Admin mode</mat-checkbox-->\n  ",
         styles: [__webpack_require__("../../../../../src/app/findings.component.scss")]
     }),
     __param(4, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["R" /* Optional */])()), __param(4, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Inject */])(__WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["e" /* NPN_BASE_HREF */])),
@@ -8382,8 +8446,8 @@ var NewVisualizationDialogComponent = (function () {
 NewVisualizationDialogComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'new-vis-dialog',
-        template: "\n    <!-- for \"station aware\" visualizations display a multi-step process -->\n    <mat-horizontal-stepper (selectionChange)=\"stepChanged($event)\">\n        <mat-step *ngIf=\"stationAware\" [stepControl]=\"step1FormGroup\" label=\"Choose scope\">\n            <div>\n                <div>\n                    <visualization-scope-selection [selection]=\"selection\" [refuge]=\"refuge\"></visualization-scope-selection>\n                    <div>\n                        <button mat-button (click)=\"dialogRef.close()\">Cancel</button>\n                        <button mat-button matStepperNext>Next</button>\n                    </div>\n                </div>\n            </div>\n        </mat-step>\n\n        <mat-step [stepControl]=\"step2FormGroup\" label=\"Build visualization\">\n            <div *ngIf=\"showVis\">\n                <new-visualization-builder [selection]=\"selection\" [refuge]=\"refuge\"></new-visualization-builder>\n                <div>\n                    <button mat-button (click)=\"dialogRef.close()\">Cancel</button>\n                    <button *ngIf=\"stationAware\"  mat-button matStepperPrevious>Back</button>\n                    <button mat-button matStepperNext>Next</button>\n                </div>\n            </div>\n        </mat-step>\n\n        <mat-step [stepControl]=\"step3FormGroup\" label=\"Visualization details\">\n            <div *ngIf=\"showDetails\">\n                <mat-form-field class=\"visualization-title\">\n                    <input matInput placeholder=\"Visualization title\" [(ngModel)]=\"selection.meta.title\" required />\n                </mat-form-field>\n                <mat-form-field class=\"visualization-description\">\n                    <textarea matInput placeholder=\"Visualization description\" [(ngModel)]=\"selection.meta.description\"></textarea>\n                </mat-form-field>\n                <div>\n                    <button mat-button (click)=\"dialogRef.close()\">Cancel</button>\n                    <button mat-button matStepperPrevious>Back</button>\n                    <button mat-button (click)=\"dialogRef.close(selection)\" [disabled]=\"!selection.meta.title || !selection.isValid()\">Add</button>\n                </div>\n            </div>\n        </mat-step>\n    </mat-horizontal-stepper>\n    ",
-        styles: ["\n        .visualization-title,\n        .visualization-description {\n            display: block;\n            width: 100%;\n        }\n        .visualization-description textarea {\n            height: 5em;\n        }\n    "]
+        template: "\n    <!-- for \"station aware\" visualizations display a multi-step process -->\n    <mat-horizontal-stepper (selectionChange)=\"stepChanged($event)\">\n        <mat-step *ngIf=\"stationAware\" [stepControl]=\"step1FormGroup\" label=\"Choose scope\">\n            <div>\n                <div>\n                    <visualization-scope-selection [selection]=\"selection\" [refuge]=\"refuge\"></visualization-scope-selection>\n                    <div class=\"step-nav\">\n                        <button mat-raised-button (click)=\"dialogRef.close()\">Cancel</button>\n                        <button mat-raised-button matStepperNext>Next</button>\n                    </div>\n                </div>\n            </div>\n        </mat-step>\n\n        <mat-step [stepControl]=\"step2FormGroup\" label=\"Build visualization\">\n            <div *ngIf=\"showVis\">\n                <new-visualization-builder [selection]=\"selection\" [refuge]=\"refuge\"></new-visualization-builder>\n                <div class=\"step-nav\">\n                    <button mat-raised-button (click)=\"dialogRef.close()\">Cancel</button>\n                    <button mat-raised-button *ngIf=\"stationAware\" matStepperPrevious>Back</button>\n                    <button mat-raised-button matStepperNext>Next</button>\n                </div>\n            </div>\n        </mat-step>\n\n        <mat-step [stepControl]=\"step3FormGroup\" label=\"Visualization details\">\n            <div *ngIf=\"showDetails\">\n                <mat-form-field class=\"visualization-title\">\n                    <input matInput placeholder=\"Visualization title\" [(ngModel)]=\"selection.meta.title\" required />\n                </mat-form-field>\n                <mat-form-field class=\"visualization-description\">\n                    <textarea matInput placeholder=\"Visualization description\" [(ngModel)]=\"selection.meta.description\"></textarea>\n                </mat-form-field>\n                <div class=\"step-nav\">\n                    <button mat-raised-button (click)=\"dialogRef.close()\">Cancel</button>\n                    <button mat-raised-button matStepperPrevious>Back</button>\n                    <button mat-raised-button (click)=\"dialogRef.close(selection)\" [disabled]=\"!selection.meta.title || !selection.isValid()\">Add</button>\n                </div>\n            </div>\n        </mat-step>\n    </mat-horizontal-stepper>\n    ",
+        styles: ["\n        .visualization-title,\n        .visualization-description {\n            display: block;\n            width: 100%;\n        }\n        .visualization-description textarea {\n            height: 5em;\n        }\n        .step-nav {\n            padding: 5px;\n        }\n        .step-nav >button {\n            margin-right: 5px;\n        }\n    "]
     }),
     __param(2, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__angular_material__["a" /* MAT_DIALOG_DATA */])),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_forms__["b" /* FormBuilder */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_forms__["b" /* FormBuilder */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["i" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["i" /* MatDialogRef */]) === "function" && _b || Object, Object])
@@ -8430,7 +8494,7 @@ NewVisualizationBuilderComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'new-visualization-builder',
         template: "\n    <activity-curves-control  *ngIf=\"activity\" [selection]=\"activity\"></activity-curves-control>\n    <scatter-plot-control *ngIf=\"scatter\" [selection]=\"scatter\"></scatter-plot-control>\n    <calendar-control *ngIf=\"calendar\" [selection]=\"calendar\"></calendar-control>\n    <observer-activity-control *ngIf=\"observer\" [selection]=\"observer\"></observer-activity-control>\n    <observation-frequency-control *ngIf=\"observationFreq\" [selection]=\"observationFreq\"></observation-frequency-control>\n    <clipped-wms-map-control *ngIf=\"clipped\" [selection]=\"clipped\"></clipped-wms-map-control>\n\n    <npn-visualization *ngIf=\"selection\" [selection]=\"selection\"></npn-visualization>\n    ",
-        styles: ["\n        npn-visualization {\n            margin-top: 20px;\n            width: 98%; // within stepper o/w horizontal scroll\n        }\n    "]
+        styles: ["\n        npn-visualization {\n            margin-top: 20px;\n            width: 90%; // within stepper o/w horizontal scroll\n        }\n    "]
     })
 ], NewVisualizationBuilderComponent);
 
