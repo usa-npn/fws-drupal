@@ -5318,7 +5318,7 @@ var ObservationDateVisSelection = (function (_super) {
     ObservationDateVisSelection.prototype.postProcessData = function (data) {
         var _this = this;
         if (!data) {
-            return data;
+            return null;
         }
         var response = new ObservationDateData(), vPlots = this.validPlots, y = (vPlots.length * this.years.length) - 1, addDoys = function (doys, color) {
             doys.forEach(function (doy) {
@@ -8372,7 +8372,8 @@ __decorate([
 FocalSpeciesComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'focal-species',
-        template: "\n    <div *ngIf=\"refuge\">\n        <h3>Focal Species for {{refuge.title}}</h3>\n        <ul *ngIf=\"speciesList && speciesList.length\">\n            <li *ngFor=\"let s of speciesList\">\n            <a target=\"_blank\" [href]=\"'https://usanpn.org/nn/'+s.genus+'_'+s.species\">{{s | speciesTitle:'common-name'}} ({{s | speciesTitle:'scientific-name'}})</a>\n            </li>\n        </ul>\n    </div>\n    "
+        template: "\n    <div *ngIf=\"refuge\">\n        <h3>Focal Species for {{refuge.title}}</h3>\n        <ul *ngIf=\"speciesList && speciesList.length\">\n            <li *ngFor=\"let s of speciesList\">\n            <a target=\"_blank\" [href]=\"'https://usanpn.org/nn/'+s.genus+'_'+s.species\">{{s | speciesTitle:'common-name'}} ({{s | speciesTitle:'scientific-name'}})</a>\n            </li>\n        </ul>\n    </div>\n    ",
+        styles: ["\n        h3 {\n            font-size: 28px;\n        }\n    "]
     }),
     __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__node_modules_npn_common__["n" /* SpeciesService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__node_modules_npn_common__["n" /* SpeciesService */]) === "function" && _b || Object])
 ], FocalSpeciesComponent);
