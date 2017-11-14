@@ -3859,7 +3859,7 @@ ClippedWmsMapControl = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'clipped-wms-map-control',
         template: "\n    <mat-select class=\"map-service-input\" placeholder=\"Map\" [(ngModel)]=\"selection.service\" (change)=\"serviceChange()\">\n        <mat-option *ngFor=\"let s of validServices\" [value]=\"s.value\">{{s.label}}</mat-option>\n    </mat-select>\n    <mat-select class=\"map-layer-input\" placeholder=\"Layer\" [(ngModel)]=\"selection.layer\" (change)=\"layerChange()\">\n        <mat-option *ngFor=\"let l of validLayers\" [value]=\"l\">{{l.label}}</mat-option>\n    </mat-select>\n    ",
-        styles: ["\n        .map-service-input,\n        .map-layer-input {\n            width: 200px;\n        }\n    "]
+        styles: ["\n        .map-service-input {\n            width: 225px;\n        }\n        .map-layer-input {\n            width: 155px;\n        }\n    "]
     })
 ], ClippedWmsMapControl);
 
@@ -3939,6 +3939,14 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -3952,18 +3960,47 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 var SIX_LAYERS = [{
         label: 'Current Si-x leaf index',
-        layerName: 'si-x:average_leaf_ncep'
+        layerName: 'si-x:average_leaf_ncep',
+        clippingService: 'si-x/area/clippedImage',
+        statisticsService: 'si-x/area/statistics'
     }, {
         label: '6-day forecast',
         layerName: 'si-x:average_leaf_ncep',
+        clippingService: 'si-x/area/clippedImage',
+        statisticsService: 'si-x/area/statistics',
         forecast: true
-    } /* TODO not yet supported,{
+    }, {
         label: 'Anomaly',
-        layerName: 'si-x:average_leaf_ncep',
-        forecast: false
-    }*/
-];
-var AGDD_LAYERS = [];
+        layerName: 'si-x:leaf_anomaly',
+        clippingService: 'si-x/anomaly/area/clippedImage',
+        statisticsService: 'si-x/anomaly/area/statistics'
+    }];
+var AGDD_LAYERS = [{
+        label: 'Current AGDD',
+        layerName: 'gdd:agdd',
+        clippingService: 'agdd/area/clippedImage',
+        statisticsService: 'agdd/area/statistics',
+        statsParams: {
+            useCache: false
+        }
+    }, {
+        label: '6-day forecast',
+        layerName: 'gdd:agdd',
+        clippingService: 'agdd/area/clippedImage',
+        statisticsService: 'agdd/area/statistics',
+        forecast: true,
+        statsParams: {
+            useCache: false
+        }
+    }, {
+        label: 'Anomaly',
+        layerName: 'gdd:agdd_anomaly',
+        clippingService: 'agdd/anomaly/area/clippedImage',
+        statisticsService: 'agdd/anomaly/area/statistics',
+        statsParams: {
+            useCache: false
+        }
+    }];
 var ClippedWmsMapSelection = (function (_super) {
     __extends(ClippedWmsMapSelection, _super);
     function ClippedWmsMapSelection(http, cache, datePipe, mapLegendService, config) {
@@ -4043,7 +4080,7 @@ var ClippedWmsMapSelection = (function (_super) {
     ClippedWmsMapSelection.prototype.getBoundary = function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            var url = _this.config.dataApiRoot + "/v0/" + _this.service + "/area/boundary", params = {
+            var url = _this.config.dataApiRoot + "/v0/si-x/area/boundary", params = {
                 format: 'geojson',
                 fwsBoundary: _this.fwsBoundary
             };
@@ -4060,7 +4097,7 @@ var ClippedWmsMapSelection = (function (_super) {
         });
     };
     ClippedWmsMapSelection.prototype.getData = function () {
-        var url = this.config.dataApiRoot + "/v0/" + this.service + "/area/clippedImage", params = {
+        var url = this.config.dataApiRoot + "/v0/" + this.layer.clippingService, params = {
             layerName: this.layer.layerName,
             fwsBoundary: this.fwsBoundary,
             date: this.apiDate,
@@ -4072,12 +4109,15 @@ var ClippedWmsMapSelection = (function (_super) {
     ClippedWmsMapSelection.prototype.getStatistics = function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            var url = _this.config.dataApiRoot + "/v0/" + _this.service + "/area/statistics", params = {
+            var url = _this.config.dataApiRoot + "/v0/" + _this.layer.statisticsService, params = {
                 layerName: _this.layer.layerName,
                 fwsBoundary: _this.fwsBoundary,
                 date: _this.apiDate,
-                useCache: true // TODO not sure on this.
+                useCache: true
             };
+            if (_this.layer.statsParams) {
+                params = __assign({}, params, _this.layer.statsParams);
+            }
             _this.cachedGet(url, params)
                 .then(function (stats) {
                 // translate the date string to a date object.
