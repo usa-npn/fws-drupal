@@ -2989,7 +2989,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var ROOT_DATE = new Date(2010, 0);
-var D3_DATE_FMT = __WEBPACK_IMPORTED_MODULE_7_d3__["o" /* timeFormat */]('%m/%d');
+var D3_DATE_FMT = __WEBPACK_IMPORTED_MODULE_7_d3__["n" /* timeFormat */]('%m/%d');
 var DATE_FMT = function (d) {
     var time = ((d - 1) * __WEBPACK_IMPORTED_MODULE_2__vis_selection__["d" /* ONE_DAY_MILLIS */]) + ROOT_DATE.getTime(), date = new Date(time);
     return D3_DATE_FMT(date);
@@ -3696,7 +3696,7 @@ var CalendarComponent = (function (_super) {
         var _this = this;
         _super.prototype.reset.call(this);
         this.processed = undefined;
-        var chart = this.chart, sizing = this.sizing, d3_month_fmt = __WEBPACK_IMPORTED_MODULE_6_d3__["o" /* timeFormat */](this.getMonthFormat());
+        var chart = this.chart, sizing = this.sizing, d3_month_fmt = __WEBPACK_IMPORTED_MODULE_6_d3__["n" /* timeFormat */](this.getMonthFormat());
         this.x = Object(__WEBPACK_IMPORTED_MODULE_5_d3_scale__["a" /* scaleBand */])().range([0, sizing.width]).domain(__WEBPACK_IMPORTED_MODULE_6_d3__["l" /* range */](1, 366))
             .paddingInner(-0.1).paddingOuter(0.5);
         this.xAxis = Object(__WEBPACK_IMPORTED_MODULE_4_d3_axis__["a" /* axisBottom */])(this.x).tickValues(this.xTickValues())
@@ -5681,7 +5681,7 @@ var ObservationFrequencyComponent = (function (_super) {
     ObservationFrequencyComponent.prototype.reset = function () {
         console.debug('ObservationFrequencyComponent.reset');
         _super.prototype.reset.call(this);
-        var chart = this.chart, sizing = this.sizing, d3_month_fmt = __WEBPACK_IMPORTED_MODULE_6_d3__["o" /* timeFormat */](this.getMonthFormat()), fontSize = this.baseFontSize();
+        var chart = this.chart, sizing = this.sizing, d3_month_fmt = __WEBPACK_IMPORTED_MODULE_6_d3__["n" /* timeFormat */](this.getMonthFormat()), fontSize = this.baseFontSize();
         this.title = chart.append('g')
             .attr('class', 'chart-title')
             .append('text')
@@ -6027,7 +6027,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
-// TODO is this always network wide or can they select specific stations
 var ObserverActivitySelection = (function (_super) {
     __extends(ObserverActivitySelection, _super);
     function ObserverActivitySelection(serviceUtils) {
@@ -6036,6 +6035,12 @@ var ObserverActivitySelection = (function (_super) {
         _this.dataCnt = 0;
         return _this;
     }
+    ObserverActivitySelection.prototype.isMultiStation = function () {
+        return this.stationIds && this.stationIds.length > 1;
+    };
+    ObserverActivitySelection.prototype.isSingleStation = function () {
+        return this.stationIds && this.stationIds.length === 1;
+    };
     ObserverActivitySelection.prototype.isValid = function () {
         return !!this.year;
     };
@@ -6056,39 +6061,10 @@ var ObserverActivitySelection = (function (_super) {
                 resolve(data);
             })
                 .catch(reject);
-            /*
-            // mocked up randomly generated response
-            let response:any = {
-                network_id: this.networkIds[0],
-                months: []
-            },
-            rint = (min,max) => {
-                min = Math.ceil(min);
-                max = Math.floor(max);
-                return Math.floor(Math.random() * (max-min)) + min;
-            };
-            // mock up a bogus response
-            // every other return a full year and then a partial year
-            let max = 13;
-            if(this.year === (new Date()).getFullYear()) {
-                // if it's this year then return up to this month
-                max = (new Date()).getMonth()+2
-            }
-            for(let i = 1; i < max; i++) {
-                let nobs = rint(0,10);
-                response.months.push({
-                    month: i,
-                    //month_name: 'ignore',
-                    number_new_observers: nobs,
-                    number_active_observers: rint(nobs,20)
-                });
-            }
-            resolve(response);
-            */
         });
     };
     return ObserverActivitySelection;
-}(__WEBPACK_IMPORTED_MODULE_0__vis_selection__["g" /* StationAwareVisSelection */]));
+}(__WEBPACK_IMPORTED_MODULE_0__vis_selection__["c" /* NetworkAwareVisSelection */]));
 
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__vis_selection__["j" /* selectionProperty */])(),
@@ -6144,7 +6120,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var TITLE = 'New/Active Observers by Month';
+var TITLE = 'New/Active Observers';
 var ObserverActivityComponent = (function (_super) {
     __extends(ObserverActivityComponent, _super);
     function ObserverActivityComponent(window, rootElement) {
@@ -6173,7 +6149,7 @@ var ObserverActivityComponent = (function (_super) {
     };
     ObserverActivityComponent.prototype.reset = function () {
         _super.prototype.reset.call(this);
-        var chart = this.chart, sizing = this.sizing, d3_month_fmt = __WEBPACK_IMPORTED_MODULE_6_d3__["o" /* timeFormat */](this.getMonthFormat()), fontSize = this.baseFontSize();
+        var chart = this.chart, sizing = this.sizing, d3_month_fmt = __WEBPACK_IMPORTED_MODULE_6_d3__["n" /* timeFormat */](this.getMonthFormat()), fontSize = this.baseFontSize();
         this.title = chart.append('g')
             .attr('class', 'chart-title')
             .append('text')
@@ -6240,17 +6216,18 @@ var ObserverActivityComponent = (function (_super) {
         if (!this.data) {
             return;
         }
-        this.title.text(TITLE + ", \"TODO: Refuge Name\", " + this.selection.year);
+        this.title.text(TITLE + ", " + this.data.network_name + ", " + this.selection.year);
         console.debug('ObserverActivityComponent:data', this.data);
-        var data = this.data.months.slice(), chart = this.chart, new_sum = data.reduce(function (sum, d) { return sum + d.number_new_observers; }, 0), active_sum = data.reduce(function (sum, d) { return sum + d.number_active_observers; }, 0), max = data.reduce(function (max, d) {
-            var sum = d.number_new_observers + d.number_active_observers;
-            if (sum > max) {
-                max = sum;
+        var sizing = this.sizing, data = this.data.months.slice(), chart = this.chart, new_sum = data.reduce(function (sum, d) { return sum + d.number_new_observers; }, 0), active_sum = data.reduce(function (sum, d) { return sum + d.number_active_observers; }, 0), max = data.reduce(function (max, d) {
+            if (d.number_new_observers > max) {
+                max = d.number_new_observers;
+            }
+            if (d.number_active_observers > max) {
+                max = d.number_active_observers;
             }
             return max;
         }, 0);
         console.debug("ObserverActivityComponent:vis data (max=" + max + ")", data);
-        console.debug('ObserverActivityComponent:stacked data', __WEBPACK_IMPORTED_MODULE_6_d3__["n" /* stack */]().keys(this.keys)(data));
         // update x axis with months+total
         this.x.domain(__WEBPACK_IMPORTED_MODULE_6_d3__["l" /* range */](0, data.length));
         this.chart.selectAll('g .x.axis').call(this.xAxis);
@@ -6258,41 +6235,34 @@ var ObserverActivityComponent = (function (_super) {
         // largest will always be the total column
         this.y.domain([0, max]);
         this.chart.selectAll('g .y.axis').call(this.yAxis);
-        this.chart.selectAll('g .bars').remove();
-        this.chart.append('g')
-            .attr('class', 'bars')
-            .selectAll('g')
-            .data(__WEBPACK_IMPORTED_MODULE_6_d3__["n" /* stack */]().keys(this.keys)(data))
-            .enter().append('g')
-            .attr('fill', function (d) { return _this.z(d.key); })
-            .selectAll('rect')
-            .data(function (d) { return d; })
-            .enter().append('rect')
-            .attr('x', function (d, i) { return _this.x(i); })
-            .attr('y', function (d) { return _this.y(d[1]); })
-            .attr('title', function (d) { return "" + d[1]; })
-            .attr('height', function (d) { return _this.y(d[0]) - _this.y(d[1]); })
-            .attr('width', this.x.bandwidth());
-        this.chart.selectAll('g .bar-labels').remove();
-        this.chart.append('g')
-            .attr('class', 'bar-labels')
-            .selectAll('g')
-            .data(__WEBPACK_IMPORTED_MODULE_6_d3__["n" /* stack */]().keys(this.keys)(data))
-            .enter().append('g')
-            .attr('fill', function (d) { return _this.zDarker(d.key); })
-            .selectAll('text')
-            .data(function (d) { return d; })
-            .enter().append('text')
-            .attr('text-anchor', 'middle')
-            .attr('dy', '-0.25em')
-            .attr('x', function (d, i) { return _this.x(i) + (_this.x.bandwidth() / 2); })
-            .attr('y', function (d, i) {
-            //console.log(`y.d[${i}]`,d[1],d);
-            // TODO when one is 0 d[1] isn't the number we're looking for
-            // needs adjustment in text below as well.
-            return _this.y(d[1]);
-        })
-            .text(function (d) { return "" + d[1]; });
+        var bars = function (key, idx) {
+            var barWidth = _this.x.bandwidth() / 2;
+            _this.chart.selectAll("g .bars." + key).remove();
+            _this.chart.append('g')
+                .attr('class', "bars " + key)
+                .attr('fill', function (d) { return _this.z(key); })
+                .selectAll('rect')
+                .data(data)
+                .enter().append('rect')
+                .attr('x', function (d, i) { return _this.x(i) + (barWidth * idx); })
+                .attr('y', function (d) { return _this.y(d[key]); })
+                .attr('title', function (d) { return "" + d[key]; })
+                .attr('height', function (d) { return sizing.height - _this.y(d[key]); })
+                .attr('width', barWidth);
+            _this.chart.selectAll("g .bar-labels." + key).remove();
+            _this.chart.append('g')
+                .attr('class', "bar-labels " + key)
+                .attr('fill', function (d) { return _this.z(key); })
+                .selectAll('text')
+                .data(data)
+                .enter().append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '-0.25em')
+                .attr('x', function (d, i) { return _this.x(i) + (barWidth * idx) + (barWidth / 2); })
+                .attr('y', function (d) { return _this.y(d[key]); })
+                .text(function (d) { return "" + d[key]; });
+        };
+        this.keys.forEach(function (k, i) { return bars(k, i); });
         this.legend.selectAll('text')
             .each((function (nSum, aSum, labels) {
             return function (d, i) {
@@ -6542,7 +6512,7 @@ var ScatterPlotSelection = (function (_super) {
         _this.regressionLines = false;
         _this.axis = AXIS[0];
         _this.plots = [];
-        _this.d3DateFormat = __WEBPACK_IMPORTED_MODULE_4_d3__["o" /* timeFormat */]('%x');
+        _this.d3DateFormat = __WEBPACK_IMPORTED_MODULE_4_d3__["n" /* timeFormat */]('%x');
         return _this;
     }
     ScatterPlotSelection.prototype.isValid = function () {
@@ -6715,7 +6685,7 @@ var ScatterPlotComponent = (function (_super) {
         _this.rootElement = rootElement;
         _this.speciesTitle = speciesTitle;
         _this.defaultAxisFormat = __WEBPACK_IMPORTED_MODULE_6_d3__["i" /* format */]('d');
-        _this.dateFormat = __WEBPACK_IMPORTED_MODULE_6_d3__["o" /* timeFormat */]('%x');
+        _this.dateFormat = __WEBPACK_IMPORTED_MODULE_6_d3__["n" /* timeFormat */]('%x');
         _this.filename = 'scatter-plot.png';
         // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html#object-spread-and-rest
         // similar to _|angular.extend
