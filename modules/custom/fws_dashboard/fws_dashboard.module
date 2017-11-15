@@ -92,6 +92,20 @@ function fws_dashboard_block_view($delta='') {
         $refuge = entity_metadata_wrapper('node', $node);
         $refuge_id = $refuge->nid->value();
         $module_path = drupal_get_path('module','fws_dashboard');
+
+        $app_dir = $module_path.'/app';
+        $files = file_scan_directory($app_dir,'/\.(js|css)$/');
+        $js = array();
+        $css = array();
+        foreach($files as $file => $record) {
+            $rel = $record->filename;
+            if(preg_match('/\.js$/',$rel)) {
+                $key = preg_replace('/^([^\.]+)\.(.*)$/','${1}',$rel);
+                $js[$key] = $rel;
+            } else {
+                $css[] = $rel;
+            }
+        }
         $user_is_admin = fws_dashboard_user_is_admin($refuge) ? ' user_is_admin' :'';
         $npn_configuration = array(
             'apiRoot' => variable_get(NPN_API_ROOT,NPN_API_ROOT_DEFAULT),
@@ -99,19 +113,21 @@ function fws_dashboard_block_view($delta='') {
             'geoServerRoot' => variable_get(NPN_GEOSERVER_ROOT,NPN_GEOSERVER_ROOT_DEFAULT),
         );
         $npn_configuration_json = drupal_json_encode($npn_configuration);
-        $html = <<<EOT
-<script>
-var npn_base_href = '/$module_path/app/',
-    npn_configuration = $npn_configuration_json;
-</script>
-<refuge-dashboard refuge_id="$refuge_id"$user_is_admin></refuge-dashboard>
-<script type="text/javascript" src="$module_path/app/inline.bundle.js"></script>
-<script type="text/javascript" src="$module_path/app/polyfills.bundle.js"></script>
-<script type="text/javascript" src="$module_path/app/scripts.bundle.js"></script>
-<script type="text/javascript" src="$module_path/app/styles.bundle.js"></script>
-<script type="text/javascript" src="$module_path/app/vendor.bundle.js"></script>
-<script type="text/javascript" src="$module_path/app/main.bundle.js"></script>
-EOT;
+        $module_path = '/'.$module_path;
+        $html = '';
+        foreach($css as $f) { // empty on dev build
+            $html .= "<link href=\"${app_dir}/${f}\" rel=\"stylesheet\"/>\n";
+        }
+        // TODO this doesn't appear to work properly in a production build for some reason
+        $html .= "<script>\nvar npn_base_href = '${app_dir}/',\nnpn_configuration = ${npn_configuration_json};\n</script>";
+        $html .= "<refuge-dashboard refuge_id=\"${refuge_id}\"${user_is_admin}></refuge-dashboard>";
+        $order = array('inline','polyfills','scripts','styles','vendor','main');
+        foreach($order as $key) { // styles only there on dev build
+            if(isset($js[$key])) {
+                $f = $js[$key];
+                $html .= "<script type=\"text/javascript\" src=\"${app_dir}/${f}\"></script>";
+            }
+        }
         return array(
             'content' => $html,
         );
