@@ -20,12 +20,13 @@
 /*==========================================================================
 1. Base 1200 Grid
 ===========================================================================*/
-
+/*revert me to 1200px */
 .container-12 {
 	position: relative;
-	width: 1200px;
+	width: 75%;
 	margin: 0 auto;
 	padding: 0;
+	max-width:1200px;
 }
 
 .grid-1,
@@ -595,7 +596,7 @@ Table of Contents:
 ===========================================================================*/
 
 @media (max-width: 1250px) {
-	.container-12 {width: 960px;}
+	.container-12 {}
 
 	.grid-1,
 	.grid-2,
@@ -667,7 +668,7 @@ Table of Contents:
 /* Note: Design for a width of 768px */
 
 @media (max-width: 995px) {
-	.container-12 {width: 768px;}
+	.container-12 {}
 
 	.container-12 .grid-1 {width: 44px;}
 	.container-12 .grid-2 {width: 108px;}
@@ -725,7 +726,7 @@ Table of Contents:
 @media (max-width: 767px) {
 	.container-12 {
 		padding: 0 15px;
-		width: auto;
+		width: 75%;
 	}
 
 	.container-12 [class*="grid-"] {

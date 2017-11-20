@@ -89,6 +89,18 @@ endif; ?>
 	$has_border_color = false;
 	$border_color = '';
  endif; ?>
+	
+   <?php if(!empty( $node->field_image_alt_text['und'][0]['value'] ) ) :
+	$alt = $node->field_image_alt_text['und'][0]['value'];
+ else:
+	$alt = "";
+ endif; ?>
+ 
+    <?php if(!empty( $node->field_image_hover_title_credits['und'][0]['value'] ) ) :
+	$header_image_title = $node->field_image_hover_title_credits['und'][0]['value'];
+ else:
+	$header_image_title = "";
+ endif; ?>
 
  <?php
 
@@ -131,7 +143,9 @@ endif; ?>
 				</div>
 			<?php endif; ?>
 
-			<div class="clearfix header-bg-refuge" style="background-image: url(<?php echo (($has_header_image) ? $header_image_url : base_path().path_to_theme() . '/images/fws-sandcranes.png') ?>); background-position: center;background-size:contain;background-repeat:no-repeat;" data-stellar-background-ratio = "0.5">
+			
+			<img src = '<?php echo $header_image_url; ?>' class='refuge-header-image' alt="<?php echo $alt; ?>" title="<?php echo $header_image_title; ?>"  />
+			
 				<!-- Region Slider Content -->
 				<?php if ( $page['slider_content'] ) :
 					mnpn_region_preffix ( 'slider_content' );

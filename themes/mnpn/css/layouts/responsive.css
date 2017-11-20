@@ -649,7 +649,9 @@ img::-moz-selection {
 ===========================================================================*/
 #header {
   position: relative;
-  width: 100%;
+  width: 75%;
+  max-width:1200px;
+  margin:0 auto
 }
 .stickup {
   -moz-transition: all 0.4s ease;
@@ -675,7 +677,6 @@ img::-moz-selection {
 
 
 .header-bg, .header-bg-refuge {
-  min-height: 52.35em;
   margin-top: 100px;
 }
 .header-section-1 {
@@ -715,7 +716,8 @@ img::-moz-selection {
   height: 0;
 }
 
-.container-12 .grid-12 {width: 1200px;margin:0;}
+
+.container-12 .grid-12 {width: 100%;margin:0;}
 
 .region.region-menu {
   /* margin-top: -10.5em; */
@@ -723,6 +725,17 @@ img::-moz-selection {
   position: relative;
 }
 
+.header-image, .refuge-header-image{
+	max-width:1200px;
+	width:100%;
+	max-height:680px;
+	margin:100px auto 0;
+	display:block;
+}
+
+.not-front .header-image{
+	display:none;
+}
 
 
 /* Menu
@@ -756,6 +769,7 @@ img::-moz-selection {
   position: relative;
   margin-top:100px;
   height:50px;
+  display:flex;
 }
 #superfish-1:after {
   clear: both;
@@ -1165,19 +1179,19 @@ transform: rotate(20deg); */
 }
 
 #vdr-nwr-container{
-	background-color:#734831;
+	background-color:#49575E;
 }
 
 .vdr-nwr-text{
-	background-color:#8b664d;
+	background-color:#698288;
 }
 
 #midway-atoll-nwr-container{
-	background-color:#2e1413;
+	background-color:#2E1324;
 }
 
 .midway-atoll-text{
-	background-color:#553438;
+	background-color:#55343D;
 }
 
 
@@ -1328,10 +1342,13 @@ Start a Project Page
 
 /* Refuge Pages */
 
-.refuge-content{
-	margin-left:30px;
-	color:#fff;
+.refuge-content p{ 
+	margin-left:30px;	
 	width:85%;
+}
+
+.refuge-content{
+	color:#fff;
 }
 
 .refuge-content li, .bullet-list li{
@@ -1994,11 +2011,12 @@ div.messages .dismiss:hover {
   color: #464646;
 }
 
+/***
+* Dashboard Stuff
+***/
 
- /* Contact Us */
- .connect-block h2.block__title.block-title {
-   text-align: center;
- }
+
+ 
 
 
 
@@ -2095,7 +2113,6 @@ div.messages .dismiss:hover {
 	
 	
 	.container-12 .grid-12{
-		width:960px;
 	}
 	
 	.title-center{
@@ -2107,13 +2124,10 @@ div.messages .dismiss:hover {
 	}
 	
 	#page-header-tagline{
-		width:960px;
 	}
 	
 	.header-bg-refuge{
-		width:960px;
 		margin:0 auto;
-		min-height:41.9em;
 	}
 
 	.header-bg{
@@ -2135,7 +2149,8 @@ div.messages .dismiss:hover {
   .header-section-2, 
   .not-front .header-section-2 {
     background: #fff;
-    height: 5.3em;
+    height: auto;
+	min-height:85px;
   }  
   .nav-logo img {
     width: 87px;
@@ -2303,9 +2318,26 @@ div.messages .dismiss:hover {
 3. Mobile landscape
 ===========================================================================*/
 @media (max-width: 767px) {
+	
+   #homepage-actions-table td{
+	   display:block;
+	   width: 80%;
+	   margin:5px auto 0;
+   }
+
+	#homepage-actions-table td#action-runner{
+		display:none;
+	}      
+	
+	
   #superfish-1 {
     display: none;
   }
+  
+  #block-superfish-1{
+	  display:none;
+  }
+  
   .nav-logo img {
     width: 72px;
   }
@@ -2327,7 +2359,7 @@ div.messages .dismiss:hover {
   }
    #block-system-main-menu ul.menu {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background: #8db698;
+    background: #5C4C3D;
     top: -1.6em;
     text-decoration: none;
     color: #fff;
@@ -2421,7 +2453,7 @@ div.messages .dismiss:hover {
   }
   #main {
     display: table !important;
-    padding: 25px 0 0;
+    padding: 0;
     width: 100% !important;
   }
   .sidebar {
@@ -2455,7 +2487,7 @@ div.messages .dismiss:hover {
   }
   .header-section-2,
   .not-front .header-section-2 {
-    height: 1.6em;
+    min-height: 20px;
     background: #fff;
   }
   .block.block-sharethis {
@@ -2597,10 +2629,11 @@ div.messages .dismiss:hover {
 	
     .container-12{
 		padding:0;
+		width:auto;
 	}
 	
    .container-12 .grid-12{
-	   width: 360px;
+	   width: auto; 
 	   margin:0 auto;
    }
    
@@ -2612,6 +2645,15 @@ div.messages .dismiss:hover {
 	   left:0;
 	   bottom:0;
 	   padding:0;
+   }
+   
+   .header-image{
+	   width:auto;
+	   max-height:220px;
+   }
+   
+   #header{
+	   width:100%;
    }
    
    #header_bottom_wrapper .block{
@@ -2628,19 +2670,11 @@ div.messages .dismiss:hover {
    }
    
    .header-bg-refuge{
-	   width:360px;
+	   width:auto;
 	   min-height:15.7em;
    }
-	
-   #homepage-actions-table td{
-	   display:block;
-	   width: 80%;
-	   margin:0 auto;
-   }
-   
-	#homepage-actions-table td#action-runner{
-		display:none;
-	}   
+
+
 
    .refuge-left, .refuge-right{
 	   float:none;

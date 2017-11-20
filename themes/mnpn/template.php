@@ -166,8 +166,11 @@ function mnpn_aggregator_block_item($variables) {
 
 function mnpn_render_header_block($tagline, $image_url, $border_color='fff'){
 	$html = "";
+	//$html .= "<img src = '" . $image_url . "' class='header-image' />";
 	$html .= "<div id='page-header-tagline' class='clearfix' style='background-image:url(\"" . $image_url . "\");border-bottom:15px solid #" . $border_color . "'>";
-	$html .= "<p class = 'tagline-text'>" . $tagline . "</p>";
+	if($tagline){
+		$html .= "<p class = 'tagline-text'>" . $tagline . "</p>";
+	}
 	$html .= "</div>";
 	
 	return $html;

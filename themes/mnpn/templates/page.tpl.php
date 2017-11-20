@@ -87,6 +87,7 @@ endif; ?>
 	$tagline = $node->field_tagline['und'][0]['value'];
  else:
 	$has_tagline = false;
+	$tagline = null;
  endif; ?>
  
   <?php if(!empty( $node->field_border_color['und'][0]['value'] ) ) :
@@ -133,13 +134,14 @@ endif; ?>
 			<?php endif; ?>
 			
 			<?php 
-				if ($has_header_image && $has_tagline) :
+				if ($has_header_image) :
 					print mnpn_render_header_block($tagline, $header_image_url, $border_color);
 				endif;
 			?>				
-			
+			<img src = '//fwstest.usanpn.org/sites/fwstest.usanpn.org/themes/mnpn/images/fws-sandcranes.png' class='header-image' />
+			<!--
 			<div class="clearfix header-bg" style="background-image: url(<?php echo base_path().path_to_theme() ?>/images/fws-sandcranes-2.jpg); background-position: center;background-size:contain;background-repeat:no-repeat" data-stellar-background-ratio = "0.5">
-				<!-- Region Slider Content -->
+
 				<?php if ( $page['slider_content'] ) : 
 					mnpn_region_preffix ( 'slider_content' );
 						print render( $page['slider_content'] );
@@ -154,6 +156,7 @@ endif; ?>
 					</div>
 				</div>
 			</div>
+			-->
 
 			<!-- Region Header -->
 			<?php if ( $page['header'] ) : ?>
