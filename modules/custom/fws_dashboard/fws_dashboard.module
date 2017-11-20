@@ -5,10 +5,15 @@ define('REFUGE_DASHBOARD','dashboard');
 
 define('REFUGE_DASHBOARD_THEME','refuge_dashboard');
 
+define('NPN_CACHE_TTL_MINUTES','npn_cahe_ttl_minutes');
+define('NPN_CACHE_TTL_MINUTES_DEFAULT','60');
 define('NPN_API_ROOT','npn_api_root');
 define('NPN_API_ROOT_DEFAULT','//www-dev.usanpn.org');
 define('NPN_DATA_API_ROOT','npn_data_api_root');
 define('NPN_DATA_API_ROOT_DEFAULT','//data-dev.usanpn.org:3006');
+define('NPN_DATA_USE_STATS_CACHE','npn_data_use_stats_cache');
+
+
 define('NPN_GEOSERVER_ROOT','npn_geoserver_root');
 define('NPN_GEOSERVER_ROOT_DEFAULT','//geoserver-dev.usanpn.org/geoserver');
 
@@ -47,6 +52,14 @@ function fws_dashboard_menu() {
  */
 function fws_dashboard_settings_form() {
     return system_settings_form(array(
+        NPN_CACHE_TTL_MINUTES => array(
+            '#type' => 'textfield',
+            '#title' => t('Client cache time to live (minutes)'),
+            '#default_value' => variable_get(NPN_CACHE_TTL_MINUTES,NPN_CACHE_TTL_MINUTES_DEFAULT),
+            '#description' => t('How long client browsers should cache responses from webservices.'),
+            '#required' => FALSE,
+            '#size' => 25,
+        ),
         NPN_API_ROOT => array(
             '#type' => 'textfield',
             '#title' => t('URL of the NPN web services (defaults to: "'.NPN_API_ROOT_DEFAULT.'")'),
@@ -60,6 +73,13 @@ function fws_dashboard_settings_form() {
             '#default_value' => variable_get(NPN_DATA_API_ROOT,NPN_DATA_API_ROOT_DEFAULT),
             '#required' => TRUE,
             '#size' => 100,
+        ),
+        NPN_DATA_USE_STATS_CACHE => array(
+            '#type' => 'checkbox',
+            '#title' => 'Use cache for statistics',
+            '#default_value' => variable_get(NPN_DATA_USE_STATS_CACHE),
+            '#required' => FALSE,
+            '#size' => 25,
         ),
         NPN_GEOSERVER_ROOT => array(
             '#type' => 'textfield',
@@ -108,8 +128,10 @@ function fws_dashboard_block_view($delta='') {
         }
         $user_is_admin = fws_dashboard_user_is_admin($refuge) ? ' user_is_admin' :'';
         $npn_configuration = array(
+            'cacheTTL' => intval(variable_get(NPN_CACHE_TTL_MINUTES,NPN_CACHE_TTL_MINUTES_DEFAULT)),
             'apiRoot' => variable_get(NPN_API_ROOT,NPN_API_ROOT_DEFAULT),
             'dataApiRoot' => variable_get(NPN_DATA_API_ROOT,NPN_DATA_API_ROOT_DEFAULT),
+            'dataApiUseStatisticsCache' => variable_get(NPN_DATA_USE_STATS_CACHE) ? TRUE : FALSE,
             'geoServerRoot' => variable_get(NPN_GEOSERVER_ROOT,NPN_GEOSERVER_ROOT_DEFAULT),
         );
         $npn_configuration_json = drupal_json_encode($npn_configuration);
