@@ -126,6 +126,7 @@ function fws_dashboard_block_view($delta='') {
                 $css[] = $rel;
             }
         }
+        $user_is_logged_in = user_is_logged_in() ? ' user_is_logged_in' : '';
         $user_is_admin = fws_dashboard_user_is_admin($refuge) ? ' user_is_admin' :'';
         $npn_configuration = array(
             'cacheTTL' => intval(variable_get(NPN_CACHE_TTL_MINUTES,NPN_CACHE_TTL_MINUTES_DEFAULT)),
@@ -142,7 +143,7 @@ function fws_dashboard_block_view($delta='') {
         }
         // TODO this doesn't appear to work properly in a production build for some reason
         $html .= "<script>\nvar npn_base_href = '${app_dir}/',\nnpn_configuration = ${npn_configuration_json};\n</script>";
-        $html .= "<refuge-dashboard refuge_id=\"${refuge_id}\"${user_is_admin}></refuge-dashboard>";
+        $html .= "<refuge-dashboard refuge_id=\"${refuge_id}\"${user_is_logged_in}${user_is_admin}></refuge-dashboard>";
         $order = array('inline','polyfills','scripts','styles','vendor','main');
         foreach($order as $key) { // styles only there on dev build
             if(isset($js[$key])) {
