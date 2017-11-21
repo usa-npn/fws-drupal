@@ -143,7 +143,7 @@ endif; ?>
 				</div>
 			<?php endif; ?>
 
-			
+	
 			<img src = '<?php echo $header_image_url; ?>' class='refuge-header-image' alt="<?php echo $alt; ?>" title="<?php echo $header_image_title; ?>"  />
 			
 				<!-- Region Slider Content -->
