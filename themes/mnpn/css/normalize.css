@@ -23,7 +23,7 @@
 /*revert me to 1200px */
 .container-12 {
 	position: relative;
-	width: 75%;
+	width: 90%;
 	margin: 0 auto;
 	padding: 0;
 	max-width:1200px;
@@ -617,7 +617,7 @@ Table of Contents:
 	.container-12 .grid-1 {width: 60px;}
 	.container-12 .grid-2 {width: 140px;}
 	.container-12 .grid-3 {width: 220px;}
-	.container-12 .grid-4 {width: 300px;}
+	.container-12 .grid-4 {}
 	.container-12 .grid-5 {width: 380px;}
 	.container-12 .grid-6 {width: 460px;}
 	.container-12 .grid-7 {width: 540px;}
@@ -726,7 +726,7 @@ Table of Contents:
 @media (max-width: 767px) {
 	.container-12 {
 		padding: 0 15px;
-		width: 75%;
+		width: 90%;
 	}
 
 	.container-12 [class*="grid-"] {
