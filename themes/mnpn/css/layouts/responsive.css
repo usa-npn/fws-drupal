@@ -363,6 +363,16 @@ input[type="reset"] {
   padding-top: 20px;
   text-align: left;
 }
+
+.gmap-popup a{
+	color:#2F1614;
+	text-decoration:underline;
+}
+
+.gmap-popup a:hover{
+	color:#ffd501;
+}
+
 /* Lists
 ===========================================================================*/
 ul,
@@ -373,10 +383,9 @@ ul.menu {
 ul li,
 .item-list ul li,
 ul.menu li {
-  list-style: none;
-  font-size: 18px;
-  line-height: 22px;
-  border-bottom: 1px solid #e1e1e1;
+  list-style: disc inside;
+  font-size: 16px;
+  line-height: 22px;  
   margin: 0;
   padding: 10px 20px 15px 0;
 }
@@ -703,7 +712,11 @@ img::-moz-selection {
   z-index: 99;
   background-color:#FFF;
   color:#000;
-  box-shadow:0 2px 8px;
+  box-shadow:0px 2px 8px #000;
+  -webkit-box-shadow: 0px 2px 8px #000;
+  -moz-box-shadow:0 2px 8px #000;
+  left:0px;
+  top:0px;
   
 }
 .header-scrolling {
@@ -768,7 +781,7 @@ img::-moz-selection {
   width: auto;
   z-index: 101;
   position: relative;
-  margin-top:100px;
+  margin-top:100px; 
   height:50px;
   display:flex;
 }
@@ -789,7 +802,8 @@ img::-moz-selection {
   overflow: inherit;
   padding: 0;
   text-transform: uppercase;
-  position: relative;  
+  position: relative;
+  list-style:none;
 }
 #superfish-1 > li:after {
   -moz-transition: all 0.3s ease;
@@ -1081,6 +1095,10 @@ img::-moz-selection {
 6. CONTENT
 ===========================================================================*/
 
+.content-main{
+	max-width:1200px;
+}
+
 
 h2.visually-hidden{
 	display:none;
@@ -1297,6 +1315,33 @@ Sign Up Block
 	margin-right:20px;
 }
 
+/*
+Call Arrow
+*/
+.call-arrow{
+	line-height:36px;
+	max-width:450px;
+	text-align:center;
+	margin:0 auto 25px;
+}
+
+.call-arrow .call-arrow-link{
+	display:block;
+	background:transparent url("/sites/fwstest.usanpn.org/themes/mnpn/images/call-arrow-green.png") center right no-repeat;
+	text-transform:uppercase;
+	color:#fff;
+	text-decoration:none;
+	padding:0 15px 3px;
+	font-style:normal;
+	font-family: 'FrutigerLTW01-75Black',Arial,sans-serif;
+	font-size:13px;
+}
+
+.call-arrow .call-arrow-link:hover, .call-arrow .call-arrow-link:active{
+	color:#ffd501;
+}
+
+
 
 /*
 Start a Project Page
@@ -1318,6 +1363,10 @@ Start a Project Page
 	color:#5a4541;
 }
 
+.project-profile-block p, .project-profile-block ul{
+	margin-left:20px;
+}
+
 .project-profile-block a{
 	text-decoration:underline;
 	color:#599a53;	
@@ -1331,7 +1380,7 @@ Start a Project Page
 	
 }
 
-.profile-quote, .profile-attribute{
+.project-profile-block .profile-quote, .project-profile-block .profile-attribute{
 	font-family:'FrutigerLTW01-55Roman',Arial,sans-serif;
 	margin-left: 22%;
 }
@@ -1862,6 +1911,7 @@ div.messages .dismiss:hover {
 	border:0;
 	line-height:18px;
 	border-bottom:none;
+	list-style:none;
 }
 
 
