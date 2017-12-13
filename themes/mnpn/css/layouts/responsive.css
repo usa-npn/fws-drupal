@@ -1047,36 +1047,36 @@ img::-moz-selection {
 
 #arrow-icon{
 
-	background-image:url("/sites/fwstest.usanpn.org/themes/mnpn/images/arrow-icon.png");
+	background-image:url("/sites/fws.usanpn.org/themes/mnpn/images/arrow-icon.png");
 
 }
 
 #arrow-icon:hover{
-	background-image:url("/sites/fwstest.usanpn.org/themes/mnpn/images/arrow-icon-yellow.png");
+	background-image:url("/sites/fws.usanpn.org/themes/mnpn/images/arrow-icon-yellow.png");
 }
 
 #cog-icon{
-	background-image:url("/sites/fwstest.usanpn.org/themes/mnpn/images/cog-icon.png");
+	background-image:url("/sites/fws.usanpn.org/themes/mnpn/images/cog-icon.png");
 }
 
 #cog-icon:hover{
-	background-image:url("/sites/fwstest.usanpn.org/themes/mnpn/images/cog-icon-yellow.png");
+	background-image:url("/sites/fws.usanpn.org/themes/mnpn/images/cog-icon-yellow.png");
 }
 
 #flower-icon{
-	background-image:url("/sites/fwstest.usanpn.org/themes/mnpn/images/flower-icon.png");
+	background-image:url("/sites/fws.usanpn.org/themes/mnpn/images/flower-icon.png");
 }
 
 #flower-icon:hover{
-	background-image:url("/sites/fwstest.usanpn.org/themes/mnpn/images/flower-icon-yellow.png");
+	background-image:url("/sites/fws.usanpn.org/themes/mnpn/images/flower-icon-yellow.png");
 }
 
 #us-icon{
-	background-image:url("/sites/fwstest.usanpn.org/themes/mnpn/images/US-icon.png");
+	background-image:url("/sites/fws.usanpn.org/themes/mnpn/images/US-icon.png");
 }
 
 #us-icon:hover{
-	background-image:url("/sites/fwstest.usanpn.org/themes/mnpn/images/US-icon-yellow.png");
+	background-image:url("/sites/fws.usanpn.org/themes/mnpn/images/US-icon-yellow.png");
 }
 
 #main-action-2{
@@ -1327,7 +1327,7 @@ Call Arrow
 
 .call-arrow .call-arrow-link{
 	display:block;
-	background:transparent url("/sites/fwstest.usanpn.org/themes/mnpn/images/call-arrow-green.png") center right no-repeat;
+	background:transparent url("/sites/fws.usanpn.org/themes/mnpn/images/call-arrow-green.png") center right no-repeat;
 	text-transform:uppercase;
 	color:#fff;
 	text-decoration:none;
