@@ -100,6 +100,10 @@ function fws_dashboard_block_info() {
             'info' => t('Refuge Dashboard'),
             'cache' => DRUPAL_NO_CACHE,
         ),
+        'status_of_spring' => array(
+            'info' => t('Refuge Status of Spring Dashboard'),
+            'cache' => DRUPAL_NO_CACHE,
+        ),
     );
 }
 
@@ -107,13 +111,15 @@ function fws_dashboard_block_info() {
  * Implements hook_block_view()
  */
 function fws_dashboard_block_view($delta='') {
-    if($delta === 'refuge_dashboard') {
-        $node = menu_get_object();
-        $refuge = entity_metadata_wrapper('node', $node);
-        $refuge_id = $refuge->nid->value();
+    if($delta === 'refuge_dashboard' || $delta === 'status_of_spring') {
+
         $module_path = drupal_get_path('module','fws_dashboard');
 
-        $app_dir = $module_path.'/app';
+        if($delta === 'refuge_dashboard') {
+            $app_dir = $module_path.'/app';
+        } else {
+            $app_dir = $module_path.'/spring';
+        }
         $files = file_scan_directory($app_dir,'/\.(js|css)$/');
         $js = array();
         $css = array();
@@ -127,7 +133,6 @@ function fws_dashboard_block_view($delta='') {
             }
         }
         $user_is_logged_in = user_is_logged_in() ? ' user_is_logged_in' : '';
-        $user_is_admin = fws_dashboard_user_is_admin($refuge) ? ' user_is_admin' :'';
         $npn_configuration = array(
             'cacheTTL' => intval(variable_get(NPN_CACHE_TTL_MINUTES,NPN_CACHE_TTL_MINUTES_DEFAULT)),
             'apiRoot' => variable_get(NPN_API_ROOT,NPN_API_ROOT_DEFAULT),
@@ -143,7 +148,15 @@ function fws_dashboard_block_view($delta='') {
         }
         // TODO this doesn't appear to work properly in a production build for some reason
         $html .= "<script>\nvar npn_base_href = '${app_dir}/',\nnpn_configuration = ${npn_configuration_json};\n</script>";
-        $html .= "<refuge-dashboard refuge_id=\"${refuge_id}\"${user_is_logged_in}${user_is_admin}></refuge-dashboard>";
+        if($delta === 'refuge_dashboard') {
+            $node = menu_get_object();
+            $refuge = entity_metadata_wrapper('node', $node);
+            $user_is_admin = fws_dashboard_user_is_admin($refuge) ? ' user_is_admin' :'';
+            $refuge_id = $refuge->nid->value();
+            $html .= "<refuge-dashboard refuge_id=\"${refuge_id}\"${user_is_logged_in}${user_is_admin}></refuge-dashboard>";
+        } else {
+            $html .= "<spring-dashboard ${user_is_logged_in}></spring-dashboard>";
+        }
         $order = array('inline','polyfills','scripts','styles','vendor','main');
         foreach($order as $key) { // styles only there on dev build
             if(isset($js[$key])) {
@@ -289,22 +302,35 @@ function fws_dashboard_list() {
  * serializes a refuge to an array for JSON output.
  */
 function _fws_dashboard_refuge_s11n($refuge) {
-    $selections = $refuge->field_saved_visualizations->value();
-    $path_alias = drupal_get_path_alias('node/'.$refuge->nid->value());
+    $terse = isset($_GET['terse']);
     $url_opts = array('absolute'=>TRUE);
-    $resources = $refuge->field_resources_for_observers->value();
+    $path_alias = drupal_get_path_alias('node/'.$refuge->nid->value());
+    // the location field unfortunately doesn't support entity metadata wrappers
+    // get the raw data
+    $raw = $refuge->raw();
+    $location = isset($raw->field_refuge_location) && // tests just to be safe
+                isset($raw->field_refuge_location['und']) &&
+                isset($raw->field_refuge_location['und'][0]) ? $raw->field_refuge_location['und'][0] : NULL;
     $return = array(
          'id' => $path_alias,
+         'nid' => intval($refuge->nid->value()),
          'title' => $refuge->label(),
          'network_id' => intval($refuge->field_network_id->value()),
          'boundary_id' => $refuge->field_refuge_boundary->value(),
-         'selections' => $selections ? drupal_json_decode($selections) : array(),
-         'resources' => $resources ? $resources['value'] : NULL,
+         'location' => ($location && isset($location['latitude']) && isset($location['longitude'])) ?
+            array( 'lat' => floatval($location['latitude']), 'lng' => floatval($location['longitude'])) : NULL,
          'links' => array(
              'self' => url(REFUGE_API.'/'.$path_alias,$url_opts),
              'dashboard' => url(REFUGE_DASHBOARD.'/'.$path_alias,$url_opts),
          ),
      );
+     if(!$terse) {
+         $selections = $refuge->field_saved_visualizations->value();
+         $return['selections'] = $selections ? drupal_json_decode($selections) : array();
+
+         $resources = $refuge->field_resources_for_observers->value();
+         $return['resources'] = $resources ? $resources['value'] : NULL;
+     }
      return $return;
 }
 

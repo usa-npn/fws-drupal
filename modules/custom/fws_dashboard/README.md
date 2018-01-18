@@ -9,6 +9,15 @@ $ npm install
 $ ng build --output-path ../app [--watch]
 ```
 
+For the status of spring Dashboard
+
+```
+$ git clone git@github.com:usa-npn/npn_fws_spring.git
+$ cd npn_fws_spring
+$ npm install
+$ ng build --output-path ../spring [--watch]
+```
+
 Add the optional `--watch` listed above to the `ng build` command to have code changes automatically compiled.  In this way you can develop within the context of the Drupal site but requires browser refreshes which often aren't required when using `ng serve`.
 
 _Important_: The above command will result in a __development__ build of the application.  In this situation CSS will be inlined into the app document and the JavaScript will not be minified so will be significantly larger.  Prior to committing code and pushing a production build should be built and tested like:
