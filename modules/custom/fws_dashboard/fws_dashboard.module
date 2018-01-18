@@ -1,7 +1,5 @@
 <?php
-
 define('REFUGE_API', 'api/refuge');
-define('REFUGE_DASHBOARD','dashboard');
 
 define('REFUGE_DASHBOARD_THEME','refuge_dashboard');
 
@@ -315,13 +313,14 @@ function _fws_dashboard_refuge_s11n($refuge) {
          'id' => $path_alias,
          'nid' => intval($refuge->nid->value()),
          'title' => $refuge->label(),
+         'partner' => $refuge->field_is_partner->value(),
          'network_id' => intval($refuge->field_network_id->value()),
          'boundary_id' => $refuge->field_refuge_boundary->value(),
          'location' => ($location && isset($location['latitude']) && isset($location['longitude'])) ?
             array( 'lat' => floatval($location['latitude']), 'lng' => floatval($location['longitude'])) : NULL,
          'links' => array(
              'self' => url(REFUGE_API.'/'.$path_alias,$url_opts),
-             'dashboard' => url(REFUGE_DASHBOARD.'/'.$path_alias,$url_opts),
+             'dashboard' => url('/'.$path_alias,$url_opts),
          ),
      );
      if(!$terse) {
