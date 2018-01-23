@@ -314,6 +314,7 @@ function _fws_dashboard_refuge_s11n($refuge) {
          'nid' => intval($refuge->nid->value()),
          'title' => $refuge->label(),
          'partner' => $refuge->field_is_partner->value(),
+         'no_geospatial' => $refuge->field_no_geospatial_data->value(),
          'network_id' => intval($refuge->field_network_id->value()),
          'boundary_id' => $refuge->field_refuge_boundary->value(),
          'location' => ($location && isset($location['latitude']) && isset($location['longitude'])) ?
