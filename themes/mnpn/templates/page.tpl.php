@@ -138,8 +138,9 @@ endif; ?>
 					print mnpn_render_header_block($tagline, $header_image_url, $border_color);
 				endif;
 			?>							
-			<img src = '//fwstest.usanpn.org/sites/fwstest.usanpn.org/themes/mnpn/images/fws-sandcranes.png' class='header-image' />
-			<!--
+			<img src = '/sites/fws/themes/mnpn/images/fws-sandcranes.png' class='header-image' />
+
+	<!--
 			<div class="clearfix header-bg" style="background-image: url(<?php echo base_path().path_to_theme() ?>/images/fws-sandcranes-2.jpg); background-position: center;background-size:contain;background-repeat:no-repeat" data-stellar-background-ratio = "0.5">
 
 				<?php if ( $page['slider_content'] ) : 
