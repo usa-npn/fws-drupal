@@ -1880,6 +1880,11 @@ div.messages .dismiss:hover {
   padding: 0;
   position: relative;
 }
+
+.fws-customize-mode footer{
+	display:none;
+}
+
 .footer-wrapper {
   background: #333;
   padding: 3em 0 4em;
