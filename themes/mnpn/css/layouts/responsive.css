@@ -154,6 +154,11 @@ h6 a:hover {
 	font: 700 20px/30px 'Frutiger LT W01 65 Bold', Arial, sans-serif;
 }
 
+.section-gulfcoastphenologytrail #page-header-tagline{
+    background-size:contain;
+    border-bottom:none;
+}
+
 /* Forms
 ===========================================================================*/
 input[type="text"],
@@ -1712,6 +1717,13 @@ div.messages .dismiss:hover {
 }
 .panel-2col .panel-2col .panel-col-last .inside {
   margin: 0 0 0 20px;
+}
+
+/* Mayfly Watch Page
+=============================================================================*/
+
+.mayfly-img{
+    height:100px;
 }
 
 
