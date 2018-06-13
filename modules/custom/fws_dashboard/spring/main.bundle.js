@@ -1231,7 +1231,7 @@ NpnGriddedModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_4__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_platform_browser__["a" /* BrowserModule */],
             __WEBPACK_IMPORTED_MODULE_2__angular_forms__["e" /* FormsModule */], __WEBPACK_IMPORTED_MODULE_2__angular_forms__["j" /* ReactiveFormsModule */],
-            __WEBPACK_IMPORTED_MODULE_5__angular_material__["n" /* MatSliderModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["o" /* MatSliderModule */],
             __WEBPACK_IMPORTED_MODULE_9__common__["h" /* NpnCommonModule */]
         ],
         declarations: [
@@ -5441,9 +5441,9 @@ VisualizationsModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_16__angular_platform_browser__["a" /* BrowserModule */],
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["a" /* CommonModule */],
             __WEBPACK_IMPORTED_MODULE_2__angular_forms__["e" /* FormsModule */], __WEBPACK_IMPORTED_MODULE_2__angular_forms__["j" /* ReactiveFormsModule */],
-            __WEBPACK_IMPORTED_MODULE_18__angular_material__["h" /* MatFormFieldModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["c" /* MatButtonModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["d" /* MatCheckboxModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["m" /* MatSelectModule */],
-            __WEBPACK_IMPORTED_MODULE_18__angular_material__["l" /* MatProgressSpinnerModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["g" /* MatExpansionModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["b" /* MatAutocompleteModule */],
-            __WEBPACK_IMPORTED_MODULE_18__angular_material__["j" /* MatInputModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["n" /* MatSliderModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["k" /* MatProgressBarModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["p" /* MatTooltipModule */],
+            __WEBPACK_IMPORTED_MODULE_18__angular_material__["i" /* MatFormFieldModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["c" /* MatButtonModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["d" /* MatCheckboxModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["n" /* MatSelectModule */],
+            __WEBPACK_IMPORTED_MODULE_18__angular_material__["m" /* MatProgressSpinnerModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["h" /* MatExpansionModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["b" /* MatAutocompleteModule */],
+            __WEBPACK_IMPORTED_MODULE_18__angular_material__["k" /* MatInputModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["o" /* MatSliderModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["l" /* MatProgressBarModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["q" /* MatTooltipModule */],
             __WEBPACK_IMPORTED_MODULE_19__agm_core__["a" /* AgmCoreModule */],
             __WEBPACK_IMPORTED_MODULE_20__angular_flex_layout__["a" /* FlexLayoutModule */],
             __WEBPACK_IMPORTED_MODULE_21__common__["h" /* NpnCommonModule */], __WEBPACK_IMPORTED_MODULE_22__gridded__["a" /* NpnGriddedModule */]
@@ -8580,9 +8580,9 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["h" /* VisualizationsModule */],
             __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["d" /* NpnCommonModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_http__["c" /* HttpModule */],
-            __WEBPACK_IMPORTED_MODULE_13__angular_material__["o" /* MatTabsModule */], __WEBPACK_IMPORTED_MODULE_13__angular_material__["f" /* MatDialogModule */],
-            __WEBPACK_IMPORTED_MODULE_13__angular_material__["l" /* MatProgressSpinnerModule */], __WEBPACK_IMPORTED_MODULE_13__angular_material__["i" /* MatIconModule */], __WEBPACK_IMPORTED_MODULE_13__angular_material__["c" /* MatButtonModule */], __WEBPACK_IMPORTED_MODULE_13__angular_material__["p" /* MatTooltipModule */],
-            __WEBPACK_IMPORTED_MODULE_13__angular_material__["h" /* MatFormFieldModule */], __WEBPACK_IMPORTED_MODULE_13__angular_material__["m" /* MatSelectModule */], __WEBPACK_IMPORTED_MODULE_13__angular_material__["j" /* MatInputModule */], __WEBPACK_IMPORTED_MODULE_13__angular_material__["b" /* MatAutocompleteModule */],
+            __WEBPACK_IMPORTED_MODULE_13__angular_material__["p" /* MatTabsModule */], __WEBPACK_IMPORTED_MODULE_13__angular_material__["f" /* MatDialogModule */],
+            __WEBPACK_IMPORTED_MODULE_13__angular_material__["m" /* MatProgressSpinnerModule */], __WEBPACK_IMPORTED_MODULE_13__angular_material__["j" /* MatIconModule */], __WEBPACK_IMPORTED_MODULE_13__angular_material__["c" /* MatButtonModule */], __WEBPACK_IMPORTED_MODULE_13__angular_material__["q" /* MatTooltipModule */],
+            __WEBPACK_IMPORTED_MODULE_13__angular_material__["i" /* MatFormFieldModule */], __WEBPACK_IMPORTED_MODULE_13__angular_material__["n" /* MatSelectModule */], __WEBPACK_IMPORTED_MODULE_13__angular_material__["k" /* MatInputModule */], __WEBPACK_IMPORTED_MODULE_13__angular_material__["b" /* MatAutocompleteModule */],
             __WEBPACK_IMPORTED_MODULE_14__angular_flex_layout__["a" /* FlexLayoutModule */],
             __WEBPACK_IMPORTED_MODULE_16__agm_core__["a" /* AgmCoreModule */].forRoot({
                 apiKey: __WEBPACK_IMPORTED_MODULE_15__node_modules_npn_common_environments_environment__["a" /* environment */].googleMapsApiKey
@@ -9045,8 +9045,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 
 
 var StartOfSpringDialog = (function () {
-    function StartOfSpringDialog(dialogData, npnSvcUtils, rootElement) {
+    function StartOfSpringDialog(dialogData, dialogRef, zone, npnSvcUtils, rootElement) {
         this.dialogData = dialogData;
+        this.dialogRef = dialogRef;
+        this.zone = zone;
         this.npnSvcUtils = npnSvcUtils;
         this.rootElement = rootElement;
         this.working = true;
@@ -9059,6 +9061,26 @@ var StartOfSpringDialog = (function () {
             this.fliCategory = __WEBPACK_IMPORTED_MODULE_3__fli_pcnt__["a" /* FLI_DESCRIPTIONS */][bucketIndex];
         }
     }
+    /*
+    this feels like a hack/workaround.  something about the code in this dialog
+    prevents the standard mat-dialog-close directive from working, clicks of the
+    close icon are being run outside of the angular zone even though (click) events
+    are being tied to the correct code.
+
+    the behavior is inconsistent.  everything works on a new window until a browser refresh
+    and then stops working.  once it stops working the dialog will close if you click the X
+    and then hover the mouse over the visualization (meaning the d3 mouse events ARE being
+    evaluated within the angular zone).
+
+    at any rate cannot deep end on the issue and forcing the close to run in the angular
+    zone seems to work.
+    */
+    StartOfSpringDialog.prototype.close = function () {
+        var _this = this;
+        this.zone.run(function () {
+            _this.dialogRef.close();
+        });
+    };
     StartOfSpringDialog.prototype.ngAfterViewInit = function () {
         var _this = this;
         if (this.noData) {
@@ -9216,14 +9238,14 @@ var StartOfSpringDialog = (function () {
 }());
 StartOfSpringDialog = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        template: "\n    <button mat-icon-button mat-dialog-close><i class=\"fa fa-times\" aria-hidden=\"true\"></i></button>\n    <div class=\"mat-typography\" id=\"startOfSpringDialogWrapper\">\n        <span class=\"mat-title\">{{refuge.title}}</span>\n        <span *ngIf=\"!noData; else noDataDisclaimer\">\n            <ul class=\"refuge-info\">\n                <li>\n                    <label>Average spring leaf onset in recent decades (1983-2012):</label>\n                    {{refugeData['FLI (Day)'] | number:'1.2-2'}}\n                </li>\n                <li>\n                    <label>Recent change in timing relative to historical range of variation (1901-2012):</label>\n                    {{refugeData['FLI (%)'] | number:'1.2-2'}}% ({{fliCategory}})\n                </li>\n                <li>\n                    <label>Change in timing over latitudinal exent of migratory flyway (1920-2012):</label>\n                    <p>\n                        <span *ngIf=\"FLYWAY_TEXTS[refuge.flywayId]; else noFlyway\">\n                        This refuge is in the {{FLYWAY_TEXTS[refuge.flywayId]}} Migration Flyway.\n                        </span>\n                        <ng-template #noFlyway>\n                        This Refuge is outside of the four migratory flyways.\n                        </ng-template>\n                    </p>\n                </li>\n            </ul>\n            <div id=\"startOfSpringVisWrapper\">\n                <div class=\"vis-working\" *ngIf=\"working\">\n                    <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n                </div>\n                <svg id=\"timeSeries\"></svg>\n            </div>\n        </span>\n        <ng-template #noDataDisclaimer>\n            <p>Data are not available for this Refuge.</p>\n        </ng-template>\n    </div>\n    <!--pre>{{refugeData | json}}</pre-->\n    ",
-        styles: ["\n        button[mat-dialog-close] {\n            float: right;\n        }\n        #startOfSpringVisWrapper {\n            min-height: 1px;\n            position: relative;\n        }\n        svg {\n            display: block;\n            border: 1px solid #aaa;\n        }\n        ul.refuge-info>li {\n            list-style: none;\n        }\n        ul.refuge-info>li label {\n            font-weight: bold;\n        }\n    "]
+        template: "\n    <button mat-icon-button class=\"dialog-close\" (click)=\"close()\"><i class=\"fa fa-times\" aria-hidden=\"true\"></i></button>\n    <div class=\"mat-typography\" id=\"startOfSpringDialogWrapper\">\n        <span class=\"mat-title\">{{refuge.title}}</span>\n        <span *ngIf=\"!noData; else noDataDisclaimer\">\n            <ul class=\"refuge-info\">\n                <li>\n                    <label>Average spring leaf onset in recent decades (1983-2012):</label>\n                    {{refugeData['FLI (Day)'] | number:'1.2-2'}}\n                </li>\n                <li>\n                    <label>Recent change in timing relative to historical range of variation (1901-2012):</label>\n                    {{refugeData['FLI (%)'] | number:'1.2-2'}}% ({{fliCategory}})\n                </li>\n                <li>\n                    <label>Change in timing over latitudinal exent of migratory flyway (1920-2012):</label>\n                    <p>\n                        <span *ngIf=\"FLYWAY_TEXTS[refuge.flywayId]; else noFlyway\">\n                        This refuge is in the {{FLYWAY_TEXTS[refuge.flywayId]}} Migration Flyway.\n                        </span>\n                        <ng-template #noFlyway>\n                        This Refuge is outside of the four migratory flyways.\n                        </ng-template>\n                    </p>\n                </li>\n            </ul>\n            <div id=\"startOfSpringVisWrapper\">\n                <div class=\"vis-working\" *ngIf=\"working\">\n                    <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n                </div>\n                <svg id=\"timeSeries\"></svg>\n            </div>\n        </span>\n        <ng-template #noDataDisclaimer>\n            <p>Data are not available for this Refuge.</p>\n        </ng-template>\n    </div>\n    <!--pre>{{refugeData | json}}</pre-->\n    ",
+        styles: ["\n        button.dialog-close {\n            float: right;\n        }\n        #startOfSpringVisWrapper {\n            min-height: 1px;\n            position: relative;\n        }\n        svg {\n            display: block;\n            border: 1px solid #aaa;\n        }\n        ul.refuge-info>li {\n            list-style: none;\n        }\n        ul.refuge-info>li label {\n            font-weight: bold;\n        }\n    "]
     }),
     __param(0, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__angular_material__["a" /* MAT_DIALOG_DATA */])),
-    __metadata("design:paramtypes", [Object, typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_5_npn_common__["f" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5_npn_common__["f" /* NpnServiceUtils */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [Object, typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialogRef */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["P" /* NgZone */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["P" /* NgZone */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_5_npn_common__["f" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5_npn_common__["f" /* NpnServiceUtils */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _d || Object])
 ], StartOfSpringDialog);
 
-var _a, _b;
+var _a, _b, _c, _d;
 //# sourceMappingURL=start-of-spring-dialog.component.js.map
 
 /***/ }),
