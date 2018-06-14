@@ -8568,7 +8568,8 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_7__spring_dashboard_component__["a" /* SpringDashboardComponent */],
             __WEBPACK_IMPORTED_MODULE_9__status_of_spring_component__["a" /* StatusOfSpringComponent */],
             __WEBPACK_IMPORTED_MODULE_10__start_of_spring_component__["a" /* StartOfSpringComponent */],
-            __WEBPACK_IMPORTED_MODULE_17__start_of_spring_dialog_component__["a" /* StartOfSpringDialog */]
+            __WEBPACK_IMPORTED_MODULE_17__start_of_spring_dialog_component__["b" /* StartOfSpringDialog */],
+            __WEBPACK_IMPORTED_MODULE_17__start_of_spring_dialog_component__["a" /* SosDoyTransform */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_12__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
@@ -8595,7 +8596,7 @@ AppModule = __decorate([
             { provide: __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["c" /* NPN_CONFIGURATION */], useFactory: npnConfigurationFactory }
         ],
         entryComponents: [
-            __WEBPACK_IMPORTED_MODULE_17__start_of_spring_dialog_component__["a" /* StartOfSpringDialog */]
+            __WEBPACK_IMPORTED_MODULE_17__start_of_spring_dialog_component__["b" /* StartOfSpringDialog */]
         ]
     })
 ], AppModule);
@@ -9019,7 +9020,8 @@ var _a, _b;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return StartOfSpringDialog; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SosDoyTransform; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return StartOfSpringDialog; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__flyways__ = __webpack_require__("../../../../../src/app/flyways.ts");
@@ -9043,6 +9045,24 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 
 
 
+
+var SosDoyTransform = (function () {
+    function SosDoyTransform() {
+        this.dateFormat = __WEBPACK_IMPORTED_MODULE_4_d3__["r" /* timeFormat */]('%B %e');
+    }
+    SosDoyTransform.prototype.transform = function (value) {
+        var fixed = value.toFixed(2);
+        var rounded = Math.round(value);
+        var d = new Date(2010, 0, 1); // 2010 not a leap year
+        d.setTime(d.getTime() + (rounded * 24 * 60 * 60 * 1000));
+        var fmt = this.dateFormat(d);
+        return fmt + " (" + fixed + " DOY)";
+    };
+    return SosDoyTransform;
+}());
+SosDoyTransform = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["W" /* Pipe */])({ name: 'SosDoy' })
+], SosDoyTransform);
 
 var StartOfSpringDialog = (function () {
     function StartOfSpringDialog(dialogData, dialogRef, zone, npnSvcUtils, rootElement) {
@@ -9134,7 +9154,7 @@ var StartOfSpringDialog = (function () {
             .attr('font-size', '18px')
             .attr('font-style', 'bold')
             .attr('text-anchor', 'left')
-            .text("First Leaf Index, " + startYear + "-" + endYear);
+            .text("Arrival of Spring First Leaf Index from " + startYear + "-" + endYear);
         svg.append('g')
             .attr('transform', "translate(10," + (h + margin.top + margin.bottom - 10) + ")")
             .append('text')
@@ -9238,8 +9258,11 @@ var StartOfSpringDialog = (function () {
 }());
 StartOfSpringDialog = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        template: "\n    <button mat-icon-button class=\"dialog-close\" (click)=\"close()\"><i class=\"fa fa-times\" aria-hidden=\"true\"></i></button>\n    <div class=\"mat-typography\" id=\"startOfSpringDialogWrapper\">\n        <span class=\"mat-title\">{{refuge.title}}</span>\n        <span *ngIf=\"!noData; else noDataDisclaimer\">\n            <ul class=\"refuge-info\">\n                <li>\n                    <label>Average spring leaf onset in recent decades (1983-2012):</label>\n                    {{refugeData['FLI (Day)'] | number:'1.2-2'}}\n                </li>\n                <li>\n                    <label>Recent change in timing relative to historical range of variation (1901-2012):</label>\n                    {{refugeData['FLI (%)'] | number:'1.2-2'}}% ({{fliCategory}})\n                </li>\n                <li>\n                    <label>Change in timing over latitudinal exent of migratory flyway (1920-2012):</label>\n                    <p>\n                        <span *ngIf=\"FLYWAY_TEXTS[refuge.flywayId]; else noFlyway\">\n                        This refuge is in the {{FLYWAY_TEXTS[refuge.flywayId]}} Migration Flyway.\n                        </span>\n                        <ng-template #noFlyway>\n                        This Refuge is outside of the four migratory flyways.\n                        </ng-template>\n                    </p>\n                </li>\n            </ul>\n            <div id=\"startOfSpringVisWrapper\">\n                <div class=\"vis-working\" *ngIf=\"working\">\n                    <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n                </div>\n                <svg id=\"timeSeries\"></svg>\n            </div>\n        </span>\n        <ng-template #noDataDisclaimer>\n            <p>Data are not available for this Refuge.</p>\n        </ng-template>\n    </div>\n    <!--pre>{{refugeData | json}}</pre-->\n    ",
-        styles: ["\n        button.dialog-close {\n            float: right;\n        }\n        #startOfSpringVisWrapper {\n            min-height: 1px;\n            position: relative;\n        }\n        svg {\n            display: block;\n            border: 1px solid #aaa;\n        }\n        ul.refuge-info>li {\n            list-style: none;\n        }\n        ul.refuge-info>li label {\n            font-weight: bold;\n        }\n    "]
+        template: "\n    <button mat-icon-button class=\"dialog-close\" (click)=\"close()\"><i class=\"fa fa-times\" aria-hidden=\"true\"></i></button>\n    <div class=\"mat-typography\" id=\"startOfSpringDialogWrapper\">\n        <span class=\"mat-title\">{{refuge.title}}</span>\n        <span *ngIf=\"!noData; else noDataDisclaimer\">\n            <ul class=\"refuge-info\">\n                <li>\n                    <label>Average spring leaf onset in recent decades (1983-2012):</label>\n                    {{refugeData['FLI (Day)'] | SosDoy}}\n                </li>\n                <li>\n                    <label>Recent change in timing relative to historical range of variation (1901-2012):</label>\n                    Spring first leaf arrival in recent decades is {{fliCategory}} ({{refugeData['FLI (%)'] | number:'1.2-2'}}%) compared to the historical range.\n                </li>\n                <li>\n                    <label>Change in timing over latitudinal exent of migratory flyway (1920-2012):</label>\n                    <p>\n                        <span *ngIf=\"FLYWAY_TEXTS[refuge.flywayId]; else noFlyway\">\n                        {{FLYWAY_TEXTS[refuge.flywayId]}}\n                        </span>\n                        <ng-template #noFlyway>\n                        This Refuge is outside of the four migratory flyways.\n                        </ng-template>\n                    </p>\n                </li>\n            </ul>\n            <div id=\"startOfSpringVisWrapper\">\n                <div class=\"vis-working\" *ngIf=\"working\">\n                    <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n                </div>\n                <svg id=\"timeSeries\"></svg>\n            </div>\n        </span>\n        <ng-template #noDataDisclaimer>\n            <p>Data are not available for this Refuge.</p>\n        </ng-template>\n    </div>\n    <!--pre>{{refugeData | json}}</pre-->\n    ",
+        styles: ["\n        button.dialog-close {\n            float: right;\n        }\n        #startOfSpringVisWrapper {\n            min-height: 1px;\n            position: relative;\n        }\n        svg {\n            display: block;\n            border: 1px solid #aaa;\n        }\n        ul.refuge-info>li {\n            list-style: none;\n        }\n        ul.refuge-info>li label {\n            font-weight: bold;\n        }\n    "],
+        providers: [
+            SosDoyTransform
+        ]
     }),
     __param(0, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__angular_material__["a" /* MAT_DIALOG_DATA */])),
     __metadata("design:paramtypes", [Object, typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialogRef */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["P" /* NgZone */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["P" /* NgZone */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_5_npn_common__["f" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5_npn_common__["f" /* NpnServiceUtils */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _d || Object])
@@ -9484,7 +9507,7 @@ var StartOfSpringComponent = (function (_super) {
                 refuge: refuge,
                 refugeData: refuge.data
             } });
-        this.dialog.open(__WEBPACK_IMPORTED_MODULE_5__start_of_spring_dialog_component__["a" /* StartOfSpringDialog */], config);
+        this.dialog.open(__WEBPACK_IMPORTED_MODULE_5__start_of_spring_dialog_component__["b" /* StartOfSpringDialog */], config);
     };
     StartOfSpringComponent.prototype.ngOnInit = function () {
     };
