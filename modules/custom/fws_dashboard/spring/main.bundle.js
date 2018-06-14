@@ -9050,13 +9050,16 @@ var SosDoyTransform = (function () {
     function SosDoyTransform() {
         this.dateFormat = __WEBPACK_IMPORTED_MODULE_4_d3__["r" /* timeFormat */]('%B %e');
     }
-    SosDoyTransform.prototype.transform = function (value) {
+    SosDoyTransform.prototype.transform = function (value, justDate) {
         var fixed = value.toFixed(2);
+        var fmt = this.dateFormat(this.getDate(value));
+        return justDate ? "" + fmt : fmt + " (" + fixed + " DOY)";
+    };
+    SosDoyTransform.prototype.getDate = function (value) {
         var rounded = Math.round(value);
         var d = new Date(2010, 0, 1); // 2010 not a leap year
         d.setTime(d.getTime() + (rounded * 24 * 60 * 60 * 1000));
-        var fmt = this.dateFormat(d);
-        return fmt + " (" + fixed + " DOY)";
+        return d;
     };
     return SosDoyTransform;
 }());
@@ -9065,12 +9068,13 @@ SosDoyTransform = __decorate([
 ], SosDoyTransform);
 
 var StartOfSpringDialog = (function () {
-    function StartOfSpringDialog(dialogData, dialogRef, zone, npnSvcUtils, rootElement) {
+    function StartOfSpringDialog(dialogData, dialogRef, zone, npnSvcUtils, rootElement, doyTrans) {
         this.dialogData = dialogData;
         this.dialogRef = dialogRef;
         this.zone = zone;
         this.npnSvcUtils = npnSvcUtils;
         this.rootElement = rootElement;
+        this.doyTrans = doyTrans;
         this.working = true;
         this.FLYWAY_TEXTS = __WEBPACK_IMPORTED_MODULE_2__flyways__["b" /* FLYWAY_TEXTS */];
         this.refuge = dialogData.refuge;
@@ -9113,7 +9117,7 @@ var StartOfSpringDialog = (function () {
         var strToPx = function (s) { return parseInt(s.replace(/px$/, '')); };
         var ratioMult = 0.5376; // based on 930/500
         var minusLeft = strToPx(style.paddingLeft) + strToPx(style.borderLeftWidth), minusRight = strToPx(style.paddingRight) + strToPx(style.borderRightWidth), innerWidth = wrapper.clientWidth - minusLeft - minusRight, cw = Math.floor(innerWidth);
-        var margin = { top: 35, right: 20, left: 50, bottom: 50 };
+        var margin = { top: 35, right: 20, left: 55, bottom: 50 };
         var ch = (cw * ratioMult), w = cw - margin.left - margin.right, h = ch - margin.top - margin.bottom;
         var svgWidth = w + margin.left + margin.right, svgHeight = h + margin.top + margin.bottom;
         svg.attr('width', svgWidth)
@@ -9189,15 +9193,17 @@ var StartOfSpringDialog = (function () {
                 .call(__WEBPACK_IMPORTED_MODULE_4_d3__["a" /* axisBottom */](x))
                 .select(".domain")
                 .remove();
+            var abbrevDateFmt = __WEBPACK_IMPORTED_MODULE_4_d3__["r" /* timeFormat */]('%b %e');
+            var yTickFmt = function (d) { return abbrevDateFmt(_this.doyTrans.getDate(d)); };
             chart.append("g")
-                .call(__WEBPACK_IMPORTED_MODULE_4_d3__["b" /* axisLeft */](y))
+                .call(__WEBPACK_IMPORTED_MODULE_4_d3__["b" /* axisLeft */](y).tickFormat(yTickFmt))
                 .append("text")
                 .attr("fill", "#000")
                 .attr("transform", "rotate(-90)")
                 .attr("y", 6)
                 .attr("dy", "0.71em")
                 .attr("text-anchor", "end")
-                .text("DOY");
+                .text("Date");
             chart.append("path")
                 .datum(data)
                 .attr("fill", "none")
@@ -9235,10 +9241,11 @@ var StartOfSpringDialog = (function () {
                 var tx = x(nearest.date);
                 hoverLine.attr('transform', "translate(" + tx + ")");
                 var anchor = nearest.index < (data.length / 2) ? 'start' : 'end';
+                var doyDate = yTickFmt(nearest.doy);
                 hoverDoy
                     .style('text-anchor', anchor)
                     .attr('x', tx)
-                    .text("    " + dateFormat(nearest.date) + " (" + nearest.doy + ")     ");
+                    .text("    " + dateFormat(nearest.date) + " (" + doyDate + ")     ");
             }
             svg.append('rect')
                 .attr('class', 'overlay')
@@ -9265,7 +9272,7 @@ StartOfSpringDialog = __decorate([
         ]
     }),
     __param(0, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__angular_material__["a" /* MAT_DIALOG_DATA */])),
-    __metadata("design:paramtypes", [Object, typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialogRef */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["P" /* NgZone */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["P" /* NgZone */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_5_npn_common__["f" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5_npn_common__["f" /* NpnServiceUtils */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [Object, typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialogRef */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["P" /* NgZone */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["P" /* NgZone */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_5_npn_common__["f" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5_npn_common__["f" /* NpnServiceUtils */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _d || Object, SosDoyTransform])
 ], StartOfSpringDialog);
 
 var _a, _b, _c, _d;
@@ -9281,7 +9288,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".map-wrapper {\n  position: relative; }\n  .map-wrapper ul.start-of-spring-legend {\n    list-style: none;\n    margin: 0px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    padding: 8px;\n    border: 1px solid #aaa;\n    background-color: rgba(255, 255, 255, 0.85);\n    border-radius: 5px; }\n    .map-wrapper ul.start-of-spring-legend > li {\n      list-style: none;\n      padding: 0px; }\n      .map-wrapper ul.start-of-spring-legend > li:not(.title) {\n        position: relative;\n        padding: 0px 0px 4px 25px; }\n        .map-wrapper ul.start-of-spring-legend > li:not(.title):before {\n          display: inline-block;\n          content: ' ';\n          width: 20px;\n          height: 20px;\n          border: 1px solid #aaa;\n          margin-right: 5px;\n          position: absolute;\n          top: 0px;\n          left: 0px; }\n      .map-wrapper ul.start-of-spring-legend > li.mean-5:before {\n        background-color: #ed3d3d; }\n      .map-wrapper ul.start-of-spring-legend > li.mean-5-25:before {\n        background-color: #f5a27a; }\n      .map-wrapper ul.start-of-spring-legend > li.mean-25-75:before {\n        background-color: #828282; }\n      .map-wrapper ul.start-of-spring-legend > li.mean-75-95:before {\n        background-color: #5cb3f2; }\n      .map-wrapper ul.start-of-spring-legend > li.mean-95:before {\n        background-color: #3b3bf0; }\n      .map-wrapper ul.start-of-spring-legend > li.no-data:before {\n        background-color: #ffffff; }\n      .map-wrapper ul.start-of-spring-legend > li.title {\n        font-weight: bold; }\n", ""]);
+exports.push([module.i, ".map-wrapper {\n  position: relative; }\n  .map-wrapper ul.start-of-spring-legend {\n    list-style: none;\n    margin: 0px;\n    width: 185px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    padding: 8px;\n    border: 1px solid #aaa;\n    background-color: rgba(255, 255, 255, 0.85);\n    border-radius: 5px; }\n    .map-wrapper ul.start-of-spring-legend > li {\n      list-style: none;\n      padding: 0px; }\n      .map-wrapper ul.start-of-spring-legend > li:not(.title) {\n        position: relative;\n        padding: 0px 0px 4px 25px; }\n        .map-wrapper ul.start-of-spring-legend > li:not(.title):before {\n          display: inline-block;\n          content: ' ';\n          width: 20px;\n          height: 20px;\n          border: 1px solid #aaa;\n          margin-right: 5px;\n          position: absolute;\n          top: 0px;\n          left: 0px; }\n      .map-wrapper ul.start-of-spring-legend > li.mean-5:before {\n        background-color: #ed3d3d; }\n      .map-wrapper ul.start-of-spring-legend > li.mean-5-25:before {\n        background-color: #f5a27a; }\n      .map-wrapper ul.start-of-spring-legend > li.mean-25-75:before {\n        background-color: #828282; }\n      .map-wrapper ul.start-of-spring-legend > li.mean-75-95:before {\n        background-color: #5cb3f2; }\n      .map-wrapper ul.start-of-spring-legend > li.mean-95:before {\n        background-color: #3b3bf0; }\n      .map-wrapper ul.start-of-spring-legend > li.no-data:before {\n        background-color: #ffffff; }\n      .map-wrapper ul.start-of-spring-legend > li.title {\n        font-weight: bold; }\n", ""]);
 
 // exports
 
@@ -9297,13 +9304,14 @@ module.exports = module.exports.toString();
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return StartOfSpringComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__map_base__ = __webpack_require__("../../../../../src/app/map-base.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__node_modules_npn_common__ = __webpack_require__("../../../../../../../../../../../../npn_common/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_d3__ = __webpack_require__("../../../../d3/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__start_of_spring_dialog_component__ = __webpack_require__("../../../../../src/app/start-of-spring-dialog.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__flyways__ = __webpack_require__("../../../../../src/app/flyways.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__fli_pcnt__ = __webpack_require__("../../../../../src/app/fli-pcnt.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__agm_core__ = __webpack_require__("../../../../@agm/core/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__map_base__ = __webpack_require__("../../../../../src/app/map-base.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__ = __webpack_require__("../../../../../../../../../../../../npn_common/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_d3__ = __webpack_require__("../../../../d3/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__start_of_spring_dialog_component__ = __webpack_require__("../../../../../src/app/start-of-spring-dialog.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__flyways__ = __webpack_require__("../../../../../src/app/flyways.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__fli_pcnt__ = __webpack_require__("../../../../../src/app/fli-pcnt.ts");
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -9331,6 +9339,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -9380,10 +9389,12 @@ var DIALOG_CONFIG = {
 };
 var StartOfSpringComponent = (function (_super) {
     __extends(StartOfSpringComponent, _super);
-    function StartOfSpringComponent(npnSvcUtils, dialog) {
+    function StartOfSpringComponent(npnSvcUtils, dialog, mapsApiLoader) {
         var _this = _super.call(this) || this;
         _this.npnSvcUtils = npnSvcUtils;
         _this.dialog = dialog;
+        _this.mapsApiLoader = mapsApiLoader;
+        _this.FLI_DESCRIPTIONS = __WEBPACK_IMPORTED_MODULE_8__fli_pcnt__["a" /* FLI_DESCRIPTIONS */];
         _this.flywayTesters = [];
         return _this;
     }
@@ -9397,89 +9408,107 @@ var StartOfSpringComponent = (function (_super) {
     };
     StartOfSpringComponent.prototype.refugesReady = function (refuges) {
         var _this = this;
-        this.getMap.then(function (map) {
-            _this.npnSvcUtils.cachedGet(_this.npnSvcUtils.geoServerUrl('/gdd/ows'), {
-                service: 'WFS',
-                version: '1.0.0',
-                request: 'GetFeature',
-                typeName: 'gdd:waterfowl_flyways',
-                maxFeatures: 50,
-                outputFormat: 'application/json'
-            })
-                .then(function (geoJson) {
-                map.data.addGeoJson(geoJson);
-                map.data.setStyle(function (feature) {
-                    return {
-                        strokeOpacity: 0,
-                        strokeWeight: 0,
-                        strokeColor: 'transparent',
-                        fillOpacity: 0.25,
-                        fillColor: __WEBPACK_IMPORTED_MODULE_6__flyways__["a" /* FLYWAY_COLORS */][feature.getId()] || '#ff0000'
-                    };
-                });
-                var self = _this;
-                map.data.forEach(function (feature) {
-                    var id = feature.getId();
-                    var flywayGeometry = feature.getGeometry();
-                    self.flywayTesters.push(function (point) {
-                        return geoContains(point, flywayGeometry) ? id : null;
+        this.mapsApiLoader.load()
+            .then(function () {
+            _this.getMap.then(function (map) {
+                _this.npnSvcUtils.cachedGet(_this.npnSvcUtils.geoServerUrl('/gdd/ows'), {
+                    service: 'WFS',
+                    version: '1.0.0',
+                    request: 'GetFeature',
+                    typeName: 'gdd:waterfowl_flyways',
+                    maxFeatures: 50,
+                    outputFormat: 'application/json'
+                })
+                    .then(function (geoJson) {
+                    map.data.addGeoJson(geoJson);
+                    map.data.setStyle(function (feature) {
+                        return {
+                            strokeOpacity: 0,
+                            strokeWeight: 0,
+                            strokeColor: 'transparent',
+                            fillOpacity: 0.10,
+                            fillColor: __WEBPACK_IMPORTED_MODULE_7__flyways__["a" /* FLYWAY_COLORS */][feature.getId()] || '#ff0000',
+                            clickable: false
+                        };
                     });
-                });
-                // go get the data
-                var nanData = null;
-                __WEBPACK_IMPORTED_MODULE_3_d3__["e" /* csv */]('/sites/fws/modules/custom/fws_dashboard/data/start_of_spring_across_moving_windows.csv', function (csvData) {
-                    var dataByRefuge = csvData.reduce(function (map, row) {
-                        Object.keys(row).forEach(function (key) {
-                            if (key && key !== 'NWR') {
-                                row[key] = parseFloat(row[key]);
+                    var self = _this;
+                    map.data.forEach(function (feature) {
+                        var id = feature.getId();
+                        var flywayGeometry = feature.getGeometry();
+                        self.flywayTesters.push(function (point) {
+                            return geoContains(point, flywayGeometry) ? id : null;
+                        });
+                    });
+                    // go get the data
+                    var nanData = null;
+                    __WEBPACK_IMPORTED_MODULE_4_d3__["e" /* csv */]('/sites/fws/modules/custom/fws_dashboard/data/start_of_spring_across_moving_windows.csv', function (csvData) {
+                        var dataByRefuge = csvData.reduce(function (map, row) {
+                            Object.keys(row).forEach(function (key) {
+                                if (key && key !== 'NWR') {
+                                    row[key] = parseFloat(row[key]);
+                                }
+                            });
+                            // the "NWR" column contains the refuge boundary id
+                            // in other CSV is '' column
+                            map[row['NWR'].trim()] = row;
+                            if (!nanData) {
+                                nanData = Object.keys(row).reduce(function (map, key) {
+                                    map[key] = key === 'NWR' ? null : Number.NaN;
+                                    return map;
+                                }, {});
                             }
+                            return map;
+                        }, {});
+                        refuges = refuges.filter(function (refuge) {
+                            if (!refuge.location) {
+                                return false;
+                            }
+                            var refugeKey = refuge.title.toUpperCase();
+                            if (!dataByRefuge[refugeKey]) {
+                                console.warn("No data found for " + refugeKey);
+                                // insert a row containing NaN for all numbers
+                                dataByRefuge[refugeKey] = __assign({}, nanData, { NWR: refugeKey });
+                            }
+                            return true;
                         });
-                        // the "NWR" column contains the refuge boundary id
-                        // in other CSV is '' column
-                        map[row['NWR'].trim()] = row;
-                        if (!nanData) {
-                            nanData = Object.keys(row).reduce(function (map, key) {
-                                map[key] = key === 'NWR' ? null : Number.NaN;
-                                return map;
-                            }, {});
-                        }
-                        return map;
-                    }, {});
-                    console.log('dataByRefuge', dataByRefuge);
-                    refuges = refuges.filter(function (refuge) {
-                        if (!refuge.location) {
-                            return false;
-                        }
-                        var refugeKey = refuge.title.toUpperCase();
-                        if (!dataByRefuge[refugeKey]) {
-                            console.warn("No data found for " + refugeKey);
-                            // insert a row containing NaN for all numbers
-                            dataByRefuge[refugeKey] = __assign({}, nanData, { NWR: refugeKey });
-                        }
-                        return true;
-                    });
-                    refuges.forEach(function (refuge) {
-                        var refugeKey = refuge.title.toUpperCase();
-                        refuge.data = dataByRefuge[refugeKey];
-                        refuge.point = new google.maps.LatLng(refuge.location.lat, refuge.location.lng);
-                        var markerColorIndex = Object(__WEBPACK_IMPORTED_MODULE_7__fli_pcnt__["b" /* FLI_PCNT_BUCKET_INDEX */])(refuge.data['FLI (%)']);
-                        // @agm/core does not expose enough of the google maps
-                        // api to do real custom icons, so going under the covers
-                        // here to avoid using external images.
-                        var marker = new google.maps.Marker({
-                            map: map,
-                            title: refuge.title,
-                            icon: {
-                                path: google.maps.SymbolPath.CIRCLE,
-                                scale: 5,
-                                fillOpacity: 1.0,
-                                strokeWeight: 1,
-                                fillColor: markerColorIndex !== -1 ? __WEBPACK_IMPORTED_MODULE_7__fli_pcnt__["c" /* MARKER_COLORS */][markerColorIndex] : '#fff'
-                            },
-                            position: refuge.point
-                        });
-                        marker.addListener('click', function () {
-                            setTimeout(function () { return _this.selectRefuge(refuge); });
+                        refuges.forEach(function (refuge) {
+                            var refugeKey = refuge.title.toUpperCase();
+                            refuge.data = dataByRefuge[refugeKey];
+                            refuge.point = new google.maps.LatLng(refuge.location.lat, refuge.location.lng);
+                            var markerColorIndex = Object(__WEBPACK_IMPORTED_MODULE_8__fli_pcnt__["b" /* FLI_PCNT_BUCKET_INDEX */])(refuge.data['FLI (%)']);
+                            /* temporary test code to see for refuges with data which aren't in a flyway boundary
+                             * doing this up front is too expensive only make test when the user clicks on a marker
+                            if(markerColorIndex !== -1) {
+                                setTimeout(() => {
+                                    if(!this.flywayTesters.reduce((flywayId,tester) => {
+                                        if(!flywayId) {
+                                            flywayId = tester(refuge.point);
+                                        }
+                                        return flywayId;
+                                    },null)) {
+                                        console.log(`${refuge.title} is not in a flyway`);
+                                    }
+                                },1000);
+                            }
+                            */
+                            // @agm/core does not expose enough of the google maps
+                            // api to do real custom icons, so going under the covers
+                            // here to avoid using external images.
+                            var marker = new google.maps.Marker({
+                                map: map,
+                                title: refuge.title,
+                                icon: {
+                                    path: google.maps.SymbolPath.CIRCLE,
+                                    scale: 5,
+                                    fillOpacity: 1.0,
+                                    strokeWeight: 1,
+                                    fillColor: markerColorIndex !== -1 ? __WEBPACK_IMPORTED_MODULE_8__fli_pcnt__["c" /* MARKER_COLORS */][markerColorIndex] : '#fff'
+                                },
+                                position: refuge.point
+                            });
+                            marker.addListener('click', function () {
+                                setTimeout(function () { return _this.selectRefuge(refuge); });
+                            });
                         });
                     });
                 });
@@ -9507,22 +9536,22 @@ var StartOfSpringComponent = (function (_super) {
                 refuge: refuge,
                 refugeData: refuge.data
             } });
-        this.dialog.open(__WEBPACK_IMPORTED_MODULE_5__start_of_spring_dialog_component__["b" /* StartOfSpringDialog */], config);
+        this.dialog.open(__WEBPACK_IMPORTED_MODULE_6__start_of_spring_dialog_component__["b" /* StartOfSpringDialog */], config);
     };
     StartOfSpringComponent.prototype.ngOnInit = function () {
     };
     return StartOfSpringComponent;
-}(__WEBPACK_IMPORTED_MODULE_1__map_base__["a" /* MapBase */]));
+}(__WEBPACK_IMPORTED_MODULE_2__map_base__["a" /* MapBase */]));
 StartOfSpringComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'start-of-spring',
-        template: "\n    <form class=\"control-form\">\n        <refuge-control (onList)=\"refugesReady($event)\" (onSelect)=\"selectRefuge($event)\"></refuge-control>\n        <button *ngIf=\"selected\" class=\"reset-button\"\n            mat-icon-button (click)=\"reset()\" matTooltip=\"Reset map\"><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i></button>\n    </form>\n    <div class=\"map-wrapper\">\n        <agm-map (mapReady)=\"mapReady($event)\"\n                [latitude]=\"latitude\" [longitude]=\"longitude\" [zoom]=\"zoom\"\n                [streetViewControl]=\"false\" [scrollwheel]=\"false\" [styles]=\"mapStyles\">\n        </agm-map>\n        <ul class=\"start-of-spring-legend\">\n            <li class=\"title\">Mean</li>\n            <li class=\"mean-5\">&lt; 5%</li>\n            <li class=\"mean-5-25\">5 - 25%</li>\n            <li class=\"mean-25-75\">25 - 75%</li>\n            <li class=\"mean-75-95\">75 - 95%</li>\n            <li class=\"mean-95\">&gt; 95%</li>\n            <li class=\"no-data\">No data</li>\n        </ul>\n    </div>\n    ",
+        template: "\n    <form class=\"control-form\">\n        <refuge-control (onList)=\"refugesReady($event)\" (onSelect)=\"selectRefuge($event)\"></refuge-control>\n        <button *ngIf=\"selected\" class=\"reset-button\"\n            mat-icon-button (click)=\"reset()\" matTooltip=\"Reset map\"><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i></button>\n    </form>\n    <div class=\"map-wrapper\">\n        <agm-map (mapReady)=\"mapReady($event)\"\n                [latitude]=\"latitude\" [longitude]=\"longitude\" [zoom]=\"zoom\"\n                [streetViewControl]=\"false\" [scrollwheel]=\"false\" [styles]=\"mapStyles\">\n        </agm-map>\n        <ul class=\"start-of-spring-legend\">\n            <li class=\"title\">Recent timing of spring onset relative to historical range of variability (1901-2012)</li>\n            <li class=\"mean-5\">&lt; 5% ({{FLI_DESCRIPTIONS[0]}})</li>\n            <li class=\"mean-5-25\">5 - 25% ({{FLI_DESCRIPTIONS[1]}})</li>\n            <li class=\"mean-25-75\">25 - 75% ({{FLI_DESCRIPTIONS[2]}})</li>\n            <li class=\"mean-75-95\">75 - 95% ({{FLI_DESCRIPTIONS[3]}})</li>\n            <li class=\"mean-95\">&gt; 95% ({{FLI_DESCRIPTIONS[4]}})</li>\n            <li class=\"no-data\">No data</li>\n        </ul>\n    </div>\n    ",
         styles: [__webpack_require__("../../../../../src/app/start-of-spring.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__node_modules_npn_common__["f" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__node_modules_npn_common__["f" /* NpnServiceUtils */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__angular_material__["e" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_material__["e" /* MatDialog */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["f" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["f" /* NpnServiceUtils */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_5__angular_material__["e" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__angular_material__["e" /* MatDialog */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__agm_core__["b" /* MapsAPILoader */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__agm_core__["b" /* MapsAPILoader */]) === "function" && _c || Object])
 ], StartOfSpringComponent);
 
-var _a, _b;
+var _a, _b, _c;
 //# sourceMappingURL=start-of-spring.component.js.map
 
 /***/ }),
