@@ -8619,7 +8619,8 @@ if (__WEBPACK_IMPORTED_MODULE_15__node_modules_npn_common_environments_environme
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return MARKER_COLORS; });
+/* unused harmony export MARKER_COLORS */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return MARKER_ICONS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FLI_DESCRIPTIONS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return FLI_PCNT_BUCKET_INDEX; });
 var BUCKETS = [
@@ -8635,6 +8636,14 @@ var MARKER_COLORS = [
     '#828282',
     '#5cb3f2',
     '#3b3bf0' // > 95%
+];
+var MARKER_ICONS = [
+    'mean-5.png',
+    'mean-5-25.png',
+    'mean-25-75.png',
+    'mean-75-95.png',
+    'mean-95.png',
+    'no-data.png'
 ];
 var FLI_DESCRIPTIONS = [
     'extremely early',
@@ -9118,7 +9127,7 @@ var StartOfSpringDialog = (function () {
         var style = getComputedStyle(wrapper, null);
         var strToPx = function (s) { return parseInt(s.replace(/px$/, '')); };
         var ratioMult = 0.5376; // based on 930/500
-        var minusLeft = strToPx(style.paddingLeft) + strToPx(style.borderLeftWidth), minusRight = strToPx(style.paddingRight) + strToPx(style.borderRightWidth), innerWidth = wrapper.clientWidth - minusLeft - minusRight, cw = Math.floor(innerWidth);
+        var minusLeft = strToPx(style.paddingLeft) + strToPx(style.borderLeftWidth), minusRight = strToPx(style.paddingRight) + strToPx(style.borderRightWidth), innerWidth = (wrapper.clientWidth * 0.75) - minusLeft - minusRight, cw = Math.floor(innerWidth);
         var margin = { top: 35, right: 20, left: 55, bottom: 50 };
         var ch = (cw * ratioMult), w = cw - margin.left - margin.right, h = ch - margin.top - margin.bottom;
         var svgWidth = w + margin.left + margin.right, svgHeight = h + margin.top + margin.bottom;
@@ -9268,7 +9277,7 @@ var StartOfSpringDialog = (function () {
 StartOfSpringDialog = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         template: "\n    <button mat-icon-button class=\"dialog-close\" (click)=\"close()\"><i class=\"fa fa-times\" aria-hidden=\"true\"></i></button>\n    <div class=\"mat-typography\" id=\"startOfSpringDialogWrapper\">\n        <span class=\"mat-title\">{{refuge.title}}</span>\n        <span *ngIf=\"!noData; else noDataDisclaimer\">\n            <ul class=\"refuge-info\">\n                <li>\n                    <label>Average spring leaf onset in recent decades (1983-2012):</label>\n                    {{refugeData['FLI (Day)'] | SosDoy}}\n                </li>\n                <li>\n                    <label>Recent change in timing relative to historical range of variation (1901-2012):</label>\n                    Spring first leaf arrival in recent decades is {{fliCategory}} ({{refugeData['FLI (%)'] | number:'1.2-2'}}%) compared to the historical range.\n                </li>\n                <li>\n                    <label>Change in timing over latitudinal exent of migratory flyway (1920-2012):</label>\n                    <p>\n                        <span *ngIf=\"FLYWAY_TEXTS[refuge.flywayId]; else noFlyway\">\n                        {{FLYWAY_TEXTS[refuge.flywayId]}}\n                        </span>\n                        <ng-template #noFlyway>\n                        This Refuge is outside of the four migratory flyways.\n                        </ng-template>\n                    </p>\n                </li>\n            </ul>\n            <div id=\"startOfSpringVisWrapper\">\n                <div class=\"vis-working\" *ngIf=\"working\">\n                    <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n                </div>\n                <svg id=\"timeSeries\"></svg>\n            </div>\n        </span>\n        <ng-template #noDataDisclaimer>\n            <p>Data are not available for this Refuge.</p>\n        </ng-template>\n    </div>\n    <!--pre>{{refugeData | json}}</pre-->\n    ",
-        styles: ["\n        button.dialog-close {\n            float: right;\n        }\n        #startOfSpringVisWrapper {\n            min-height: 1px;\n            position: relative;\n        }\n        svg {\n            display: block;\n            border: 1px solid #aaa;\n        }\n        ul.refuge-info>li {\n            list-style: none;\n        }\n        ul.refuge-info>li label {\n            font-weight: bold;\n        }\n    "],
+        styles: ["\n        button.dialog-close {\n            float: right;\n        }\n        #startOfSpringVisWrapper {\n            min-height: 1px;\n            position: relative;\n            padding-top: 10px;\n        }\n        svg {\n            display: block;\n            border: 1px solid #aaa;\n            margin: auto;\n        }\n        ul.refuge-info {\n            margin: 0 0 12px;\n        }\n        ul.refuge-info>li {\n            list-style: none;\n            padding: 10px 0px 0px 0px;\n        }\n        ul.refuge-info>li label {\n            font-weight: bold;\n        }\n        p {\n            margin: 0px;\n        }\n    "],
         providers: [
             SosDoyTransform
         ]
@@ -9306,15 +9315,14 @@ module.exports = module.exports.toString();
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return StartOfSpringComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__agm_core__ = __webpack_require__("../../../../@agm/core/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__map_base__ = __webpack_require__("../../../../../src/app/map-base.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__ = __webpack_require__("../../../../../../../../../../../../npn_common/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_d3__ = __webpack_require__("../../../../d3/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__start_of_spring_dialog_component__ = __webpack_require__("../../../../../src/app/start-of-spring-dialog.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__flyways__ = __webpack_require__("../../../../../src/app/flyways.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__fli_pcnt__ = __webpack_require__("../../../../../src/app/fli-pcnt.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__node_modules_npn_common_gridded__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__map_base__ = __webpack_require__("../../../../../src/app/map-base.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__node_modules_npn_common__ = __webpack_require__("../../../../../../../../../../../../npn_common/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_d3__ = __webpack_require__("../../../../d3/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__start_of_spring_dialog_component__ = __webpack_require__("../../../../../src/app/start-of-spring-dialog.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__flyways__ = __webpack_require__("../../../../../src/app/flyways.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__fli_pcnt__ = __webpack_require__("../../../../../src/app/fli-pcnt.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__node_modules_npn_common_gridded__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/index.ts");
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -9342,7 +9350,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -9393,13 +9400,14 @@ var DIALOG_CONFIG = {
 };
 var StartOfSpringComponent = (function (_super) {
     __extends(StartOfSpringComponent, _super);
-    function StartOfSpringComponent(npnSvcUtils, dialog, mapsApiLoader, zone) {
+    function StartOfSpringComponent(npnSvcUtils, dialog, zone) {
         var _this = _super.call(this) || this;
         _this.npnSvcUtils = npnSvcUtils;
         _this.dialog = dialog;
-        _this.mapsApiLoader = mapsApiLoader;
         _this.zone = zone;
-        _this.FLI_DESCRIPTIONS = __WEBPACK_IMPORTED_MODULE_8__fli_pcnt__["a" /* FLI_DESCRIPTIONS */];
+        _this.FLI_DESCRIPTIONS = __WEBPACK_IMPORTED_MODULE_7__fli_pcnt__["a" /* FLI_DESCRIPTIONS */];
+        _this.refuges = [];
+        _this.working = false;
         _this.flywayTesters = [];
         return _this;
     }
@@ -9435,7 +9443,7 @@ var StartOfSpringComponent = (function (_super) {
                         if (flywayId) {
                             return flywayId;
                         }
-                        var p = Object(__WEBPACK_IMPORTED_MODULE_9__node_modules_npn_common_gridded__["a" /* DESTINATION_POINT */])(refuge.point, bearing, distToCornersKm);
+                        var p = Object(__WEBPACK_IMPORTED_MODULE_8__node_modules_npn_common_gridded__["a" /* DESTINATION_POINT */])(refuge.point, bearing, distToCornersKm);
                         return _this.flywayTesters.reduce(function (fid, tester) {
                             if (!fid) {
                                 fid = tester(p);
@@ -9470,135 +9478,139 @@ var StartOfSpringComponent = (function (_super) {
     };
     StartOfSpringComponent.prototype.refugesReady = function (refuges) {
         var _this = this;
-        this.mapsApiLoader.load()
-            .then(function () {
-            _this.getMap.then(function (map) {
-                _this.npnSvcUtils.cachedGet(_this.npnSvcUtils.geoServerUrl('/gdd/ows'), {
-                    service: 'WFS',
-                    version: '1.0.0',
-                    request: 'GetFeature',
-                    typeName: 'gdd:waterfowl_flyways',
-                    maxFeatures: 50,
-                    outputFormat: 'application/json'
-                })
-                    .then(function (geoJson) {
-                    map.data.addGeoJson(geoJson);
-                    map.data.setStyle(function (feature) {
-                        return {
-                            strokeOpacity: 0,
-                            strokeWeight: 0,
-                            strokeColor: 'transparent',
-                            fillOpacity: 0.10,
-                            fillColor: __WEBPACK_IMPORTED_MODULE_7__flyways__["a" /* FLYWAY_COLORS */][feature.getId()] || '#ff0000',
-                            clickable: false
-                        };
+        this.getMap.then(function (map) {
+            _this.npnSvcUtils.cachedGet(_this.npnSvcUtils.geoServerUrl('/gdd/ows'), {
+                service: 'WFS',
+                version: '1.0.0',
+                request: 'GetFeature',
+                typeName: 'gdd:waterfowl_flyways',
+                maxFeatures: 50,
+                outputFormat: 'application/json'
+            })
+                .then(function (geoJson) {
+                map.data.addGeoJson(geoJson);
+                map.data.setStyle(function (feature) {
+                    return {
+                        strokeOpacity: 0,
+                        strokeWeight: 0,
+                        strokeColor: 'transparent',
+                        fillOpacity: 0.10,
+                        fillColor: __WEBPACK_IMPORTED_MODULE_6__flyways__["a" /* FLYWAY_COLORS */][feature.getId()] || '#ff0000',
+                        clickable: false
+                    };
+                });
+                var self = _this;
+                map.data.forEach(function (feature) {
+                    var id = feature.getId();
+                    var flywayGeometry = feature.getGeometry();
+                    self.flywayTesters.push(function (point) {
+                        return geoContains(point, flywayGeometry) ? id : null;
                     });
-                    var self = _this;
-                    map.data.forEach(function (feature) {
-                        var id = feature.getId();
-                        var flywayGeometry = feature.getGeometry();
-                        self.flywayTesters.push(function (point) {
-                            return geoContains(point, flywayGeometry) ? id : null;
+                });
+                // go get the data
+                var nanData = null;
+                __WEBPACK_IMPORTED_MODULE_3_d3__["e" /* csv */]('/sites/fws/modules/custom/fws_dashboard/data/start_of_spring_across_moving_windows.csv', function (csvData) {
+                    var dataByRefuge = csvData.reduce(function (map, row) {
+                        Object.keys(row).forEach(function (key) {
+                            if (key && key !== 'NWR') {
+                                row[key] = parseFloat(row[key]);
+                            }
                         });
+                        // the "NWR" column contains the refuge boundary id
+                        // in other CSV is '' column
+                        map[row['NWR'].trim()] = row;
+                        if (!nanData) {
+                            nanData = Object.keys(row).reduce(function (map, key) {
+                                map[key] = key === 'NWR' ? null : Number.NaN;
+                                return map;
+                            }, {});
+                        }
+                        return map;
+                    }, {});
+                    refuges = refuges.filter(function (refuge) {
+                        if (!refuge.location) {
+                            return false;
+                        }
+                        var refugeKey = refuge.title.toUpperCase();
+                        if (!dataByRefuge[refugeKey]) {
+                            console.warn("No data found for " + refugeKey);
+                            // insert a row containing NaN for all numbers
+                            dataByRefuge[refugeKey] = __assign({}, nanData, { NWR: refugeKey });
+                        }
+                        return true;
                     });
-                    // go get the data
-                    var nanData = null;
-                    __WEBPACK_IMPORTED_MODULE_4_d3__["e" /* csv */]('/sites/fws/modules/custom/fws_dashboard/data/start_of_spring_across_moving_windows.csv', function (csvData) {
-                        var dataByRefuge = csvData.reduce(function (map, row) {
-                            Object.keys(row).forEach(function (key) {
-                                if (key && key !== 'NWR') {
-                                    row[key] = parseFloat(row[key]);
+                    refuges.forEach(function (refuge) {
+                        refuge.data = dataByRefuge[refuge.title.toUpperCase()];
+                        refuge.point = new google.maps.LatLng(refuge.location.lat, refuge.location.lng);
+                        var markerColorIndex = Object(__WEBPACK_IMPORTED_MODULE_7__fli_pcnt__["b" /* FLI_PCNT_BUCKET_INDEX */])(refuge.data['FLI (%)']);
+                        /* temporary test code to see for refuges with data which aren't in a flyway boundary
+                            * doing this up front is too expensive only make test when the user clicks on a marker
+                        if(markerColorIndex !== -1) {
+                            // timeout just a hack to give the geometry library time to load
+                            setTimeout(() => {
+                                if(!this.findFlywayId(refuge)) {
+                                    console.log(`${refuge.title} NOT IN FLYWAY`)
                                 }
-                            });
-                            // the "NWR" column contains the refuge boundary id
-                            // in other CSV is '' column
-                            map[row['NWR'].trim()] = row;
-                            if (!nanData) {
-                                nanData = Object.keys(row).reduce(function (map, key) {
-                                    map[key] = key === 'NWR' ? null : Number.NaN;
-                                    return map;
-                                }, {});
-                            }
-                            return map;
-                        }, {});
-                        refuges = refuges.filter(function (refuge) {
-                            if (!refuge.location) {
-                                return false;
-                            }
-                            var refugeKey = refuge.title.toUpperCase();
-                            if (!dataByRefuge[refugeKey]) {
-                                console.warn("No data found for " + refugeKey);
-                                // insert a row containing NaN for all numbers
-                                dataByRefuge[refugeKey] = __assign({}, nanData, { NWR: refugeKey });
-                            }
-                            return true;
-                        });
-                        refuges.forEach(function (refuge) {
-                            var refugeKey = refuge.title.toUpperCase();
-                            refuge.data = dataByRefuge[refugeKey];
-                            refuge.point = new google.maps.LatLng(refuge.location.lat, refuge.location.lng);
-                            var markerColorIndex = Object(__WEBPACK_IMPORTED_MODULE_8__fli_pcnt__["b" /* FLI_PCNT_BUCKET_INDEX */])(refuge.data['FLI (%)']);
-                            /* temporary test code to see for refuges with data which aren't in a flyway boundary
-                             * doing this up front is too expensive only make test when the user clicks on a marker
-                            if(markerColorIndex !== -1) {
-                                setTimeout(() => {
-                                    if(!this.findFlywayId(refuge)) {
-                                        console.log(`${refuge.title} NOT IN FLYWAY`)
-                                    }
-                                },5000);
-                            }*/
-                            // @agm/core does not expose enough of the google maps
-                            // api to do real custom icons, so going under the covers
-                            // here to avoid using external images.
-                            var marker = new google.maps.Marker({
-                                map: map,
-                                title: refuge.title,
-                                icon: {
-                                    path: google.maps.SymbolPath.CIRCLE,
-                                    scale: 5,
-                                    fillOpacity: 1.0,
-                                    strokeWeight: 1,
-                                    fillColor: markerColorIndex !== -1 ? __WEBPACK_IMPORTED_MODULE_8__fli_pcnt__["c" /* MARKER_COLORS */][markerColorIndex] : '#fff'
-                                },
-                                position: refuge.point
-                            });
-                            marker.addListener('click', function () { return _this.selectRefuge(refuge); });
-                        });
+                            },5000);
+                        }*/
+                        /* For this number of icons SVG icons cause a performance isue
+                         * presumably because Google maps must re-draw all the SVGs over
+                         * and over on zoom/pan
+                         * switching to static icons
+                        refuge.icon = {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            scale: 5,
+                            fillOpacity: 1.0,
+                            strokeWeight: 1,
+                            fillColor: markerColorIndex !== -1 ? MARKER_COLORS[markerColorIndex] : '#fff'
+                        };*/
+                        if (markerColorIndex === -1) {
+                            markerColorIndex = __WEBPACK_IMPORTED_MODULE_7__fli_pcnt__["c" /* MARKER_ICONS */].length - 1;
+                        }
+                        refuge.icon = "/sites/fws/modules/custom/fws_dashboard/markers/" + __WEBPACK_IMPORTED_MODULE_7__fli_pcnt__["c" /* MARKER_ICONS */][markerColorIndex];
                     });
+                    _this.refuges = refuges;
                 });
             });
         });
     };
     StartOfSpringComponent.prototype.selectRefuge = function (refuge) {
+        var _this = this;
         if (!refuge) {
             return this.reset();
         }
-        this.selected = refuge;
-        this.getMap.then(function (map) {
-            map.panTo(refuge.point);
-            map.setZoom(8);
+        // show a progress spinner since finding the flyway can be expensive
+        // for a rare few refuges (like those in the caribean or florida keys)
+        this.working = true;
+        setTimeout(function () {
+            _this.selected = refuge;
+            _this.getMap.then(function (map) {
+                map.panTo(refuge.point);
+                map.setZoom(8);
+            });
+            if (refuge.flywayId === undefined) {
+                refuge.flywayId = _this.findFlywayId(refuge);
+            }
+            var config = __assign({}, DIALOG_CONFIG, { data: {
+                    refuge: refuge,
+                    refugeData: refuge.data
+                } });
+            _this.working = false;
+            _this.dialog.open(__WEBPACK_IMPORTED_MODULE_5__start_of_spring_dialog_component__["b" /* StartOfSpringDialog */], config);
         });
-        if (refuge.flywayId === undefined) {
-            refuge.flywayId = this.findFlywayId(refuge);
-        }
-        var config = __assign({}, DIALOG_CONFIG, { data: {
-                refuge: refuge,
-                refugeData: refuge.data
-            } });
-        this.dialog.open(__WEBPACK_IMPORTED_MODULE_6__start_of_spring_dialog_component__["b" /* StartOfSpringDialog */], config);
     };
     return StartOfSpringComponent;
-}(__WEBPACK_IMPORTED_MODULE_2__map_base__["a" /* MapBase */]));
+}(__WEBPACK_IMPORTED_MODULE_1__map_base__["a" /* MapBase */]));
 StartOfSpringComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'start-of-spring',
-        template: "\n    <form class=\"control-form\">\n        <refuge-control (onList)=\"refugesReady($event)\" (onSelect)=\"selectRefuge($event)\"></refuge-control>\n        <button *ngIf=\"selected\" class=\"reset-button\"\n            mat-icon-button (click)=\"reset()\" matTooltip=\"Reset map\"><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i></button>\n    </form>\n    <div class=\"map-wrapper\">\n        <agm-map (mapReady)=\"mapReady($event)\"\n                [latitude]=\"latitude\" [longitude]=\"longitude\" [zoom]=\"zoom\"\n                [streetViewControl]=\"false\" [scrollwheel]=\"false\" [styles]=\"mapStyles\">\n        </agm-map>\n        <ul class=\"start-of-spring-legend\">\n            <li class=\"title\">Recent timing of spring onset relative to historical range of variability (1901-2012)</li>\n            <li class=\"mean-5\">&lt; 5% ({{FLI_DESCRIPTIONS[0]}})</li>\n            <li class=\"mean-5-25\">5 - 25% ({{FLI_DESCRIPTIONS[1]}})</li>\n            <li class=\"mean-25-75\">25 - 75% ({{FLI_DESCRIPTIONS[2]}})</li>\n            <li class=\"mean-75-95\">75 - 95% ({{FLI_DESCRIPTIONS[3]}})</li>\n            <li class=\"mean-95\">&gt; 95% ({{FLI_DESCRIPTIONS[4]}})</li>\n            <li class=\"no-data\">No data</li>\n        </ul>\n    </div>\n    ",
+        template: "\n    <form class=\"control-form\">\n        <refuge-control (onList)=\"refugesReady($event)\" (onSelect)=\"selectRefuge($event)\"></refuge-control>\n        <button *ngIf=\"selected\" class=\"reset-button\"\n            mat-icon-button (click)=\"reset()\" matTooltip=\"Reset map\"><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i></button>\n    </form>\n    <div class=\"map-wrapper\">\n        <div class=\"vis-working\" *ngIf=\"working\">\n            <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n        </div>\n        <agm-map (mapReady)=\"mapReady($event)\"\n                [latitude]=\"latitude\" [longitude]=\"longitude\" [zoom]=\"zoom\"\n                [streetViewControl]=\"false\" [scrollwheel]=\"false\" [styles]=\"mapStyles\">\n            <agm-marker *ngFor=\"let refuge of refuges\"\n                (markerClick)=\"selectRefuge(refuge)\"\n                [iconUrl]=\"refuge.icon\"\n                [title]=\"refuge.title\"\n                [latitude]=\"refuge.location.lat\" [longitude]=\"refuge.location.lng\"></agm-marker>\n        </agm-map>\n        <ul class=\"start-of-spring-legend\">\n            <li class=\"title\">Recent timing of spring onset relative to historical range of variability (1901-2012)</li>\n            <li class=\"mean-5\">&lt; 5% ({{FLI_DESCRIPTIONS[0]}})</li>\n            <li class=\"mean-5-25\">5 - 25% ({{FLI_DESCRIPTIONS[1]}})</li>\n            <li class=\"mean-25-75\">25 - 75% ({{FLI_DESCRIPTIONS[2]}})</li>\n            <li class=\"mean-75-95\">75 - 95% ({{FLI_DESCRIPTIONS[3]}})</li>\n            <li class=\"mean-95\">&gt; 95% ({{FLI_DESCRIPTIONS[4]}})</li>\n            <li class=\"no-data\">No data</li>\n        </ul>\n    </div>\n    ",
         styles: [__webpack_require__("../../../../../src/app/start-of-spring.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["f" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["f" /* NpnServiceUtils */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_5__angular_material__["e" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__angular_material__["e" /* MatDialog */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__agm_core__["b" /* MapsAPILoader */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__agm_core__["b" /* MapsAPILoader */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["P" /* NgZone */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["P" /* NgZone */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__node_modules_npn_common__["f" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__node_modules_npn_common__["f" /* NpnServiceUtils */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__angular_material__["e" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_material__["e" /* MatDialog */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["P" /* NgZone */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["P" /* NgZone */]) === "function" && _c || Object])
 ], StartOfSpringComponent);
 
-var _a, _b, _c, _d;
+var _a, _b, _c;
 //# sourceMappingURL=start-of-spring.component.js.map
 
 /***/ }),
