@@ -1174,8 +1174,8 @@ var _a;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NpnGriddedModule; });
-/* harmony export (immutable) */ __webpack_exports__["d"] = googleFeatureBounds;
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return NpnGriddedModule; });
+/* harmony export (immutable) */ __webpack_exports__["e"] = googleFeatureBounds;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("../../../common/@angular/common.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
@@ -1195,8 +1195,9 @@ var _a;
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__wms_map_legend__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/wms-map-legend.ts");
 /* unused harmony namespace reexport */
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_8__wms_map_legend_service__["a"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_14__wcs_data_service__["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_8__wms_map_legend_service__["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_14__wcs_data_service__["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_14__wcs_data_service__["b"]; });
 /* unused harmony reexport WmsMapSupportsOpacity */
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1253,7 +1254,7 @@ NpnGriddedModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_7__wms_map_layer_service__["a" /* WmsMapLayerService */],
             __WEBPACK_IMPORTED_MODULE_8__wms_map_legend_service__["a" /* WmsMapLegendService */],
             __WEBPACK_IMPORTED_MODULE_13__gridded_common__["c" /* GriddedUrls */],
-            __WEBPACK_IMPORTED_MODULE_14__wcs_data_service__["a" /* WcsDataService */]
+            __WEBPACK_IMPORTED_MODULE_14__wcs_data_service__["b" /* WcsDataService */]
         ]
     })
 ], NpnGriddedModule);
@@ -1470,7 +1471,8 @@ var _a, _b, _c, _d, _e, _f, _g;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WcsDataService; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DESTINATION_POINT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return WcsDataService; });
 /* unused harmony export GriddedInfoWindowHandler */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
@@ -4195,7 +4197,7 @@ var ClippedWmsMapSelectionFactory = (function () {
 }());
 ClippedWmsMapSelectionFactory = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__common__["j" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__common__["j" /* NpnServiceUtils */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_common__["c" /* DatePipe */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_common__["c" /* DatePipe */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__gridded__["c" /* WmsMapLegendService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__gridded__["c" /* WmsMapLegendService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__gridded__["b" /* WcsDataService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__gridded__["b" /* WcsDataService */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__common__["j" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__common__["j" /* NpnServiceUtils */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_common__["c" /* DatePipe */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_common__["c" /* DatePipe */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__gridded__["d" /* WmsMapLegendService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__gridded__["d" /* WmsMapLegendService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__gridded__["c" /* WcsDataService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__gridded__["c" /* WcsDataService */]) === "function" && _d || Object])
 ], ClippedWmsMapSelectionFactory);
 
 var _a, _b, _c, _d;
@@ -4409,7 +4411,7 @@ var ClippedWmsMapSelection = (function (_super) {
             }
         }
         if (!bounds && this.features && this.features.length) {
-            var allBounds = this.features.map(function (f) { return Object(__WEBPACK_IMPORTED_MODULE_1__gridded__["d" /* googleFeatureBounds */])(f); }).filter(function (b) { return !!b; });
+            var allBounds = this.features.map(function (f) { return Object(__WEBPACK_IMPORTED_MODULE_1__gridded__["e" /* googleFeatureBounds */])(f); }).filter(function (b) { return !!b; });
             if (allBounds.length) {
                 var bounds_1 = allBounds[0];
                 if (allBounds.length > 1) {
@@ -5446,7 +5448,7 @@ VisualizationsModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_18__angular_material__["k" /* MatInputModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["o" /* MatSliderModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["l" /* MatProgressBarModule */], __WEBPACK_IMPORTED_MODULE_18__angular_material__["q" /* MatTooltipModule */],
             __WEBPACK_IMPORTED_MODULE_19__agm_core__["a" /* AgmCoreModule */],
             __WEBPACK_IMPORTED_MODULE_20__angular_flex_layout__["a" /* FlexLayoutModule */],
-            __WEBPACK_IMPORTED_MODULE_21__common__["h" /* NpnCommonModule */], __WEBPACK_IMPORTED_MODULE_22__gridded__["a" /* NpnGriddedModule */]
+            __WEBPACK_IMPORTED_MODULE_21__common__["h" /* NpnCommonModule */], __WEBPACK_IMPORTED_MODULE_22__gridded__["b" /* NpnGriddedModule */]
         ],
         declarations: [
             __WEBPACK_IMPORTED_MODULE_10__visualization_base_component__["a" /* VisualizationBaseComponent */], __WEBPACK_IMPORTED_MODULE_11__svg_visualization_base_component__["b" /* SvgVisualizationBaseComponent */], __WEBPACK_IMPORTED_MODULE_12__map_visualization_base_component__["a" /* MapVisualizationBaseComponent */],
@@ -8577,7 +8579,7 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["a" /* CommonModule */],
             __WEBPACK_IMPORTED_MODULE_11__angular_forms__["e" /* FormsModule */], __WEBPACK_IMPORTED_MODULE_11__angular_forms__["j" /* ReactiveFormsModule */],
             __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["e" /* NpnLibModule */],
-            __WEBPACK_IMPORTED_MODULE_5__node_modules_npn_common_gridded__["a" /* NpnGriddedModule */],
+            __WEBPACK_IMPORTED_MODULE_5__node_modules_npn_common_gridded__["b" /* NpnGriddedModule */],
             __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["h" /* VisualizationsModule */],
             __WEBPACK_IMPORTED_MODULE_4__node_modules_npn_common__["d" /* NpnCommonModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_http__["c" /* HttpModule */],
@@ -9312,6 +9314,7 @@ module.exports = module.exports.toString();
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__start_of_spring_dialog_component__ = __webpack_require__("../../../../../src/app/start-of-spring-dialog.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__flyways__ = __webpack_require__("../../../../../src/app/flyways.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__fli_pcnt__ = __webpack_require__("../../../../../src/app/fli-pcnt.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__node_modules_npn_common_gridded__ = __webpack_require__("../../../../../../../../../../../../npn_common/gridded/index.ts");
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -9339,6 +9342,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -9389,15 +9393,73 @@ var DIALOG_CONFIG = {
 };
 var StartOfSpringComponent = (function (_super) {
     __extends(StartOfSpringComponent, _super);
-    function StartOfSpringComponent(npnSvcUtils, dialog, mapsApiLoader) {
+    function StartOfSpringComponent(npnSvcUtils, dialog, mapsApiLoader, zone) {
         var _this = _super.call(this) || this;
         _this.npnSvcUtils = npnSvcUtils;
         _this.dialog = dialog;
         _this.mapsApiLoader = mapsApiLoader;
+        _this.zone = zone;
         _this.FLI_DESCRIPTIONS = __WEBPACK_IMPORTED_MODULE_8__fli_pcnt__["a" /* FLI_DESCRIPTIONS */];
         _this.flywayTesters = [];
         return _this;
     }
+    StartOfSpringComponent.prototype.findFlywayId = function (refuge) {
+        var _this = this;
+        var flywayId = this.flywayTesters.reduce(function (flywayId, tester) {
+            if (!flywayId) {
+                flywayId = tester(refuge.point);
+            }
+            return flywayId;
+        }, null); // using null so subsequent clicks don't re-test
+        if (!flywayId) {
+            // create a polygon
+            var distToCornersKmToTest = [
+                25,
+                50,
+                75
+            ];
+            var bearingsToTest_1 = [
+                270,
+                315,
+                0,
+                45,
+                90,
+                135,
+                180,
+                225,
+                270,
+            ];
+            flywayId = distToCornersKmToTest.reduce(function (flywayId, distToCornersKm) {
+                if (!flywayId) {
+                    flywayId = bearingsToTest_1.reduce(function (flywayId, bearing) {
+                        if (flywayId) {
+                            return flywayId;
+                        }
+                        var p = Object(__WEBPACK_IMPORTED_MODULE_9__node_modules_npn_common_gridded__["a" /* DESTINATION_POINT */])(refuge.point, bearing, distToCornersKm);
+                        return _this.flywayTesters.reduce(function (fid, tester) {
+                            if (!fid) {
+                                fid = tester(p);
+                            }
+                            return fid;
+                        }, null);
+                    }, null);
+                    /* draw polygon on the map to show this miss
+                    if(!flywayId) {
+                        const intersects = new google.maps.Polygon({
+                            paths: bearingsToTest.map(bearing => DESTINATION_POINT(refuge.point,bearing,distToCornersKm)),
+                            strokeColor: 'red',
+                            fillColor: 'blue',
+                            strokeWeight: 1,
+                            fillOpacity: 0.0
+                        })
+                        this.getMap.then(map => intersects.setMap(map))
+                    }*/
+                }
+                return flywayId;
+            }, null);
+        }
+        return flywayId;
+    };
     StartOfSpringComponent.prototype.reset = function () {
         var _this = this;
         delete this.selected;
@@ -9480,17 +9542,11 @@ var StartOfSpringComponent = (function (_super) {
                              * doing this up front is too expensive only make test when the user clicks on a marker
                             if(markerColorIndex !== -1) {
                                 setTimeout(() => {
-                                    if(!this.flywayTesters.reduce((flywayId,tester) => {
-                                        if(!flywayId) {
-                                            flywayId = tester(refuge.point);
-                                        }
-                                        return flywayId;
-                                    },null)) {
-                                        console.log(`${refuge.title} is not in a flyway`);
+                                    if(!this.findFlywayId(refuge)) {
+                                        console.log(`${refuge.title} NOT IN FLYWAY`)
                                     }
-                                },1000);
-                            }
-                            */
+                                },5000);
+                            }*/
                             // @agm/core does not expose enough of the google maps
                             // api to do real custom icons, so going under the covers
                             // here to avoid using external images.
@@ -9506,9 +9562,7 @@ var StartOfSpringComponent = (function (_super) {
                                 },
                                 position: refuge.point
                             });
-                            marker.addListener('click', function () {
-                                setTimeout(function () { return _this.selectRefuge(refuge); });
-                            });
+                            marker.addListener('click', function () { return _this.selectRefuge(refuge); });
                         });
                     });
                 });
@@ -9525,20 +9579,13 @@ var StartOfSpringComponent = (function (_super) {
             map.setZoom(8);
         });
         if (refuge.flywayId === undefined) {
-            refuge.flywayId = this.flywayTesters.reduce(function (flywayId, tester) {
-                if (!flywayId) {
-                    flywayId = tester(refuge.point);
-                }
-                return flywayId;
-            }, null); // using null so subsequent clicks don't re-test
+            refuge.flywayId = this.findFlywayId(refuge);
         }
         var config = __assign({}, DIALOG_CONFIG, { data: {
                 refuge: refuge,
                 refugeData: refuge.data
             } });
         this.dialog.open(__WEBPACK_IMPORTED_MODULE_6__start_of_spring_dialog_component__["b" /* StartOfSpringDialog */], config);
-    };
-    StartOfSpringComponent.prototype.ngOnInit = function () {
     };
     return StartOfSpringComponent;
 }(__WEBPACK_IMPORTED_MODULE_2__map_base__["a" /* MapBase */]));
@@ -9548,10 +9595,10 @@ StartOfSpringComponent = __decorate([
         template: "\n    <form class=\"control-form\">\n        <refuge-control (onList)=\"refugesReady($event)\" (onSelect)=\"selectRefuge($event)\"></refuge-control>\n        <button *ngIf=\"selected\" class=\"reset-button\"\n            mat-icon-button (click)=\"reset()\" matTooltip=\"Reset map\"><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i></button>\n    </form>\n    <div class=\"map-wrapper\">\n        <agm-map (mapReady)=\"mapReady($event)\"\n                [latitude]=\"latitude\" [longitude]=\"longitude\" [zoom]=\"zoom\"\n                [streetViewControl]=\"false\" [scrollwheel]=\"false\" [styles]=\"mapStyles\">\n        </agm-map>\n        <ul class=\"start-of-spring-legend\">\n            <li class=\"title\">Recent timing of spring onset relative to historical range of variability (1901-2012)</li>\n            <li class=\"mean-5\">&lt; 5% ({{FLI_DESCRIPTIONS[0]}})</li>\n            <li class=\"mean-5-25\">5 - 25% ({{FLI_DESCRIPTIONS[1]}})</li>\n            <li class=\"mean-25-75\">25 - 75% ({{FLI_DESCRIPTIONS[2]}})</li>\n            <li class=\"mean-75-95\">75 - 95% ({{FLI_DESCRIPTIONS[3]}})</li>\n            <li class=\"mean-95\">&gt; 95% ({{FLI_DESCRIPTIONS[4]}})</li>\n            <li class=\"no-data\">No data</li>\n        </ul>\n    </div>\n    ",
         styles: [__webpack_require__("../../../../../src/app/start-of-spring.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["f" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["f" /* NpnServiceUtils */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_5__angular_material__["e" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__angular_material__["e" /* MatDialog */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__agm_core__["b" /* MapsAPILoader */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__agm_core__["b" /* MapsAPILoader */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["f" /* NpnServiceUtils */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__node_modules_npn_common__["f" /* NpnServiceUtils */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_5__angular_material__["e" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__angular_material__["e" /* MatDialog */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__agm_core__["b" /* MapsAPILoader */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__agm_core__["b" /* MapsAPILoader */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["P" /* NgZone */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["P" /* NgZone */]) === "function" && _d || Object])
 ], StartOfSpringComponent);
 
-var _a, _b, _c;
+var _a, _b, _c, _d;
 //# sourceMappingURL=start-of-spring.component.js.map
 
 /***/ }),
