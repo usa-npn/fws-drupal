@@ -2089,9 +2089,17 @@ var WmsMapLegendComponent = (function () {
                 .attr('text-anchor', 'middle')
                 .text(legend.ldef.legend_units);
         }
-        var legend_title = legend.ldef.title;
-        if (legend.ldef.extent && legend.ldef.extent.current) {
-            legend_title += ", " + legend.ldef.extent.current.label;
+        // if given an explicit title use it o/w use the info from the
+        // legend definition, etc.
+        var legend_title;
+        if (this.legendTitle) {
+            legend_title = this.legendTitle;
+        }
+        else {
+            legend_title = legend.ldef.title;
+            if (legend.ldef.extent && legend.ldef.extent.current) {
+                legend_title += ", " + legend.ldef.extent.current.label;
+            }
         }
         svg.append('g').append('text').attr('dx', 5)
             .attr('dy', 100 + top_pad)
@@ -2104,6 +2112,10 @@ var WmsMapLegendComponent = (function () {
     };
     return WmsMapLegendComponent;
 }());
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])(),
+    __metadata("design:type", String)
+], WmsMapLegendComponent.prototype, "legendTitle", void 0);
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Input */])(),
     __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__wms_map_legend__["a" /* WmsMapLegend */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__wms_map_legend__["a" /* WmsMapLegend */]) === "function" && _a || Object)
@@ -9067,9 +9079,9 @@ var SosDoyTransform = (function () {
         return justDate ? "" + fmt : fmt + " (" + fixed + " DOY)";
     };
     SosDoyTransform.prototype.getDate = function (value) {
-        var rounded = Math.round(value);
+        var rounded = Math.floor(value);
         var d = new Date(2010, 0, 1); // 2010 not a leap year
-        d.setTime(d.getTime() + (rounded * 24 * 60 * 60 * 1000));
+        d.setTime(d.getTime() + ((rounded - 1) * 24 * 60 * 60 * 1000));
         return d;
     };
     return SosDoyTransform;
@@ -9705,6 +9717,8 @@ var StatusOfSpringComponent = (function (_super) {
     };
     StatusOfSpringComponent.prototype.newSelection = function (refuge, service, layerId) {
         var selection = this.selectionFactory.newSelection();
+        // store the refuge on the selection so it can be referenced from that context
+        selection.refuge = refuge;
         selection.networkIds = [refuge.network_id];
         selection.fwsBoundary = refuge.boundary_id;
         selection.service = service;
@@ -9824,7 +9838,7 @@ __decorate([
 StatusOfSpringComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'status-of-spring',
-        template: "\n    <form class=\"control-form\">\n        <refuge-control (onList)=\"refuges=$event\" (onSelect)=\"focusRefuge($event)\"></refuge-control>\n        <mat-form-field *ngIf=\"selections\" class=\"selection-input\">\n            <mat-select placeholder=\"Layer\" [formControl]=\"selectionFormControl\">\n                <mat-option *ngFor=\"let s of selections\" [value]=\"s.selection\">{{ s.label }}</mat-option>\n            </mat-select>\n        </mat-form-field>\n        <button *ngIf=\"selection\" class=\"reset-button\" [disabled]=\"selection && selection.working\"\n            mat-icon-button (click)=\"reset()\" matTooltip=\"Reset map\"><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i></button>\n    </form>\n\n    <div class=\"map-wrapper\">\n        <div class=\"vis-working\" *ngIf=\"selection && selection.working\">\n            <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n        </div>\n        <agm-map (mapReady)=\"mapReady($event)\"\n                [latitude]=\"latitude\" [longitude]=\"longitude\" [zoom]=\"zoom\"\n                [streetViewControl]=\"false\" [scrollwheel]=\"false\" [styles]=\"mapStyles\">\n            <span *ngFor=\"let refuge of refuges\">\n                <agm-marker *ngIf=\"refuge !== focused\"\n                    (markerClick)=\"refugeClick(refuge)\"\n                    iconUrl=\"/sites/fws/libraries/gmap_markers/marker-1.png\"\n                    [title]=\"refuge.title\"\n                    [latitude]=\"refuge.location.lat\" [longitude]=\"refuge.location.lng\"></agm-marker>\n            </span>\n        </agm-map>\n        <wms-map-legend *ngIf=\"selection && selection.legend && selection.data && selection.data.statistics && selection.data.statistics.count !== 0\" [legend]=\"selection.legend\"></wms-map-legend>\n        <clipped-wms-map-statistics *ngIf=\"selection && selection.data && selection.data.statistics\"\n            [selection]=\"selection\"></clipped-wms-map-statistics>\n    </div>\n    <div class=\"project-profile-block\" *ngIf=\"focused\">\n        <p *ngIf=\"focused.partner\">\n            How is the Status of Spring impacting phenology of plants and animals at your Refuge?\n            Visit the <a [href]=\"focused.links.dashboard\" [title]=\"focused.title + 'Dashboard'\">{{focused.title}} Dashboard</a> to find out!</p>\n        <span *ngIf=\"!focused.partner\">\n            <p>Refuges across the country are using <a href=\"https://www.usanpn.org/natures_notebook\" alt=\"Nature's Notebook\" title=\"Nature's Notebook\"><em>Nature\u2019s Notebook</em></a> to learn about how the Status of Spring is impacting phenology of plants and animals at their refuges.</p>\n            <p>Start a phenology monitoring project at your refuge to better understand phenological changes of your species of interest!</p>\n            <p class=\"call-arrow\"><a href=\"/project\" title=\"Start a project\" class=\"call-arrow-link\">Start a project</a></p>\n        </span>\n    </div>\n    ",
+        template: "\n    <form class=\"control-form\">\n        <refuge-control (onList)=\"refuges=$event\" (onSelect)=\"focusRefuge($event)\"></refuge-control>\n        <mat-form-field *ngIf=\"selections\" class=\"selection-input\">\n            <mat-select placeholder=\"Layer\" [formControl]=\"selectionFormControl\">\n                <mat-option *ngFor=\"let s of selections\" [value]=\"s.selection\">{{ s.label }}</mat-option>\n            </mat-select>\n        </mat-form-field>\n        <button *ngIf=\"selection\" class=\"reset-button\" [disabled]=\"selection && selection.working\"\n            mat-icon-button (click)=\"reset()\" matTooltip=\"Reset map\"><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i></button>\n    </form>\n\n    <div class=\"map-wrapper\">\n        <div class=\"vis-working\" *ngIf=\"selection && selection.working\">\n            <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n        </div>\n        <agm-map (mapReady)=\"mapReady($event)\"\n                [latitude]=\"latitude\" [longitude]=\"longitude\" [zoom]=\"zoom\"\n                [streetViewControl]=\"false\" [scrollwheel]=\"false\" [styles]=\"mapStyles\">\n            <span *ngFor=\"let refuge of refuges\">\n                <agm-marker *ngIf=\"refuge !== focused\"\n                    (markerClick)=\"refugeClick(refuge)\"\n                    iconUrl=\"/sites/fws/libraries/gmap_markers/marker-1.png\"\n                    [title]=\"refuge.title\"\n                    [latitude]=\"refuge.location.lat\" [longitude]=\"refuge.location.lng\"></agm-marker>\n            </span>\n        </agm-map>\n        <wms-map-legend *ngIf=\"selection && selection.legend && selection.data && selection.data.statistics && selection.data.statistics.count !== 0\"\n            [legend]=\"selection.legend\"\n            [legendTitle]=\"selection.refuge.title+', Spring First Leaf Index'\"></wms-map-legend>\n        <clipped-wms-map-statistics *ngIf=\"selection && selection.data && selection.data.statistics\"\n            [selection]=\"selection\"></clipped-wms-map-statistics>\n    </div>\n    <div class=\"project-profile-block\" *ngIf=\"focused\">\n        <p *ngIf=\"focused.partner\">\n            How is the Status of Spring impacting phenology of plants and animals at your Refuge?\n            Visit the <a [href]=\"focused.links.dashboard\" [title]=\"focused.title + 'Dashboard'\">{{focused.title}} Dashboard</a> to find out!</p>\n        <span *ngIf=\"!focused.partner\">\n            <p>Refuges across the country are using <a href=\"https://www.usanpn.org/natures_notebook\" alt=\"Nature's Notebook\" title=\"Nature's Notebook\"><em>Nature\u2019s Notebook</em></a> to learn about how the Status of Spring is impacting phenology of plants and animals at their refuges.</p>\n            <p>Start a phenology monitoring project at your refuge to better understand phenological changes of your species of interest!</p>\n            <p class=\"call-arrow\"><a href=\"/project\" title=\"Start a project\" class=\"call-arrow-link\">Start a project</a></p>\n        </span>\n    </div>\n    ",
         styles: [__webpack_require__("../../../../../src/app/status-of-spring.component.scss")]
     }),
     __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_5__node_modules_npn_common_visualizations__["a" /* ClippedWmsMapSelectionFactory */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__node_modules_npn_common_visualizations__["a" /* ClippedWmsMapSelectionFactory */]) === "function" && _b || Object])
