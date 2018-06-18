@@ -4666,6 +4666,7 @@ function lazyClassLoader() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("../../../common/@angular/common.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__clipped_wms_map_selection__ = __webpack_require__("../../../../../../../../../../../../npn_common/visualizations/clipped-wms-map/clipped-wms-map-selection.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_d3__ = __webpack_require__("../../../../d3/index.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -4678,10 +4679,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 // wraps DecimalPipe and supplies custom formatting for specific layers for mean/min/max
 var ClippedStatValuePipe = (function () {
     function ClippedStatValuePipe(decimalPipe) {
         this.decimalPipe = decimalPipe;
+        this.dateFormat = __WEBPACK_IMPORTED_MODULE_3_d3__["r" /* timeFormat */]('%B %e');
     }
     ClippedStatValuePipe.prototype.transform = function (value, nFormat, layer) {
         if (layer && layer.layerName === 'si-x:leaf_anomaly') {
@@ -4693,7 +4696,15 @@ var ClippedStatValuePipe = (function () {
                 return transformed + " days late";
             }
         }
-        return this.decimalPipe.transform(value, nFormat);
+        // for non-anomaly maps value is DOY, display as date with DOY in parens.
+        var rounded = Math.floor(value);
+        var dateFmt = this.dateFormat(this.getDate(rounded));
+        return dateFmt + " (" + rounded + ")";
+    };
+    ClippedStatValuePipe.prototype.getDate = function (rounded) {
+        var d = new Date(2010, 0, 1); // 2010 not a leap year
+        d.setTime(d.getTime() + ((rounded - 1) * 24 * 60 * 60 * 1000));
+        return d;
     };
     return ClippedStatValuePipe;
 }());
@@ -8982,7 +8993,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ":host {\n  display: block; }\n\n/deep/ .mat-tab-header {\n  border-bottom: none; }\n  /deep/ .mat-tab-header .mat-ink-bar {\n    display: none; }\n  /deep/ .mat-tab-header .mat-tab-labels {\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n        -ms-flex-flow: row nowrap;\n            flex-flow: row nowrap; }\n  /deep/ .mat-tab-header .mat-tab-labels > .mat-tab-label {\n    width: 100%;\n    white-space: normal;\n    display: block;\n    font-size: 0.9em;\n    height: 96px;\n    opacity: 1;\n    color: #fff;\n    padding: 0px;\n    background-color: transparent; }\n    @media (min-width: 768px) {\n      /deep/ .mat-tab-header .mat-tab-labels > .mat-tab-label {\n        display: -webkit-box;\n        display: -ms-flexbox;\n        display: flex; } }\n    @media (min-width: 992px) {\n      /deep/ .mat-tab-header .mat-tab-labels > .mat-tab-label {\n        font-size: 1em; } }\n    /deep/ .mat-tab-header .mat-tab-labels > .mat-tab-label > .spring-tab-label {\n      width: 100%;\n      display: block;\n      padding: 0px;\n      height: 100%; }\n    /deep/ .mat-tab-header .mat-tab-labels > .mat-tab-label:focus {\n      background-color: transparent; }\n    /deep/ .mat-tab-header .mat-tab-labels > .mat-tab-label.mat-tab-label-active {\n      color: orange; }\n    /deep/ .mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(1) > .spring-tab-label {\n      background-color: #271614; }\n      @media (min-width: 768px) {\n        /deep/ .mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(1) > .spring-tab-label {\n          padding-left: 24px; } }\n    /deep/ .mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(1)::after {\n      content: '';\n      border-top: 48px solid #3f322b;\n      border-right: 48px solid #3f322b;\n      border-bottom: 48px solid #271614;\n      border-left: 48px solid #271614; }\n    /deep/ .mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(2) > .spring-tab-label {\n      background-color: #3f322b; }\n    /deep/ .mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(2)::after {\n      content: '';\n      border-top: 48px solid transparent;\n      border-right: 48px solid transparent;\n      border-bottom: 48px solid #3f322b;\n      border-left: 48px solid #3f322b; }\n\n.spring-tab-label {\n  position: relative;\n  text-transform: uppercase; }\n  .spring-tab-label > label {\n    color: inherit;\n    margin-top: 3.25em; }\n\n.spring-tab-content {\n  padding: 20px 5px;\n  color: #000;\n  border-left: 2px solid #ddd;\n  border-right: 2px solid #ddd;\n  border-bottom: 2px solid #ddd;\n  background-color: #fff; }\n  @media (min-width: 992px) {\n    .spring-tab-content {\n      padding: 20px; } }\n", ""]);
 
 // exports
 
@@ -9717,8 +9728,6 @@ var StatusOfSpringComponent = (function (_super) {
     };
     StatusOfSpringComponent.prototype.newSelection = function (refuge, service, layerId) {
         var selection = this.selectionFactory.newSelection();
-        // store the refuge on the selection so it can be referenced from that context
-        selection.refuge = refuge;
         selection.networkIds = [refuge.network_id];
         selection.fwsBoundary = refuge.boundary_id;
         selection.service = service;
@@ -9762,6 +9771,7 @@ var StatusOfSpringComponent = (function (_super) {
         today = new Date(), yesterday = new Date(today.getTime() - ONE_DAY_MILLIS), selection;
         // where has spring arrived
         selection = this.newSelection(refuge, 'si-x', 'current');
+        selection.legendTitle = refuge.title + ", Spring First Leaf Index";
         selection.explicitDate = yesterday;
         selections.push({
             label: 'Where has spring arrived?',
@@ -9769,14 +9779,16 @@ var StatusOfSpringComponent = (function (_super) {
         });
         // spring forecast
         selection = this.newSelection(refuge, 'si-x', 'forecast');
-        selection.explicitDate = today;
         selection.forecastDays = 3;
+        selection.explicitDate = today;
+        selection.legendTitle = refuge.title + ", Spring First Leaf Index " + selection.forecastDays + "-day Forecast";
         selections.push({
             label: 'Spring forecast',
             selection: selection
         });
         // anomaly
         selection = this.newSelection(refuge, 'si-x', 'anomaly');
+        selection.legendTitle = refuge.title + ", Spring First Leaf Index Anomaly";
         selection.explicitDate = yesterday;
         selections.push({
             label: 'How does this year stack up?',
@@ -9838,7 +9850,7 @@ __decorate([
 StatusOfSpringComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'status-of-spring',
-        template: "\n    <form class=\"control-form\">\n        <refuge-control (onList)=\"refuges=$event\" (onSelect)=\"focusRefuge($event)\"></refuge-control>\n        <mat-form-field *ngIf=\"selections\" class=\"selection-input\">\n            <mat-select placeholder=\"Layer\" [formControl]=\"selectionFormControl\">\n                <mat-option *ngFor=\"let s of selections\" [value]=\"s.selection\">{{ s.label }}</mat-option>\n            </mat-select>\n        </mat-form-field>\n        <button *ngIf=\"selection\" class=\"reset-button\" [disabled]=\"selection && selection.working\"\n            mat-icon-button (click)=\"reset()\" matTooltip=\"Reset map\"><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i></button>\n    </form>\n\n    <div class=\"map-wrapper\">\n        <div class=\"vis-working\" *ngIf=\"selection && selection.working\">\n            <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n        </div>\n        <agm-map (mapReady)=\"mapReady($event)\"\n                [latitude]=\"latitude\" [longitude]=\"longitude\" [zoom]=\"zoom\"\n                [streetViewControl]=\"false\" [scrollwheel]=\"false\" [styles]=\"mapStyles\">\n            <span *ngFor=\"let refuge of refuges\">\n                <agm-marker *ngIf=\"refuge !== focused\"\n                    (markerClick)=\"refugeClick(refuge)\"\n                    iconUrl=\"/sites/fws/libraries/gmap_markers/marker-1.png\"\n                    [title]=\"refuge.title\"\n                    [latitude]=\"refuge.location.lat\" [longitude]=\"refuge.location.lng\"></agm-marker>\n            </span>\n        </agm-map>\n        <wms-map-legend *ngIf=\"selection && selection.legend && selection.data && selection.data.statistics && selection.data.statistics.count !== 0\"\n            [legend]=\"selection.legend\"\n            [legendTitle]=\"selection.refuge.title+', Spring First Leaf Index'\"></wms-map-legend>\n        <clipped-wms-map-statistics *ngIf=\"selection && selection.data && selection.data.statistics\"\n            [selection]=\"selection\"></clipped-wms-map-statistics>\n    </div>\n    <div class=\"project-profile-block\" *ngIf=\"focused\">\n        <p *ngIf=\"focused.partner\">\n            How is the Status of Spring impacting phenology of plants and animals at your Refuge?\n            Visit the <a [href]=\"focused.links.dashboard\" [title]=\"focused.title + 'Dashboard'\">{{focused.title}} Dashboard</a> to find out!</p>\n        <span *ngIf=\"!focused.partner\">\n            <p>Refuges across the country are using <a href=\"https://www.usanpn.org/natures_notebook\" alt=\"Nature's Notebook\" title=\"Nature's Notebook\"><em>Nature\u2019s Notebook</em></a> to learn about how the Status of Spring is impacting phenology of plants and animals at their refuges.</p>\n            <p>Start a phenology monitoring project at your refuge to better understand phenological changes of your species of interest!</p>\n            <p class=\"call-arrow\"><a href=\"/project\" title=\"Start a project\" class=\"call-arrow-link\">Start a project</a></p>\n        </span>\n    </div>\n    ",
+        template: "\n    <form class=\"control-form\">\n        <refuge-control (onList)=\"refuges=$event\" (onSelect)=\"focusRefuge($event)\"></refuge-control>\n        <mat-form-field *ngIf=\"selections\" class=\"selection-input\">\n            <mat-select placeholder=\"Layer\" [formControl]=\"selectionFormControl\">\n                <mat-option *ngFor=\"let s of selections\" [value]=\"s.selection\">{{ s.label }}</mat-option>\n            </mat-select>\n        </mat-form-field>\n        <button *ngIf=\"selection\" class=\"reset-button\" [disabled]=\"selection && selection.working\"\n            mat-icon-button (click)=\"reset()\" matTooltip=\"Reset map\"><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i></button>\n    </form>\n\n    <div class=\"map-wrapper\">\n        <div class=\"vis-working\" *ngIf=\"selection && selection.working\">\n            <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n        </div>\n        <agm-map (mapReady)=\"mapReady($event)\"\n                [latitude]=\"latitude\" [longitude]=\"longitude\" [zoom]=\"zoom\"\n                [streetViewControl]=\"false\" [scrollwheel]=\"false\" [styles]=\"mapStyles\">\n            <span *ngFor=\"let refuge of refuges\">\n                <agm-marker *ngIf=\"refuge !== focused\"\n                    (markerClick)=\"refugeClick(refuge)\"\n                    iconUrl=\"/sites/fws/libraries/gmap_markers/marker-1.png\"\n                    [title]=\"refuge.title\"\n                    [latitude]=\"refuge.location.lat\" [longitude]=\"refuge.location.lng\"></agm-marker>\n            </span>\n        </agm-map>\n        <wms-map-legend *ngIf=\"selection && selection.legend && selection.data && selection.data.statistics && selection.data.statistics.count !== 0\"\n            [legend]=\"selection.legend\"\n            [legendTitle]=\"selection.legendTitle\"></wms-map-legend>\n        <clipped-wms-map-statistics *ngIf=\"selection && selection.data && selection.data.statistics\"\n            [selection]=\"selection\"></clipped-wms-map-statistics>\n    </div>\n    <div class=\"project-profile-block\" *ngIf=\"focused\">\n        <p *ngIf=\"focused.partner\">\n            How is the Status of Spring impacting phenology of plants and animals at your Refuge?\n            Visit the <a [href]=\"focused.links.dashboard\" [title]=\"focused.title + 'Dashboard'\">{{focused.title}} Dashboard</a> to find out!</p>\n        <span *ngIf=\"!focused.partner\">\n            <p>Refuges across the country are using <a href=\"https://www.usanpn.org/natures_notebook\" alt=\"Nature's Notebook\" title=\"Nature's Notebook\"><em>Nature\u2019s Notebook</em></a> to learn about how the Status of Spring is impacting phenology of plants and animals at their refuges.</p>\n            <p>Start a phenology monitoring project at your refuge to better understand phenological changes of your species of interest!</p>\n            <p class=\"call-arrow\"><a href=\"/project\" title=\"Start a project\" class=\"call-arrow-link\">Start a project</a></p>\n        </span>\n    </div>\n    ",
         styles: [__webpack_require__("../../../../../src/app/status-of-spring.component.scss")]
     }),
     __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_5__node_modules_npn_common_visualizations__["a" /* ClippedWmsMapSelectionFactory */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__node_modules_npn_common_visualizations__["a" /* ClippedWmsMapSelectionFactory */]) === "function" && _b || Object])
