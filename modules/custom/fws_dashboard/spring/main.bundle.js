@@ -9127,7 +9127,7 @@ var StartOfSpringDialog = (function () {
         var style = getComputedStyle(wrapper, null);
         var strToPx = function (s) { return parseInt(s.replace(/px$/, '')); };
         var ratioMult = 0.5376; // based on 930/500
-        var minusLeft = strToPx(style.paddingLeft) + strToPx(style.borderLeftWidth), minusRight = strToPx(style.paddingRight) + strToPx(style.borderRightWidth), innerWidth = (wrapper.clientWidth * 0.75) - minusLeft - minusRight, cw = Math.floor(innerWidth);
+        var minusLeft = strToPx(style.paddingLeft) + strToPx(style.borderLeftWidth), minusRight = strToPx(style.paddingRight) + strToPx(style.borderRightWidth), innerWidth = (wrapper.clientWidth * 0.6) - minusLeft - minusRight, cw = Math.floor(innerWidth);
         var margin = { top: 35, right: 20, left: 55, bottom: 50 };
         var ch = (cw * ratioMult), w = cw - margin.left - margin.right, h = ch - margin.top - margin.bottom;
         var svgWidth = w + margin.left + margin.right, svgHeight = h + margin.top + margin.bottom;
