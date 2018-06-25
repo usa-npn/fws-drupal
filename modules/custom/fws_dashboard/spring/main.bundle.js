@@ -9084,10 +9084,11 @@ var SosDoyTransform = (function () {
     function SosDoyTransform() {
         this.dateFormat = __WEBPACK_IMPORTED_MODULE_4_d3__["r" /* timeFormat */]('%B %e');
     }
-    SosDoyTransform.prototype.transform = function (value, justDate) {
+    SosDoyTransform.prototype.transform = function (value, stdev) {
         var fixed = value.toFixed(2);
+        var fixedStdev = stdev.toFixed(2);
         var fmt = this.dateFormat(this.getDate(value));
-        return justDate ? "" + fmt : fmt + " (" + fixed + " DOY)";
+        return fmt + " (" + fixed + " DOY \u00B1 " + fixedStdev + " days)";
     };
     SosDoyTransform.prototype.getDate = function (value) {
         var rounded = Math.floor(value);
@@ -9185,7 +9186,7 @@ var StartOfSpringDialog = (function () {
             .attr('y', 10)
             .attr('x', 0)
             .text(' ');
-        var startYear = 1981, endYear = 2013; // BEST data set only throu 2013 (new Date()).getFullYear() - 2;
+        var startYear = 1981, endYear = 2012; // BEST data set only throu 2013 (new Date()).getFullYear() - 2;
         svg.append('g')
             .attr('transform', "translate(10,20)")
             .append('text')
@@ -9299,7 +9300,7 @@ var StartOfSpringDialog = (function () {
 }());
 StartOfSpringDialog = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        template: "\n    <button mat-icon-button class=\"dialog-close\" (click)=\"close()\"><i class=\"fa fa-times\" aria-hidden=\"true\"></i></button>\n    <div class=\"mat-typography\" id=\"startOfSpringDialogWrapper\">\n        <span class=\"mat-title\">{{refuge.title}}</span>\n        <span *ngIf=\"!noData; else noDataDisclaimer\">\n            <ul class=\"refuge-info\">\n                <li>\n                    <label>Average spring leaf onset in recent decades (1983-2012):</label>\n                    {{refugeData['FLI (Day)'] | SosDoy}}\n                </li>\n                <li>\n                    <label>Recent change in timing relative to historical range of variation (1901-2012):</label>\n                    Spring first leaf arrival in recent decades is {{fliCategory}} ({{refugeData['FLI (%)'] | number:'1.2-2'}}%) compared to the historical range.\n                </li>\n                <li>\n                    <label>Change in timing over latitudinal exent of migratory flyway (1920-2012):</label>\n                    <p>\n                        <span *ngIf=\"FLYWAY_TEXTS[refuge.flywayId]; else noFlyway\">\n                        {{FLYWAY_TEXTS[refuge.flywayId]}}\n                        </span>\n                        <ng-template #noFlyway>\n                        This Refuge is outside of the four migratory flyways.\n                        </ng-template>\n                    </p>\n                </li>\n            </ul>\n            <div id=\"startOfSpringVisWrapper\">\n                <div class=\"vis-working\" *ngIf=\"working\">\n                    <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n                </div>\n                <svg id=\"timeSeries\"></svg>\n            </div>\n        </span>\n        <ng-template #noDataDisclaimer>\n            <p>Data are not available for this Refuge.</p>\n        </ng-template>\n    </div>\n    <!--pre>{{refugeData | json}}</pre-->\n    ",
+        template: "\n    <button mat-icon-button class=\"dialog-close\" (click)=\"close()\"><i class=\"fa fa-times\" aria-hidden=\"true\"></i></button>\n    <div class=\"mat-typography\" id=\"startOfSpringDialogWrapper\">\n        <span class=\"mat-title\">{{refuge.title}}</span>\n        <span *ngIf=\"!noData; else noDataDisclaimer\">\n            <ul class=\"refuge-info\">\n                <li>\n                    <label>Average spring leaf onset in recent decades (1983-2012):</label>\n                    {{refugeData['FLI (Day)'] | SosDoy:refugeData['FLI SD, AVG']}}\n                </li>\n                <li>\n                    <label>Recent change in timing relative to historical range of variation (1901-2012):</label>\n                    Spring first leaf arrival in recent decades is {{fliCategory}} ({{refugeData['FLI (%)'] | number:'1.2-2'}}%) compared to the historical range.\n                </li>\n                <li>\n                    <label>Change in timing over latitudinal exent of migratory flyway (1920-2012):</label>\n                    <p>\n                        <span *ngIf=\"FLYWAY_TEXTS[refuge.flywayId]; else noFlyway\">\n                        {{FLYWAY_TEXTS[refuge.flywayId]}}\n                        </span>\n                        <ng-template #noFlyway>\n                        This Refuge is outside of the four migratory flyways.\n                        </ng-template>\n                    </p>\n                </li>\n            </ul>\n            <div id=\"startOfSpringVisWrapper\">\n                <div class=\"vis-working\" *ngIf=\"working\">\n                    <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n                </div>\n                <svg id=\"timeSeries\"></svg>\n            </div>\n        </span>\n        <ng-template #noDataDisclaimer>\n            <p>Data are not available for this Refuge.</p>\n        </ng-template>\n    </div>\n    <!--pre>{{refugeData | json}}</pre-->\n    ",
         styles: ["\n        button.dialog-close {\n            float: right;\n        }\n        #startOfSpringVisWrapper {\n            min-height: 1px;\n            position: relative;\n            padding-top: 10px;\n        }\n        svg {\n            display: block;\n            border: 1px solid #aaa;\n            margin: auto;\n        }\n        ul.refuge-info {\n            margin: 0 0 12px;\n        }\n        ul.refuge-info>li {\n            list-style: none;\n            padding: 10px 0px 0px 0px;\n        }\n        ul.refuge-info>li label {\n            font-weight: bold;\n        }\n        p {\n            margin: 0px;\n        }\n    "],
         providers: [
             SosDoyTransform
