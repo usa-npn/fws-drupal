@@ -1615,6 +1615,11 @@ div.messages .dismiss:hover {
 }
 
 
+.refuge-info, .refuge-info span{
+	font-size:16px;
+}
+
+
 
 
 /* Contact
