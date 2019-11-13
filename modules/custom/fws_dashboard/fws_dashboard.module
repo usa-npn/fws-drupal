@@ -151,11 +151,12 @@ function fws_dashboard_block_view($delta='') {
             $refuge = entity_metadata_wrapper('node', $node);
             $user_is_admin = fws_dashboard_user_is_admin($refuge) ? ' user_is_admin' :'';
             $refuge_id = $refuge->nid->value();
-            $html .= "<refuge-dashboard refuge_id=\"${refuge_id}\"${user_is_logged_in}${user_is_admin}></refuge-dashboard>";
+            $contentType = $node->type;
+            $html .= "<fws-dashboard mode=\"${contentType}\" entity_id=\"${refuge_id}\"${user_is_logged_in}${user_is_admin}></fws-dashboard>";
         } else {
             $html .= "<spring-dashboard ${user_is_logged_in}></spring-dashboard>";
         }
-        $order = array('inline','polyfills','scripts','styles','vendor','main');
+        $order = array('runtime','inline','polyfills','scripts','styles','vendor','main');
         foreach($order as $key) { // styles only there on dev build
             if(isset($js[$key])) {
                 $f = $js[$key];
