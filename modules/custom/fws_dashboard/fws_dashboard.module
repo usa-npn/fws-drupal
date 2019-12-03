@@ -1,5 +1,6 @@
 <?php
 define('REFUGE_API', 'api/refuge');
+define('PHENO_TRAIL_API', 'api/phenology_trail');
 
 define('REFUGE_DASHBOARD_THEME','refuge_dashboard');
 
@@ -15,6 +16,12 @@ define('NPN_DATA_USE_STATS_CACHE','npn_data_use_stats_cache');
 define('NPN_GEOSERVER_ROOT','npn_geoserver_root');
 define('NPN_GEOSERVER_ROOT_DEFAULT','//geoserver-dev.usanpn.org/geoserver');
 
+/**
+ * NOTE: The code below uses "refuge" a lot and isn't generic while it now alwo deals with phenology_trail
+ * An attempt was made to make the code generic but this then broke the Drupal 7 registry.
+ * Rather than require NPN re-build their registry to install the new code just not making it clean/generic.
+ * During the upgrade to D8 the issue should be rectified.
+ */
 /**
  * Implements hook_menu
  */
@@ -32,6 +39,13 @@ function fws_dashboard_menu() {
              'page arguments' => array(2),
              'type' => MENU_CALLBACK,
          ),
+         PHENO_TRAIL_API.'/%fws_dashboard_refuge' => array(
+            'access callback' => 'fws_dashboard_refuge_access',
+            'access arguments' => array(2),
+            'page callback' => 'fws_dashboard_refuge',
+            'page arguments' => array(2),
+            'type' => MENU_CALLBACK,
+        ),
          'admin/config/services/fws_dashboard' => array(
             'title' => t('FWS Dashboard Services configuration'),
             'description' => t('Configure underlying web services used by the dashboard'),
@@ -182,7 +196,7 @@ function fws_dashboard_refuge_load($refuge_id) {
         $refuge_id = $path_parts[1];
     }
     $node = node_load($refuge_id);
-    if (!$node || $node->type !== 'refuge') {
+    if (!$node || ($node->type !== 'refuge' && $node->type !== 'phenology_trail')) {
         return NULL;
     }
     return entity_metadata_wrapper('node', $node);
@@ -304,27 +318,38 @@ function _fws_dashboard_refuge_s11n($refuge) {
     $terse = isset($_GET['terse']);
     $url_opts = array('absolute'=>TRUE);
     $path_alias = drupal_get_path_alias('node/'.$refuge->nid->value());
-    // the location field unfortunately doesn't support entity metadata wrappers
-    // get the raw data
-    $raw = $refuge->raw();
-    $location = isset($raw->field_refuge_location) && // tests just to be safe
-                isset($raw->field_refuge_location['und']) &&
-                isset($raw->field_refuge_location['und'][0]) ? $raw->field_refuge_location['und'][0] : NULL;
+
     $return = array(
          'id' => $path_alias,
          'nid' => intval($refuge->nid->value()),
          'title' => $refuge->label(),
-         'partner' => $refuge->field_is_partner->value(),
-         'no_geospatial' => $refuge->field_no_geospatial_data->value(),
-         'network_id' => intval($refuge->field_network_id->value()),
-         'boundary_id' => $refuge->field_refuge_boundary->value(),
-         'location' => ($location && isset($location['latitude']) && isset($location['longitude'])) ?
-            array( 'lat' => floatval($location['latitude']), 'lng' => floatval($location['longitude'])) : NULL,
          'links' => array(
              'self' => url(REFUGE_API.'/'.$path_alias,$url_opts),
              'dashboard' => url('/'.$path_alias,$url_opts),
          ),
      );
+     switch($refuge->getBundle()) {
+         case 'refuge':
+            $return['partner'] = $refuge->field_is_partner->value();
+            $return['no_geospatial'] = $refuge->field_no_geospatial_data->value();
+            $return['network_id'] = intval($refuge->field_network_id->value());
+            $return['boundary_id'] = $refuge->field_refuge_boundary->value();
+            // the location field unfortunately doesn't support entity metadata wrappers
+            // get the raw data
+            $raw = $refuge->raw();
+            $location = isset($raw->field_refuge_location) && // tests just to be safe
+                isset($raw->field_refuge_location['und']) &&
+                isset($raw->field_refuge_location['und'][0]) ? $raw->field_refuge_location['und'][0] : NULL;
+            $return['location'] = ($location && isset($location['latitude']) && isset($location['longitude'])) ?
+               array( 'lat' => floatval($location['latitude']), 'lng' => floatval($location['longitude'])) : NULL;
+            break;
+        case 'phenology_trail':
+            $return['network_ids'] = [];
+            foreach($refuge->field_network_ids as $id) {
+                $return['network_ids'][] = intval($id->value());
+            }
+            break;
+     }
      if(!$terse) {
          $selections = $refuge->field_saved_visualizations->value();
          $return['selections'] = $selections ? drupal_json_decode($selections) : array();

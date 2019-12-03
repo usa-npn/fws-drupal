@@ -63,7 +63,7 @@ function mnpn_preprocess_page(&$variables, $hook) {
 	$type = $variables['node']->type;
     // If the content type's machine name is "my_machine_name" the file
     // name will be "page--my-machine-name.tpl.php".
-	if($type == 'refuge'){	
+	if($type == 'refuge' || $type == 'phenology_trail'){	
 	
 		$variables['theme_hook_suggestions'][] = 'page__' . $variables['node']->type;
 	}
