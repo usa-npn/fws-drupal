@@ -325,7 +325,7 @@ function newGuid() {
 /*!*********************************************!*\
   !*** ../npn/common/src/lib/common/index.ts ***!
   \*********************************************/
-/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, DoyPipe, LegendDoyPipe, NpnServiceUtils, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS */
+/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -339,6 +339,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NetworkService", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["NetworkService"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StationService", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["StationService"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getStaticColor", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["getStaticColor"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DoyPipe", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["DoyPipe"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LegendDoyPipe", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["LegendDoyPipe"]; });
@@ -350,6 +354,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Phenophase", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["Phenophase"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TaxonomicPhenophaseRank", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["TaxonomicPhenophaseRank"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "STATIC_COLORS", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["STATIC_COLORS"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getSpeciesPlotKeys", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["getSpeciesPlotKeys"]; });
 
@@ -503,11 +509,51 @@ var NetworkService = /** @class */ (function () {
     function NetworkService(serviceUtils) {
         this.serviceUtils = serviceUtils;
     }
-    NetworkService.prototype.getStations = function (networkId) {
-        return this.serviceUtils.cachedGet(this.serviceUtils.apiUrl('/npn_portal/stations/getStationsForNetwork.json'), { network_id: networkId });
+    /**
+     * Get all stations for a network or list of networks.
+     *
+     * @param networkIds A single networkId or an array of networkIds.
+     */
+    NetworkService.prototype.getStations = function (networkIds) {
+        var ids = Array.isArray(networkIds) ? networkIds : [networkIds];
+        var params = ids.reduce(function (map, id, i) {
+            map["network_ids[" + i + "]"] = id;
+            return map;
+        }, {});
+        return this.serviceUtils.cachedGet(this.serviceUtils.apiUrl('/npn_portal/stations/getAllStations.json'), params);
     };
+    /**
+     * Get a single Network by id
+     *
+     * @todo unfortunate that this takes a single networkId and yet returns an array, the function should unwrap the response so callers don't have to.
+     *
+     * @param networkId The id of the Network to fetch.
+     */
     NetworkService.prototype.getNetwork = function (networkId) {
         return this.serviceUtils.cachedGet(this.serviceUtils.dataApiUrl2("/v0/networks/" + networkId));
+    };
+    /**
+     * Get a set of Networks by id.
+     *
+     * @param networkIds The networkIds.
+     */
+    NetworkService.prototype.getNetworks = function (networkIds) {
+        var _this = this;
+        // ARGH there is a service that can do this in one request but the dataApiUrl2 
+        // service doesn't do this and we don't yet have a link to the new services (not sure if they should be used)
+        // e.g. curl -X GET "https://data-dev.usanpn.org:3004/v0/networks?network_id=295,724" -H "accept: application/json"
+        // in a development setup dataApiRoot2 is https://data-dev.usanpn.org/webservices (prefixed with /webservices and no 3004)
+        /*
+        return this.serviceUtils.cachedGet(
+            this.serviceUtils.dataApiUrl2('/v0/networks'),
+            {network_id:networkIds.join(',')}
+        );*/
+        // not re-using the getNetwork function because I think it should be fixed to not return an array
+        // but currently fetching the networks with one request per which is less efficient than it could be
+        return Promise.all(networkIds.map(function (id) { return _this.serviceUtils.cachedGet(_this.serviceUtils.dataApiUrl2("/v0/networks/" + id)); })).then(function (results) {
+            // TODO: What to do when given a bad network id?
+            return results.map(function (result) { return result.length == 1 ? result[0] : null; }).filter(function (network) { return !!network; });
+        });
     };
     NetworkService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
@@ -826,7 +872,7 @@ var TaxonomicPhenophaseRank;
 /*!**************************************************!*\
   !*** ../npn/common/src/lib/common/public_api.ts ***!
   \**************************************************/
-/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, DoyPipe, LegendDoyPipe, NpnServiceUtils, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS */
+/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -844,49 +890,60 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TaxonomicPhenophaseRank", function() { return _phenophase__WEBPACK_IMPORTED_MODULE_2__["TaxonomicPhenophaseRank"]; });
 
-/* harmony import */ var _cache_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./cache.service */ "../npn/common/src/lib/common/cache.service.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CacheService", function() { return _cache_service__WEBPACK_IMPORTED_MODULE_3__["CacheService"]; });
+/* harmony import */ var _static_color__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./static-color */ "../npn/common/src/lib/common/static-color.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "STATIC_COLORS", function() { return _static_color__WEBPACK_IMPORTED_MODULE_3__["STATIC_COLORS"]; });
 
-/* harmony import */ var _species_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./species.service */ "../npn/common/src/lib/common/species.service.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getSpeciesPlotKeys", function() { return _species_service__WEBPACK_IMPORTED_MODULE_4__["getSpeciesPlotKeys"]; });
+/* harmony import */ var _cache_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./cache.service */ "../npn/common/src/lib/common/cache.service.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CacheService", function() { return _cache_service__WEBPACK_IMPORTED_MODULE_4__["CacheService"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpeciesService", function() { return _species_service__WEBPACK_IMPORTED_MODULE_4__["SpeciesService"]; });
+/* harmony import */ var _species_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./species.service */ "../npn/common/src/lib/common/species.service.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getSpeciesPlotKeys", function() { return _species_service__WEBPACK_IMPORTED_MODULE_5__["getSpeciesPlotKeys"]; });
 
-/* harmony import */ var _network_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./network.service */ "../npn/common/src/lib/common/network.service.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NetworkService", function() { return _network_service__WEBPACK_IMPORTED_MODULE_5__["NetworkService"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpeciesService", function() { return _species_service__WEBPACK_IMPORTED_MODULE_5__["SpeciesService"]; });
 
-/* harmony import */ var _species_title_pipe__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./species-title.pipe */ "../npn/common/src/lib/common/species-title.pipe.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpeciesTitlePipe", function() { return _species_title_pipe__WEBPACK_IMPORTED_MODULE_6__["SpeciesTitlePipe"]; });
+/* harmony import */ var _network_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./network.service */ "../npn/common/src/lib/common/network.service.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NetworkService", function() { return _network_service__WEBPACK_IMPORTED_MODULE_6__["NetworkService"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TaxonomicSpeciesTitlePipe", function() { return _species_title_pipe__WEBPACK_IMPORTED_MODULE_6__["TaxonomicSpeciesTitlePipe"]; });
+/* harmony import */ var _station_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./station.service */ "../npn/common/src/lib/common/station.service.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StationService", function() { return _station_service__WEBPACK_IMPORTED_MODULE_7__["StationService"]; });
 
-/* harmony import */ var _doy_pipe__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./doy.pipe */ "../npn/common/src/lib/common/doy.pipe.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DoyPipe", function() { return _doy_pipe__WEBPACK_IMPORTED_MODULE_7__["DoyPipe"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getStaticColor", function() { return _static_color__WEBPACK_IMPORTED_MODULE_3__["getStaticColor"]; });
 
-/* harmony import */ var _legend_doy_pipe__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./legend-doy.pipe */ "../npn/common/src/lib/common/legend-doy.pipe.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LegendDoyPipe", function() { return _legend_doy_pipe__WEBPACK_IMPORTED_MODULE_8__["LegendDoyPipe"]; });
+/* harmony import */ var _species_title_pipe__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./species-title.pipe */ "../npn/common/src/lib/common/species-title.pipe.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpeciesTitlePipe", function() { return _species_title_pipe__WEBPACK_IMPORTED_MODULE_8__["SpeciesTitlePipe"]; });
 
-/* harmony import */ var _guid__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./guid */ "../npn/common/src/lib/common/guid.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "newGuid", function() { return _guid__WEBPACK_IMPORTED_MODULE_9__["newGuid"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TaxonomicSpeciesTitlePipe", function() { return _species_title_pipe__WEBPACK_IMPORTED_MODULE_8__["TaxonomicSpeciesTitlePipe"]; });
 
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./config */ "../npn/common/src/lib/common/config.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NpnConfiguration", function() { return _config__WEBPACK_IMPORTED_MODULE_10__["NpnConfiguration"]; });
+/* harmony import */ var _doy_pipe__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./doy.pipe */ "../npn/common/src/lib/common/doy.pipe.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DoyPipe", function() { return _doy_pipe__WEBPACK_IMPORTED_MODULE_9__["DoyPipe"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NPN_CONFIGURATION", function() { return _config__WEBPACK_IMPORTED_MODULE_10__["NPN_CONFIGURATION"]; });
+/* harmony import */ var _legend_doy_pipe__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./legend-doy.pipe */ "../npn/common/src/lib/common/legend-doy.pipe.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LegendDoyPipe", function() { return _legend_doy_pipe__WEBPACK_IMPORTED_MODULE_10__["LegendDoyPipe"]; });
 
-/* harmony import */ var _npn_service_utils_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./npn-service-utils.service */ "../npn/common/src/lib/common/npn-service-utils.service.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NpnServiceUtils", function() { return _npn_service_utils_service__WEBPACK_IMPORTED_MODULE_11__["NpnServiceUtils"]; });
+/* harmony import */ var _guid__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./guid */ "../npn/common/src/lib/common/guid.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "newGuid", function() { return _guid__WEBPACK_IMPORTED_MODULE_11__["newGuid"]; });
 
-/* harmony import */ var _detect_ie__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./detect-ie */ "../npn/common/src/lib/common/detect-ie.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "detectIE", function() { return _detect_ie__WEBPACK_IMPORTED_MODULE_12__["detectIE"]; });
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./config */ "../npn/common/src/lib/common/config.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NpnConfiguration", function() { return _config__WEBPACK_IMPORTED_MODULE_12__["NpnConfiguration"]; });
 
-/* harmony import */ var _monitors_destroy__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./monitors-destroy */ "../npn/common/src/lib/common/monitors-destroy.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MonitorsDestroy", function() { return _monitors_destroy__WEBPACK_IMPORTED_MODULE_13__["MonitorsDestroy"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NPN_CONFIGURATION", function() { return _config__WEBPACK_IMPORTED_MODULE_12__["NPN_CONFIGURATION"]; });
 
-/* harmony import */ var _application_settings__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./application-settings */ "../npn/common/src/lib/common/application-settings.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpeciesTitleFormat", function() { return _application_settings__WEBPACK_IMPORTED_MODULE_14__["SpeciesTitleFormat"]; });
+/* harmony import */ var _npn_service_utils_service__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./npn-service-utils.service */ "../npn/common/src/lib/common/npn-service-utils.service.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NpnServiceUtils", function() { return _npn_service_utils_service__WEBPACK_IMPORTED_MODULE_13__["NpnServiceUtils"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "APPLICATION_SETTINGS", function() { return _application_settings__WEBPACK_IMPORTED_MODULE_14__["APPLICATION_SETTINGS"]; });
+/* harmony import */ var _detect_ie__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./detect-ie */ "../npn/common/src/lib/common/detect-ie.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "detectIE", function() { return _detect_ie__WEBPACK_IMPORTED_MODULE_14__["detectIE"]; });
+
+/* harmony import */ var _monitors_destroy__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./monitors-destroy */ "../npn/common/src/lib/common/monitors-destroy.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MonitorsDestroy", function() { return _monitors_destroy__WEBPACK_IMPORTED_MODULE_15__["MonitorsDestroy"]; });
+
+/* harmony import */ var _application_settings__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./application-settings */ "../npn/common/src/lib/common/application-settings.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpeciesTitleFormat", function() { return _application_settings__WEBPACK_IMPORTED_MODULE_16__["SpeciesTitleFormat"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "APPLICATION_SETTINGS", function() { return _application_settings__WEBPACK_IMPORTED_MODULE_16__["APPLICATION_SETTINGS"]; });
+
+
+
 
 
 
@@ -1325,11 +1382,57 @@ var SpeciesService = /** @class */ (function () {
             ? _this.removeRedundantPhenophases(phases[0].phenophases)
             : []; });
     };
+    SpeciesService.prototype._getPhenodefinitions = function (species, rank, date) {
+        var _this = this;
+        var params = {};
+        var url = rank === _species__WEBPACK_IMPORTED_MODULE_3__["TaxonomicSpeciesRank"].SPECIES
+            ? this.serviceUtils.apiUrl('/npn_portal/phenophases/getPhenophasesForSpecies.json')
+            : this.serviceUtils.apiUrl('/npn_portal/phenophases/getPhenophasesForTaxon.json');
+        var o;
+        switch (rank) {
+            case _species__WEBPACK_IMPORTED_MODULE_3__["TaxonomicSpeciesRank"].SPECIES:
+                o = species;
+                params.species_id = o.species_id;
+                break;
+            case _species__WEBPACK_IMPORTED_MODULE_3__["TaxonomicSpeciesRank"].CLASS:
+                o = species;
+                params.class_id = o.class_id;
+                break;
+            case _species__WEBPACK_IMPORTED_MODULE_3__["TaxonomicSpeciesRank"].ORDER:
+                o = species;
+                params.order_id = o.order_id;
+                break;
+            case _species__WEBPACK_IMPORTED_MODULE_3__["TaxonomicSpeciesRank"].FAMILY:
+                o = species;
+                params.family_id = o.family_id;
+                break;
+            case _species__WEBPACK_IMPORTED_MODULE_3__["TaxonomicSpeciesRank"].GENUS:
+                o = species;
+                params.genus_id = o.genus_id;
+                break;
+        }
+        if (date) {
+            params.date = this.datePipe.transform(date, 'y-MM-dd');
+        }
+        else {
+            params.return_all = true;
+        }
+        return this.serviceUtils.cachedGet(url, params)
+            .then(function (phases) { return phases && phases.length
+            ? _this.removeRedundantPhenodefinitions(phases[0].phenophases)
+            : []; });
+    };
     SpeciesService.prototype.getAllPhenophases = function (species, rank) {
         return this._getPhenophases(species, rank);
     };
+    SpeciesService.prototype.getAllPhenodefinitions = function (species, rank) {
+        return this._getPhenodefinitions(species, rank);
+    };
     SpeciesService.prototype.getPhenophasesForDate = function (species, rank, date) {
         return this._getPhenophases(species, rank, date);
+    };
+    SpeciesService.prototype.getPhenodefinitionsForDate = function (species, rank, date) {
+        return this._getPhenodefinitions(species, rank, date);
     };
     SpeciesService.prototype.getPhenophasesForYear = function (species, rank, year) {
         var _this = this;
@@ -1339,10 +1442,23 @@ var SpeciesService = /** @class */ (function () {
             this.getPhenophasesForDate(species, rank, dec31)
         ]).then(function (lists) { return _this.mergeRedundantPhenophaseLists(lists); });
     };
+    SpeciesService.prototype.getPhenodefinitionsForYear = function (species, rank, year) {
+        var _this = this;
+        var jan1 = new Date(year, 0, 1), dec31 = new Date(year, 11, 31);
+        return Promise.all([
+            this.getPhenodefinitionsForDate(species, rank, jan1),
+            this.getPhenodefinitionsForDate(species, rank, dec31)
+        ]).then(function (lists) { return _this.mergeRedundantPhenodefinitionLists(lists); });
+    };
     SpeciesService.prototype.getPhenophasesForYears = function (species, rank, years) {
         var _this = this;
         return Promise.all(years.map(function (y) { return _this.getPhenophasesForYear(species, rank, y); }))
             .then(function (lists) { return _this.mergeRedundantPhenophaseLists(lists); });
+    };
+    SpeciesService.prototype.getPhenodefinitionsForYears = function (species, rank, years) {
+        var _this = this;
+        return Promise.all(years.map(function (y) { return _this.getPhenodefinitionsForYear(species, rank, y); }))
+            .then(function (lists) { return _this.mergeRedundantPhenodefinitionLists(lists); });
     };
     SpeciesService.prototype.getPhenophasesContiguousYears = function (species, rank, startYear, endYear) {
         if (startYear) {
@@ -1370,8 +1486,23 @@ var SpeciesService = /** @class */ (function () {
             return true;
         });
     };
+    SpeciesService.prototype.removeRedundantPhenodefinitions = function (list) {
+        var seen = {};
+        return list.filter(function (pp) {
+            if (seen[pp.phenophase_id]) {
+                return false;
+            }
+            seen[pp.phenophase_id] = pp;
+            return true;
+        });
+    };
     SpeciesService.prototype.mergeRedundantPhenophaseLists = function (lists) {
         return this.removeRedundantPhenophases(lists.reduce(function (arr, l) {
+            return arr.concat(l);
+        }, []));
+    };
+    SpeciesService.prototype.mergeRedundantPhenodefinitionLists = function (lists) {
+        return this.removeRedundantPhenodefinitions(lists.reduce(function (arr, l) {
             return arr.concat(l);
         }, []));
     };
@@ -1404,6 +1535,35 @@ var TaxonomicSpeciesRank;
     TaxonomicSpeciesRank["ORDER"] = "order";
     TaxonomicSpeciesRank["CLASS"] = "class";
 })(TaxonomicSpeciesRank || (TaxonomicSpeciesRank = {}));
+
+
+/***/ }),
+
+/***/ "../npn/common/src/lib/common/static-color.ts":
+/*!****************************************************!*\
+  !*** ../npn/common/src/lib/common/static-color.ts ***!
+  \****************************************************/
+/*! exports provided: STATIC_COLORS, getStaticColor */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "STATIC_COLORS", function() { return STATIC_COLORS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getStaticColor", function() { return getStaticColor; });
+var STATIC_COLORS = [
+    '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#222299', '#c51b8a', '#8c564b', '#637939', '#843c39',
+    '#5254a3', '#636363',
+    '#bcbd22', '#7b4173', '#e7ba52', '#222299', '#f03b20', '#1b9e77', '#e377c2', '#ef8a62', '#91cf60', '#9467bd'
+];
+/**
+ * Fetches a color by numeric index.  The domain of colors is finite so if the
+ * index overflows the array then it will wrap around as necessary.
+ * I.e. if index=colors.length+1 index=0
+ * @param index The numeric index to fetch a color for.
+ */
+function getStaticColor(index) {
+    return STATIC_COLORS[index % STATIC_COLORS.length];
+}
 
 
 /***/ }),
@@ -2825,7 +2985,7 @@ var NpnMapLayerService = /** @class */ (function () {
     };
     NpnMapLayerService.prototype.getLayerOverrides = function () {
         var _this = this;
-        var url = 'npn-map-layer-overrides.json';
+        var url = 'assets/npn-map-layer-overrides.json';
         return this.serviceUtils.cachedGet(url)
             // on any error (e.g. 404 not fond) return an empty document (cached to avoid subsequent failures)
             .catch(function (err) { return _this.serviceUtils.cachedSet(url, {}); });
@@ -4131,14 +4291,6 @@ var WmsMapLayerLegend = /** @class */ (function (_super) {
             legend_title = legendTitle;
         }
         else {
-            // viztool revamp, make legend titles more concise
-            if (legend.ldef.title != null) {
-                legend.ldef.title = legend.ldef.title.replace('- Spring Index', '');
-                legend.ldef.title = legend.ldef.title.replace('- Daily Spring Index Leaf Anomaly', '- First Leaf');
-                legend.ldef.title = legend.ldef.title.replace('- Daily Spring Index Bloom Anomaly', '- First Bloom');
-                legend.ldef.title = legend.ldef.title.replace('- 30-year Average SI-x First Leaf Date', '- First Leaf');
-                legend.ldef.title = legend.ldef.title.replace('- 30-year Average SI-x First Bloom Date', '- First Bloom');
-            }
             legend_title = legend.ldef.title;
             if (legend.ldef.extent && legend.ldef.extent.current) {
                 legend_title += ", " + legend.ldef.extent.current.label;
@@ -4357,7 +4509,7 @@ function xmlToString(xmlData) {
 /*!**************************************!*\
   !*** ../npn/common/src/lib/index.ts ***!
   \**************************************/
-/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObvervationFrequencyStationControlComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, SPECIES_PHENO_INPUT_COLORS, SpeciesPhenophaseInputComponent, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObvervationFrequencyStationControlComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4370,6 +4522,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CacheService", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["CacheService"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NetworkService", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["NetworkService"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StationService", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["StationService"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getStaticColor", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["getStaticColor"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DoyPipe", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["DoyPipe"]; });
 
@@ -4398,6 +4554,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Phenophase", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["Phenophase"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TaxonomicPhenophaseRank", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["TaxonomicPhenophaseRank"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "STATIC_COLORS", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["STATIC_COLORS"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getSpeciesPlotKeys", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["getSpeciesPlotKeys"]; });
 
@@ -4621,10 +4779,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MapVisualizationMarkerIw", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["MapVisualizationMarkerIw"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SPECIES_PHENO_INPUT_COLORS", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["SPECIES_PHENO_INPUT_COLORS"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpeciesPhenophaseInputComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["SpeciesPhenophaseInputComponent"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "YearRangeInputComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["YearRangeInputComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "HigherSpeciesPhenophaseInputComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["HigherSpeciesPhenophaseInputComponent"]; });
@@ -4685,7 +4839,7 @@ var NpnLibModule = /** @class */ (function () {
 /*!*******************************************!*\
   !*** ../npn/common/src/lib/public_api.ts ***!
   \*******************************************/
-/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObvervationFrequencyStationControlComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, SPECIES_PHENO_INPUT_COLORS, SpeciesPhenophaseInputComponent, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObvervationFrequencyStationControlComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4699,6 +4853,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NetworkService", function() { return _common_public_api__WEBPACK_IMPORTED_MODULE_0__["NetworkService"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StationService", function() { return _common_public_api__WEBPACK_IMPORTED_MODULE_0__["StationService"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getStaticColor", function() { return _common_public_api__WEBPACK_IMPORTED_MODULE_0__["getStaticColor"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DoyPipe", function() { return _common_public_api__WEBPACK_IMPORTED_MODULE_0__["DoyPipe"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LegendDoyPipe", function() { return _common_public_api__WEBPACK_IMPORTED_MODULE_0__["LegendDoyPipe"]; });
@@ -4710,6 +4868,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Phenophase", function() { return _common_public_api__WEBPACK_IMPORTED_MODULE_0__["Phenophase"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TaxonomicPhenophaseRank", function() { return _common_public_api__WEBPACK_IMPORTED_MODULE_0__["TaxonomicPhenophaseRank"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "STATIC_COLORS", function() { return _common_public_api__WEBPACK_IMPORTED_MODULE_0__["STATIC_COLORS"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getSpeciesPlotKeys", function() { return _common_public_api__WEBPACK_IMPORTED_MODULE_0__["getSpeciesPlotKeys"]; });
 
@@ -4948,10 +5108,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpringIndexMapLayerControlComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["SpringIndexMapLayerControlComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MapVisualizationMarkerIw", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["MapVisualizationMarkerIw"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SPECIES_PHENO_INPUT_COLORS", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["SPECIES_PHENO_INPUT_COLORS"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpeciesPhenophaseInputComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["SpeciesPhenophaseInputComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "YearRangeInputComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["YearRangeInputComponent"]; });
 
@@ -5206,6 +5362,31 @@ var ActivityCurve = /** @class */ (function () {
             }
         }
         return data;
+    };
+    ActivityCurve.prototype.endDate = function (year) {
+        var now = new Date();
+        if (year === now.getFullYear()) {
+            return this.selection.datePipe.transform(now, 'yyyy-MM-dd');
+        }
+        return year + '-12-31';
+    };
+    ActivityCurve.prototype.loadData = function (baseParams) {
+        var _this = this;
+        var curveParams = baseParams
+            .set('start_date', this.year + "-01-01")
+            .set('end_date', this.endDate(this.year));
+        var keys = Object(_common__WEBPACK_IMPORTED_MODULE_1__["getSpeciesPlotKeys"])(this);
+        curveParams = curveParams.set(keys.speciesIdKey + "[0]", "" + this.species[keys.speciesIdKey]);
+        if ((this.speciesRank || _common__WEBPACK_IMPORTED_MODULE_1__["TaxonomicSpeciesRank"].SPECIES) !== _common__WEBPACK_IMPORTED_MODULE_1__["TaxonomicSpeciesRank"].SPECIES) {
+            curveParams = curveParams.set('taxonomy_aggregate', '1');
+        }
+        curveParams = curveParams.set(keys.phenophaseIdKey + "[0]", "" + this.phenophase[keys.phenophaseIdKey]);
+        if (this.phenophaseRank === _common__WEBPACK_IMPORTED_MODULE_1__["TaxonomicPhenophaseRank"].CLASS) {
+            curveParams = curveParams.set('pheno_class_aggregate', '1');
+        }
+        return this.selection.serviceUtils
+            .cachedPost(this.selection.serviceUtils.apiUrl('/npn_portal/observations/getMagnitudeData.json'), curveParams.toString())
+            .then(function (data) { return _this.data(data); });
     };
     ActivityCurve.prototype.axis = function () {
         var y = this.y(), ticks = y.ticks(), // default is ~10 ticks
@@ -5536,19 +5717,21 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 var ActivityCurvesSelectionFactory = /** @class */ (function () {
-    function ActivityCurvesSelectionFactory(serviceUtils, datePipe, speciesService) {
+    function ActivityCurvesSelectionFactory(serviceUtils, datePipe, speciesService, networkService) {
         this.serviceUtils = serviceUtils;
         this.datePipe = datePipe;
         this.speciesService = speciesService;
+        this.networkService = networkService;
     }
     ActivityCurvesSelectionFactory.prototype.newSelection = function () {
-        return new _activity_curves_selection__WEBPACK_IMPORTED_MODULE_3__["ActivityCurvesSelection"](this.serviceUtils, this.datePipe, this.speciesService);
+        return new _activity_curves_selection__WEBPACK_IMPORTED_MODULE_3__["ActivityCurvesSelection"](this.serviceUtils, this.datePipe, this.speciesService, this.networkService);
     };
     ActivityCurvesSelectionFactory = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
         __metadata("design:paramtypes", [_common__WEBPACK_IMPORTED_MODULE_2__["NpnServiceUtils"],
             _angular_common__WEBPACK_IMPORTED_MODULE_1__["DatePipe"],
-            _common__WEBPACK_IMPORTED_MODULE_2__["SpeciesService"]])
+            _common__WEBPACK_IMPORTED_MODULE_2__["SpeciesService"],
+            _common__WEBPACK_IMPORTED_MODULE_2__["NetworkService"]])
     ], ActivityCurvesSelectionFactory);
     return ActivityCurvesSelectionFactory;
 }());
@@ -5573,9 +5756,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCIES", function() { return ACTIVITY_FREQUENCIES; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesSelection", function() { return ActivityCurvesSelection; });
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../common */ "../npn/common/src/lib/common/index.ts");
-/* harmony import */ var _activity_curve__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./activity-curve */ "../npn/common/src/lib/visualizations/activity-curves/activity-curve.ts");
-/* harmony import */ var _vis_selection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
+/* harmony import */ var _activity_curve__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./activity-curve */ "../npn/common/src/lib/visualizations/activity-curves/activity-curve.ts");
+/* harmony import */ var _vis_selection__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -5606,7 +5788,6 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
-
 var ActivityFrequency = /** @class */ (function () {
     function ActivityFrequency() {
     }
@@ -5633,20 +5814,21 @@ var ACTIVITY_FREQUENCIES = [
 // @dynamic
 var ActivityCurvesSelection = /** @class */ (function (_super) {
     __extends(ActivityCurvesSelection, _super);
-    function ActivityCurvesSelection(serviceUtils, datePipe, speciesService) {
-        var _this = _super.call(this, serviceUtils) || this;
+    function ActivityCurvesSelection(serviceUtils, datePipe, speciesService, networkService) {
+        var _this = _super.call(this, serviceUtils, networkService) || this;
         _this.serviceUtils = serviceUtils;
         _this.datePipe = datePipe;
         _this.speciesService = speciesService;
+        _this.networkService = networkService;
         _this.$supportsPop = true;
         _this.$class = 'ActivityCurvesSelection';
-        _this.defaultInterpolate = _activity_curve__WEBPACK_IMPORTED_MODULE_2__["INTERPOLATE"].monotone;
-        _this._interpolate = _activity_curve__WEBPACK_IMPORTED_MODULE_2__["INTERPOLATE"].monotone;
+        _this.defaultInterpolate = _activity_curve__WEBPACK_IMPORTED_MODULE_1__["INTERPOLATE"].monotone;
+        _this._interpolate = _activity_curve__WEBPACK_IMPORTED_MODULE_1__["INTERPOLATE"].monotone;
         _this._dataPoints = true;
         _this.defaultFrequency = ACTIVITY_FREQUENCIES[0];
         _this._frequency = ACTIVITY_FREQUENCIES[0];
         _this.curves = [{ color: '#0000ff', orient: 'left' }, { color: 'orange', orient: 'right' }].map(function (o, i) {
-            var c = new _activity_curve__WEBPACK_IMPORTED_MODULE_2__["ActivityCurve"]();
+            var c = new _activity_curve__WEBPACK_IMPORTED_MODULE_1__["ActivityCurve"]();
             c.id = i;
             c.color = o.color;
             c.orient = o.orient;
@@ -5656,7 +5838,7 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
     }
     ActivityCurvesSelection.prototype.toPOPInput = function (input) {
         var _this = this;
-        if (input === void 0) { input = __assign({}, _vis_selection__WEBPACK_IMPORTED_MODULE_3__["BASE_POP_INPUT"]); }
+        if (input === void 0) { input = __assign({}, _vis_selection__WEBPACK_IMPORTED_MODULE_2__["BASE_POP_INPUT"]); }
         return _super.prototype.toPOPInput.call(this, input)
             .then(function (input) {
             var yearRange = _this.validCurves.reduce(function (range, curve) {
@@ -5767,13 +5949,6 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    ActivityCurvesSelection.prototype.endDate = function (year) {
-        var now = new Date();
-        if (year === now.getFullYear()) {
-            return this.datePipe.transform(now, 'yyyy-MM-dd');
-        }
-        return year + '-12-31';
-    };
     ActivityCurvesSelection.prototype.loadCurveData = function () {
         var _this = this;
         this.working = true;
@@ -5782,22 +5957,7 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
             .set('frequency', "" + this.frequency.value)).then(function (baseParams) {
             var promises = _this.curves
                 .filter(function (c) { return c.data(null).isValid(); })
-                .map(function (c) {
-                var curveParams = baseParams
-                    .set('start_date', c.year + "-01-01")
-                    .set('end_date', _this.endDate(c.year));
-                var keys = Object(_common__WEBPACK_IMPORTED_MODULE_1__["getSpeciesPlotKeys"])(c);
-                curveParams = curveParams.set(keys.speciesIdKey + "[0]", "" + c.species[keys.speciesIdKey]);
-                if ((c.speciesRank || _common__WEBPACK_IMPORTED_MODULE_1__["TaxonomicSpeciesRank"].SPECIES) !== _common__WEBPACK_IMPORTED_MODULE_1__["TaxonomicSpeciesRank"].SPECIES) {
-                    curveParams = curveParams.set('taxonomy_aggregate', '1');
-                }
-                curveParams = curveParams.set(keys.phenophaseIdKey + "[0]", "" + c.phenophase[keys.phenophaseIdKey]);
-                if (c.phenophaseRank === _common__WEBPACK_IMPORTED_MODULE_1__["TaxonomicPhenophaseRank"].CLASS) {
-                    curveParams = curveParams.set('pheno_class_aggregate', '1');
-                }
-                return _this.serviceUtils.cachedPost(_this.serviceUtils.apiUrl('/npn_portal/observations/getMagnitudeData.json'), curveParams.toString())
-                    .then(function (data) { return c.data(data); });
-            });
+                .map(function (c) { return c.loadData(baseParams); });
             return Promise.all(promises)
                 .then(function () { return _this.working = false; })
                 .catch(function (err) {
@@ -5811,19 +5971,19 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
         console.error('ERROR', error);
     };
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_3__["selectionProperty"])(),
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_2__["selectionProperty"])(),
         __metadata("design:type", String)
     ], ActivityCurvesSelection.prototype, "$class", void 0);
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_3__["selectionProperty"])(),
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_2__["selectionProperty"])(),
         __metadata("design:type", Number)
     ], ActivityCurvesSelection.prototype, "_interpolate", void 0);
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_3__["selectionProperty"])(),
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_2__["selectionProperty"])(),
         __metadata("design:type", Boolean)
     ], ActivityCurvesSelection.prototype, "_dataPoints", void 0);
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_3__["selectionProperty"])({
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_2__["selectionProperty"])({
             ser: function (d) { return d; },
             des: function (d) {
                 // when deserializing re-align with the actual metric object
@@ -5836,10 +5996,10 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
         __metadata("design:type", ActivityFrequency)
     ], ActivityCurvesSelection.prototype, "_frequency", void 0);
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_3__["selectionProperty"])({
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_2__["selectionProperty"])({
             ser: function (d) { return d ? d.external : undefined; },
             des: function (d) {
-                var ac = new _activity_curve__WEBPACK_IMPORTED_MODULE_2__["ActivityCurve"]();
+                var ac = new _activity_curve__WEBPACK_IMPORTED_MODULE_1__["ActivityCurve"]();
                 ac.external = d;
                 return ac;
             }
@@ -5847,7 +6007,7 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
         __metadata("design:type", Array)
     ], ActivityCurvesSelection.prototype, "_curves", void 0);
     return ActivityCurvesSelection;
-}(_vis_selection__WEBPACK_IMPORTED_MODULE_3__["StationAwareVisSelection"]));
+}(_vis_selection__WEBPACK_IMPORTED_MODULE_2__["StationAwareVisSelection"]));
 
 
 
@@ -5990,6 +6150,7 @@ var ActivityCurvesComponent = /** @class */ (function (_super) {
         var inRow = 0;
         var xTrans = 0;
         var maxInRow = 3;
+        // TODO each curve (plot) may now actually draw multiple curves
         selection.validCurves.forEach(function (c) {
             if (c.plotted()) {
                 var yTrans = (((inRow + 1) * _this.baseFontSize()) + (inRow * vpad));
@@ -6253,7 +6414,7 @@ var CurveControlComponent = /** @class */ (function (_super) {
         _this.onMetricChange = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
         _this.validYears = (function () {
             var thisYear = (new Date()).getFullYear(), years = [], c = 2010;
-            while (c < thisYear) {
+            while (c <= thisYear) {
                 years.push(c++);
             }
             return years;
@@ -7727,7 +7888,6 @@ var VALID_YEARS = (function () {
 var CalendarControlComponent = /** @class */ (function () {
     function CalendarControlComponent() {
         this.maxYears = 5;
-        this.updateSent = false;
     }
     CalendarControlComponent.prototype.selectableYears = function (y) {
         var _this = this;
@@ -7740,32 +7900,31 @@ var CalendarControlComponent = /** @class */ (function () {
         return VALID_YEARS;
     };
     CalendarControlComponent.prototype.ngOnInit = function () {
+        var _this = this;
         if (this.selection.years.length === 0) {
             this.addYear();
         }
         if (this.selection.plots.length === 0) {
             this.addPlot();
         }
+        setTimeout(function () { return _this.updateCriteria(); });
     };
-    CalendarControlComponent.prototype.updateChange = function () {
-        if (this.selection.isValid()) {
-            this.selection.update();
-            this.updateSent = true;
-        }
+    CalendarControlComponent.prototype.updateCriteria = function () {
+        this.criteria = {
+            years: this.selection.years,
+            stationIds: this.selection.getStationIds()
+        };
+    };
+    CalendarControlComponent.prototype.yearChange = function () {
+        this.updateCriteria();
+        this.selection.update();
     };
     CalendarControlComponent.prototype.redrawChange = function (change) {
-        if (this.selection.isValid()) {
-            if (change && !change.oldValue && change.newValue) { // e.g. no color to a color means a plot that wasn't valid is now potentially valid.
-                this.updateChange();
-            }
-            else {
-                if (this.updateSent) {
-                    this.selection.redraw();
-                }
-                else {
-                    this.updateChange();
-                }
-            }
+        if (change && !change.oldValue && change.newValue) { // e.g. no color to a color means a plot that wasn't valid is now potentially valid.
+            this.selection.update();
+        }
+        else {
+            this.selection.redraw();
         }
     };
     CalendarControlComponent.prototype.addPlot = function () {
@@ -7773,7 +7932,7 @@ var CalendarControlComponent = /** @class */ (function () {
     };
     CalendarControlComponent.prototype.removePlot = function (index) {
         this.selection.plots.splice(index, 1);
-        this.updateChange();
+        this.selection.update();
     };
     CalendarControlComponent.prototype.addYear = function () {
         var y = THIS_YEAR;
@@ -7781,11 +7940,11 @@ var CalendarControlComponent = /** @class */ (function () {
             y--;
         }
         this.selection.years.push(y);
-        this.updateChange();
+        this.yearChange();
     };
     CalendarControlComponent.prototype.removeYear = function (index) {
         this.selection.years.splice(index, 1);
-        this.updateChange();
+        this.yearChange();
     };
     CalendarControlComponent.prototype.plotsValid = function () {
         return this.selection.plots.length === this.selection.validPlots.length;
@@ -7797,7 +7956,7 @@ var CalendarControlComponent = /** @class */ (function () {
     CalendarControlComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'calendar-control',
-            template: "\n    <div>\n        <div class=\"year-input-wrapper\" *ngFor=\"let plotYear of selection.years;index as idx\">\n            <mat-form-field class=\"year-input\">\n                <mat-select placeholder=\"Year {{idx+1}}\" [(ngModel)]=\"selection.years[idx]\" (ngModelChange)=\"updateChange()\" id=\"year_{{idx}}\">\n                    <mat-option *ngFor=\"let y of selectableYears(selection.years[idx])\" [value]=\"y\">{{y}}</mat-option>\n                </mat-select>\n            </mat-form-field>\n            <button *ngIf=\"idx > 0\" mat-button class=\"remove-year\" (click)=\"removeYear(idx)\">Remove</button>\n            <button *ngIf=\"selection.years.length < 6 && idx === (selection.years.length-1)\" mat-button class=\"add-year\" (click)=\"addYear()\">Add</button>\n        </div>\n    </div>\n\n    <div class=\"phenophase-input-wrapper\" *ngFor=\"let spi of selection.plots; index as idx\">\n        <species-phenophase-input\n            [(species)]=\"spi.species\" [(phenophase)]=\"spi.phenophase\" [(color)]=\"spi.color\"\n            [selection]=\"selection\"\n            [gatherColor]=\"true\"\n            (onSpeciesChange)=\"updateChange()\"\n            (onPhenophaseChange)=\"updateChange()\"\n            (onColorChange)=\"redrawChange($event)\"></species-phenophase-input>\n        <button *ngIf=\"idx > 0\" mat-button class=\"remove-plot\" (click)=\"removePlot(idx)\">Remove</button>\n        <button *ngIf=\"idx === (selection.plots.length-1)\" mat-button class=\"add-plot\" [disabled]=\"!plotsValid()\" (click)=\"addPlot()\">Add</button>\n    </div>\n\n    <mat-checkbox [(ngModel)]=\"selection.negative\" (change)=\"redrawChange()\">Display negative data</mat-checkbox>\n\n    <label for=\"label-size-input\">Label size\n        <mat-slider id=\"label-size-input\" min=\"0\" max=\"10\" step=\"0.25\" [(ngModel)]=\"selection.fontSizeDelta\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-position-input\">Label position\n        <mat-slider id=\"label-position-input\" min=\"0\" max=\"100\" step=\"1\" [(ngModel)]=\"selection.labelOffset\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-band-size-input\">Band size\n        <mat-slider invert id=\"label-band-size-input\" min=\"0\" max=\"0.95\" step=\"0.05\" [(ngModel)]=\"selection.bandPadding\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n    ",
+            template: "\n    <div>\n        <div class=\"year-input-wrapper\" *ngFor=\"let plotYear of selection.years;index as idx\">\n            <mat-form-field class=\"year-input\">\n                <mat-select placeholder=\"Year {{idx+1}}\" [(ngModel)]=\"selection.years[idx]\" (ngModelChange)=\"yearChange()\" id=\"year_{{idx}}\">\n                    <mat-option *ngFor=\"let y of selectableYears(selection.years[idx])\" [value]=\"y\">{{y}}</mat-option>\n                </mat-select>\n            </mat-form-field>\n            <button *ngIf=\"idx > 0\" mat-button class=\"remove-year\" (click)=\"removeYear(idx)\">Remove</button>\n            <button *ngIf=\"selection.years.length < 6 && idx === (selection.years.length-1)\" mat-button class=\"add-year\" (click)=\"addYear()\">Add</button>\n        </div>\n    </div>\n\n    <div class=\"phenophase-input-wrapper\" *ngFor=\"let spi of selection.plots; index as idx\">\n        <higher-species-phenophase-input\n            gatherColor=\"true\"\n            [selection]=\"selection\"\n            [criteria]=\"criteria\"\n            [plot]=\"spi\"\n            (plotChange)=\"selection.update()\"></higher-species-phenophase-input>\n        <button *ngIf=\"idx > 0\" mat-button class=\"remove-plot\" (click)=\"removePlot(idx)\">Remove</button>\n        <button *ngIf=\"idx === (selection.plots.length-1)\" mat-button class=\"add-plot\" [disabled]=\"!plotsValid()\" (click)=\"addPlot()\">Add</button>\n    </div>\n\n    <mat-checkbox [(ngModel)]=\"selection.negative\" (change)=\"redrawChange()\">Display negative data</mat-checkbox>\n\n    <label for=\"label-size-input\">Label size\n        <mat-slider id=\"label-size-input\" min=\"0\" max=\"10\" step=\"0.25\" [(ngModel)]=\"selection.fontSizeDelta\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-position-input\">Label position\n        <mat-slider id=\"label-position-input\" min=\"0\" max=\"100\" step=\"1\" [(ngModel)]=\"selection.labelOffset\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-band-size-input\">Band size\n        <mat-slider invert id=\"label-band-size-input\" min=\"0\" max=\"0.95\" step=\"0.05\" [(ngModel)]=\"selection.bandPadding\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n    ",
             styles: ["\n        .year-input-wrapper {\n            display: inline-block;\n            margin-right: 15px;\n        }\n        .year-input {\n            width: 60px;\n        }\n        .phenophase-input-wrapper {\n            display: block;\n        }\n        label[for=\"label-size-input\"] {\n            margin-left: 15px;\n        }\n    "]
         })
     ], CalendarControlComponent);
@@ -7834,20 +7993,22 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 var CalendarSelectionFactory = /** @class */ (function () {
-    function CalendarSelectionFactory(serviceUtils, speciesTitle, speciesService) {
+    function CalendarSelectionFactory(serviceUtils, speciesTitle, speciesService, networkService) {
         this.serviceUtils = serviceUtils;
         this.speciesTitle = speciesTitle;
         this.speciesService = speciesService;
+        this.networkService = networkService;
         this.requestSrc = 'npn-vis-calendar';
     }
     CalendarSelectionFactory.prototype.newSelection = function () {
-        return new _calendar_selection__WEBPACK_IMPORTED_MODULE_2__["CalendarSelection"](this.serviceUtils, this.speciesTitle, this.speciesService);
+        return new _calendar_selection__WEBPACK_IMPORTED_MODULE_2__["CalendarSelection"](this.serviceUtils, this.speciesTitle, this.speciesService, this.networkService);
     };
     CalendarSelectionFactory = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
         __metadata("design:paramtypes", [_common__WEBPACK_IMPORTED_MODULE_1__["NpnServiceUtils"],
             _common__WEBPACK_IMPORTED_MODULE_1__["TaxonomicSpeciesTitlePipe"],
-            _common__WEBPACK_IMPORTED_MODULE_1__["SpeciesService"]])
+            _common__WEBPACK_IMPORTED_MODULE_1__["SpeciesService"],
+            _common__WEBPACK_IMPORTED_MODULE_1__["NetworkService"]])
     ], CalendarSelectionFactory);
     return CalendarSelectionFactory;
 }());
@@ -8264,21 +8425,23 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 var ClippedWmsMapSelectionFactory = /** @class */ (function () {
-    function ClippedWmsMapSelectionFactory(serviceUtils, datePipe, layerService, dataService) {
+    function ClippedWmsMapSelectionFactory(serviceUtils, datePipe, layerService, dataService, networkService) {
         this.serviceUtils = serviceUtils;
         this.datePipe = datePipe;
         this.layerService = layerService;
         this.dataService = dataService;
+        this.networkService = networkService;
     }
     ClippedWmsMapSelectionFactory.prototype.newSelection = function () {
-        return new _clipped_wms_map_selection__WEBPACK_IMPORTED_MODULE_4__["ClippedWmsMapSelection"](this.serviceUtils, this.datePipe, this.layerService, this.dataService);
+        return new _clipped_wms_map_selection__WEBPACK_IMPORTED_MODULE_4__["ClippedWmsMapSelection"](this.serviceUtils, this.datePipe, this.layerService, this.dataService, this.networkService);
     };
     ClippedWmsMapSelectionFactory = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
         __metadata("design:paramtypes", [_common__WEBPACK_IMPORTED_MODULE_2__["NpnServiceUtils"],
             _angular_common__WEBPACK_IMPORTED_MODULE_1__["DatePipe"],
             _gridded__WEBPACK_IMPORTED_MODULE_3__["NpnMapLayerService"],
-            _gridded__WEBPACK_IMPORTED_MODULE_3__["WcsDataService"]])
+            _gridded__WEBPACK_IMPORTED_MODULE_3__["WcsDataService"],
+            _common__WEBPACK_IMPORTED_MODULE_2__["NetworkService"]])
     ], ClippedWmsMapSelectionFactory);
     return ClippedWmsMapSelectionFactory;
 }());
@@ -8366,12 +8529,13 @@ var AGDD_LAYERS = [{
     }];
 var ClippedWmsMapSelection = /** @class */ (function (_super) {
     __extends(ClippedWmsMapSelection, _super);
-    function ClippedWmsMapSelection(serviceUtils, datePipe, mapLayerService, dataService) {
-        var _this = _super.call(this) || this;
+    function ClippedWmsMapSelection(serviceUtils, datePipe, mapLayerService, dataService, networkService) {
+        var _this = _super.call(this, networkService) || this;
         _this.serviceUtils = serviceUtils;
         _this.datePipe = datePipe;
         _this.mapLayerService = mapLayerService;
         _this.dataService = dataService;
+        _this.networkService = networkService;
         _this.$class = 'ClippedWmsMapSelection';
         _this.service = 'si-x'; // si-x || agdd
         _this.layer = SIX_LAYERS[0];
@@ -9033,17 +9197,14 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HigherSpeciesPhenophaseInputComponent", function() { return HigherSpeciesPhenophaseInputComponent; });
-/* harmony import */ var _npn_common_common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @npn/common/common */ "../npn/common/src/lib/common/index.ts");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "../../node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _vis_selection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "../../node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "../../node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var _npn_common_common_species_title_pipe__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @npn/common/common/species-title.pipe */ "../npn/common/src/lib/common/species-title.pipe.ts");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var _npn_common_common_phenophase__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @npn/common/common/phenophase */ "../npn/common/src/lib/common/phenophase.ts");
-/* harmony import */ var _species_phenophase_input_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./species-phenophase-input.component */ "../npn/common/src/lib/visualizations/common-controls/species-phenophase-input.component.ts");
-/* harmony import */ var _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @fortawesome/pro-light-svg-icons */ "../../node_modules/@fortawesome/pro-light-svg-icons/index.es.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "../../node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _vis_selection__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "../../node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "../../node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../common */ "../npn/common/src/lib/common/index.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @fortawesome/pro-light-svg-icons */ "../../node_modules/@fortawesome/pro-light-svg-icons/index.es.js");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -9071,15 +9232,8 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
-
-
-
 /**
- * It would be nice if interfaces were actually meaningful at runtime.
- * Using concrete classes, due to getters/setters, could be problematic
- * SO WRT to validity of phenophases for date ranges this control works on
- * convention rather than introspection as follows; plot.year, selection.year,
- * selection.years, selection.start/end (TODO).
+ * Filtering of applicable species is based upon the `criteria` input.
  */
 var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
     __extends(HigherSpeciesPhenophaseInputComponent, _super);
@@ -9089,63 +9243,76 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
         _this.speciesTitle = speciesTitle;
         _this.required = true;
         _this.disabled = false;
-        _this.criteriaUpdate = new rxjs__WEBPACK_IMPORTED_MODULE_4__["Subject"]();
+        _this.criteriaUpdate = new rxjs__WEBPACK_IMPORTED_MODULE_3__["Subject"]();
         _this.debug = false;
-        _this.plotChange = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
-        _this.speciesRank = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]();
+        _this.plotChange = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+        _this.speciesRank = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"]();
         _this.speciesRanks = [{
                 label: 'Species',
-                rank: _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].SPECIES
-            }, {
-                label: 'Family',
-                rank: _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].FAMILY
-            }, {
-                label: 'Order',
-                rank: _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].ORDER
-            }, {
-                label: 'Class',
-                rank: _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].CLASS
+                rank: _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].SPECIES
             }, {
                 label: 'Genus',
-                rank: _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].GENUS
+                rank: _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].GENUS
+            }, {
+                label: 'Family',
+                rank: _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].FAMILY
+            }, {
+                label: 'Order',
+                rank: _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].ORDER
+            }, {
+                label: 'Class',
+                rank: _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].CLASS
             }
         ];
-        _this.species = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]();
+        _this.species = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"]();
         _this.fetchingSpeciesList = false;
-        _this.phenophase = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]();
+        _this.phenophase = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"]();
         _this.fetchingPhenophaseList = false;
+        _this.ignoreGatherColor = false;
+        /**
+         * Whether or not to gather color and set on the plot
+         * This input is ignored if the selection is an instanceof NetworkAwareVisSelection
+         * and is using grouping.  In that scenario visualizations will need to calculate
+         * colors based on groups.length*plots.length.
+         */
         _this.gatherColor = false;
-        _this.color = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]();
-        _this.colorList = _species_phenophase_input_component__WEBPACK_IMPORTED_MODULE_9__["SPECIES_PHENO_INPUT_COLORS"];
-        _this.hintIcon = _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_10__["faInfoCircle"];
+        _this.color = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"]();
+        _this.colorList = _common__WEBPACK_IMPORTED_MODULE_5__["STATIC_COLORS"];
+        _this.hintIcon = _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_7__["faInfoCircle"];
         _this.speciesLabel = function (item) { return _this.speciesTitle.transform(item, _this.speciesRank.value); };
         return _this;
     }
     HigherSpeciesPhenophaseInputComponent.prototype.ngOnInit = function () {
         var _this = this;
-        var $speciesTaxonomicInfo = this.criteriaUpdate.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["tap"])(function () { return _this.fetchingSpeciesList = true; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["switchMap"])(function (criteria) { return Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["from"])((criteria.stationIds || Promise.resolve([])).then(function (stationIds) {
-            var params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_7__["HttpParams"]();
+        this.criteriaUpdate
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["takeUntil"])(this.componentDestroyed))
+            .subscribe(function () { return _this.ignoreGatherColor =
+            (_this.selection instanceof _vis_selection__WEBPACK_IMPORTED_MODULE_2__["NetworkAwareVisSelection"] &&
+                !!_this.selection.groups &&
+                _this.selection.groups.length > 0); });
+        var $speciesTaxonomicInfo = this.criteriaUpdate.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function () { return _this.fetchingSpeciesList = true; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["switchMap"])(function (criteria) { return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["from"])((criteria.stationIds || Promise.resolve([])).then(function (stationIds) {
+            var params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_6__["HttpParams"]();
             (stationIds || []).forEach(function (id, idx) { return params = params.set("station_ids[" + idx + "]", "" + id); });
             return params;
-        })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["switchMap"])(function (params) { return _this.speciesService.getAllSpeciesHigher(params, criteria.years); })); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["tap"])(function () { return _this.fetchingSpeciesList = false; }));
-        Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["combineLatest"])(this.speciesRank.valueChanges, $speciesTaxonomicInfo).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["filter"])(function (input) { return !!input[0] && !!input[1]; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (input) {
+        })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["switchMap"])(function (params) { return _this.speciesService.getAllSpeciesHigher(params, criteria.years); })); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function () { return _this.fetchingSpeciesList = false; }));
+        Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["combineLatest"])(this.speciesRank.valueChanges, $speciesTaxonomicInfo).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["filter"])(function (input) { return !!input[0] && !!input[1]; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (input) {
             var rank = input[0], info = input[1];
             _this.speciesTaxInfo = info;
             console.log('speciesTaxInfo', info);
             switch (rank) {
-                case _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].SPECIES:
+                case _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].SPECIES:
                     return info.species;
-                case _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].CLASS:
+                case _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].CLASS:
                     return info.classes;
-                case _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].ORDER:
+                case _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].ORDER:
                     return info.orders;
-                case _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].FAMILY:
+                case _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].FAMILY:
                     return info.families;
-                case _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].GENUS:
+                case _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].GENUS:
                     return info.genera; // TODO: make sure this works, KW just made genus plural
             }
             throw new Error("Invalid species rank \"" + rank + "\"");
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["takeUntil"])(this.componentDestroyed)).subscribe(function (list) {
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["takeUntil"])(this.componentDestroyed)).subscribe(function (list) {
             var rank = _this.speciesRank.value;
             var species = _this.species.value;
             _this.speciesList = list.map(function (item) {
@@ -9153,10 +9320,10 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
                 var lower = label.toLowerCase();
                 return { item: item, label: label, lower: lower };
             });
-            if (rank !== _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].SPECIES) {
+            if (rank !== _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].SPECIES) {
                 _this.speciesList.sort(function (a, b) { return a.label.localeCompare(b.label); });
             }
-            _this.$filteredSpeciesList = _this.species.valueChanges.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["debounceTime"])(500), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["filter"])(function (s) { return typeof (s) === 'string'; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (s) {
+            _this.$filteredSpeciesList = _this.species.valueChanges.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["debounceTime"])(500), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["filter"])(function (s) { return typeof (s) === 'string'; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (s) {
                 if (s && _this.speciesList) {
                     s = s.trim().toLowerCase();
                     return _this.speciesList.filter(function (o) { return o.lower.indexOf(s) !== -1; });
@@ -9168,27 +9335,27 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
             // clear the current value if it is no longer valid
             if (species) {
                 switch (rank) {
-                    case _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].SPECIES:
+                    case _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].SPECIES:
                         if (!species.species_id) {
                             _this.species.setValue(null);
                         }
                         break;
-                    case _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].CLASS:
+                    case _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].CLASS:
                         if (!species.class_id || !!species.species_id) {
                             _this.species.setValue(null);
                         }
                         break;
-                    case _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].ORDER:
+                    case _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].ORDER:
                         if (!species.order_id || !!species.species_id) {
                             _this.species.setValue(null);
                         }
                         break;
-                    case _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].FAMILY:
+                    case _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].FAMILY:
                         if (!species.family_id || !!species.species_id) {
                             _this.species.setValue(null);
                         }
                         break;
-                    case _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].GENUS:
+                    case _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].GENUS:
                         if (!species.genus_id || !!species.species_id) {
                             _this.species.setValue(null);
                         }
@@ -9201,18 +9368,18 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
         });
         // whenever species changes go update the available phenophases/classes
         // TODO deal with station_ids?
-        var $phenophaseTaxInfo = Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["combineLatest"])(this.species.valueChanges, this.criteriaUpdate).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["tap"])(function () { return _this.fetchingPhenophaseList = true; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["switchMap"])(function (input) {
+        var $phenophaseTaxInfo = Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["combineLatest"])(this.species.valueChanges, this.criteriaUpdate).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function () { return _this.fetchingPhenophaseList = true; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["switchMap"])(function (input) {
             console.log('$phenophaseTaxInfo.input', input);
             var species = input[0], criteria = input[1];
-            return !!species
-                ? Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["from"])((criteria.years && criteria.years.length
-                    ? _this.speciesService.getPhenophasesForYears(species, _this.speciesRank.value, criteria.years)
-                    : _this.speciesService.getAllPhenophases(species, _this.speciesRank.value))
+            return !!species && typeof (species) === 'object'
+                ? Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["from"])((criteria.years && criteria.years.length
+                    ? _this.speciesService.getPhenodefinitionsForYears(species, _this.speciesRank.value, criteria.years)
+                    : _this.speciesService.getAllPhenodefinitions(species, _this.speciesRank.value))
                     .then(function (phenos) { return _this.speciesService.generatePhenophaseTaxonomicInfo(phenos); }))
-                : Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["of"])(null);
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["tap"])(function () { return _this.fetchingPhenophaseList = false; }));
+                : Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])(null);
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function () { return _this.fetchingPhenophaseList = false; }));
         // when the in
-        var $phenoListChange = $phenophaseTaxInfo.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (info) {
+        var $phenoListChange = $phenophaseTaxInfo.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (info) {
             _this.phenophaseTaxInfo = info;
             if (info) {
                 console.log('phenophaseTaxInfo', info);
@@ -9222,9 +9389,9 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
                 }); });
             }
             return [];
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["tap"])(function (list) { return _this.phenophaseList = list; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["takeUntil"])(this.componentDestroyed));
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function (list) { return _this.phenophaseList = list; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["takeUntil"])(this.componentDestroyed));
         //  species or list of phenophases changed, need to check validity of phenophase if set
-        Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["combineLatest"])(this.species.valueChanges, $phenoListChange).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["takeUntil"])(this.componentDestroyed)).subscribe(function (input) {
+        Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["combineLatest"])(this.species.valueChanges, $phenoListChange).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["takeUntil"])(this.componentDestroyed)).subscribe(function (input) {
             var species = input[0], phenoList = input[1];
             if (!species) {
                 if (_this.phenophase.enabled) {
@@ -9247,11 +9414,11 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
                 _this.phenophase.setValue(valid ? valid.item : null);
             }
         });
-        this.speciesRank.setValue((this.plot ? this.plot.speciesRank : null) || _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].SPECIES);
+        this.speciesRank.setValue((this.plot ? this.plot.speciesRank : null) || _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].SPECIES);
         this.species.setValue(this.plot ? this.plot.species : null);
         this.phenophase.setValue(this.plot ? this.plot.phenophase : null);
         this.color.setValue(this.plot ? this.plot.color : null);
-        Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["combineLatest"])(this.phenophase.valueChanges, $phenophaseTaxInfo).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["takeUntil"])(this.componentDestroyed)).subscribe(function (input) {
+        Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["combineLatest"])(this.phenophase.valueChanges, $phenophaseTaxInfo).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["takeUntil"])(this.componentDestroyed)).subscribe(function (input) {
             var pheno = input[0], list = input[1];
             _this.phenophaseHint = (!!pheno && !!list && !!list.phenophases && list.phenophases.length)
                 ? ('Phenophases included: ' + list.phenophases
@@ -9268,7 +9435,7 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
                 : undefined;
         });
         // gather up any input changes and propagate them outward
-        this.group = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormGroup"]({
+        this.group = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormGroup"]({
             speciesRank: this.speciesRank,
             species: this.species,
             phenophase: this.phenophase,
@@ -9281,19 +9448,19 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
             .pipe(
         //tap(v => console.log('selection changed',v)),
         // TODO expand the condition that decides when a plot is complete...
-        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (v) { return !!v.speciesRank && !!v.species && typeof (v.species) === 'object'
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (v) { return !!v.speciesRank && !!v.species && typeof (v.species) === 'object'
             && !!v.phenophase
-            && (!_this.gatherColor || !!v.color)
+            && (!_this.actuallyGatherColor || !!v.color)
             ? v
-            : null; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["takeUntil"])(this.componentDestroyed))
+            : null; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["takeUntil"])(this.componentDestroyed))
             .subscribe(function (v) {
             //setTimeout(() => {
             // edit the plot in place, it may be a class
             _this.plot.speciesRank = v ? v.speciesRank : null;
             _this.plot.species = v ? v.species : null;
-            _this.plot.phenophaseRank = _npn_common_common_phenophase__WEBPACK_IMPORTED_MODULE_8__["TaxonomicPhenophaseRank"].CLASS;
+            _this.plot.phenophaseRank = _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicPhenophaseRank"].CLASS;
             _this.plot.phenophase = v ? v.phenophase : null;
-            if (_this.gatherColor) {
+            if (_this.actuallyGatherColor) {
                 _this.plot.color = v ? v.color : null;
             }
             else {
@@ -9327,7 +9494,7 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
         var _this = this;
         if (this.group) {
             var validators_1 = this.required
-                ? [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]
+                ? [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required]
                 : null;
             Object.keys(this.group.controls).forEach(function (key) { return _this.group.controls[key].setValidators(validators_1); });
             this.group.updateValueAndValidity();
@@ -9356,22 +9523,22 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
         get: function () {
             var rank = this.speciesRank
                 ? this.speciesRank.value
-                : _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].SPECIES;
+                : _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].SPECIES;
             var label;
             switch (rank) {
-                case _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].SPECIES:
+                case _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].SPECIES:
                     label = 'Species';
                     break;
-                case _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].CLASS:
+                case _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].CLASS:
                     label = 'Class';
                     break;
-                case _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].ORDER:
+                case _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].ORDER:
                     label = 'Order';
                     break;
-                case _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].FAMILY:
+                case _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].FAMILY:
                     label = 'Family';
                     break;
-                case _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].GENUS:
+                case _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].GENUS:
                     label = 'Genus';
                     break;
             }
@@ -9383,6 +9550,13 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
     Object.defineProperty(HigherSpeciesPhenophaseInputComponent.prototype, "phenophasePlaceholder", {
         get: function () {
             return 'Phenophase class' /*+ ((this.phenophaseList||[]).length ? ` (${(this.phenophaseList||[]).length})`: '')*/ + (this.required ? ' *' : '');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(HigherSpeciesPhenophaseInputComponent.prototype, "actuallyGatherColor", {
+        get: function () {
+            return this.gatherColor && !this.ignoreGatherColor;
         },
         enumerable: true,
         configurable: true
@@ -9403,7 +9577,7 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
         get: function () {
             var rank = this.speciesRank.value;
             var s = this.species.value;
-            return rank === _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].SPECIES && !!s
+            return rank === _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].SPECIES && !!s
                 && (typeof (s.class_common_name) === 'string' && typeof (s.class_name) === 'string')
                 && (typeof (s.order_common_name) === 'string' && typeof (s.order_name) === 'string')
                 && (typeof (s.family_common_name) === 'string' && typeof (s.family_name) === 'string');
@@ -9414,59 +9588,59 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
     Object.defineProperty(HigherSpeciesPhenophaseInputComponent.prototype, "speciesHint", {
         get: function () {
             var species = this.species.value;
-            var classDisplay = this.speciesTitle.transform(species, _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].CLASS);
-            var orderDisplay = this.speciesTitle.transform(species, _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].ORDER);
-            var familyDisplay = this.speciesTitle.transform(species, _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].FAMILY);
-            var genusDisplay = this.speciesTitle.transform(species, _npn_common_common__WEBPACK_IMPORTED_MODULE_0__["TaxonomicSpeciesRank"].GENUS);
+            var classDisplay = this.speciesTitle.transform(species, _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].CLASS);
+            var orderDisplay = this.speciesTitle.transform(species, _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].ORDER);
+            var familyDisplay = this.speciesTitle.transform(species, _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].FAMILY);
+            var genusDisplay = this.speciesTitle.transform(species, _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesRank"].GENUS);
             return "Class: \"" + classDisplay + "\" Order: \"" + orderDisplay + "\" Family: \"" + familyDisplay + "\" Genus: \"" + genusDisplay;
         },
         enumerable: true,
         configurable: true
     });
     __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", Boolean)
     ], HigherSpeciesPhenophaseInputComponent.prototype, "required", void 0);
     __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", Boolean)
     ], HigherSpeciesPhenophaseInputComponent.prototype, "disabled", void 0);
     __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", Boolean)
     ], HigherSpeciesPhenophaseInputComponent.prototype, "debug", void 0);
     __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        __metadata("design:type", _vis_selection__WEBPACK_IMPORTED_MODULE_3__["VisSelection"])
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", _vis_selection__WEBPACK_IMPORTED_MODULE_2__["VisSelection"])
     ], HigherSpeciesPhenophaseInputComponent.prototype, "selection", void 0);
     __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", Object)
     ], HigherSpeciesPhenophaseInputComponent.prototype, "plot", void 0);
     __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
         __metadata("design:type", Object)
     ], HigherSpeciesPhenophaseInputComponent.prototype, "plotChange", void 0);
     __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", Boolean)
     ], HigherSpeciesPhenophaseInputComponent.prototype, "gatherColor", void 0);
     __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", Object),
         __metadata("design:paramtypes", [Object])
     ], HigherSpeciesPhenophaseInputComponent.prototype, "criteria", null);
     HigherSpeciesPhenophaseInputComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'higher-species-phenophase-input',
-            template: "\n    <mat-form-field class=\"species-rank-input\">\n        <mat-select [placeholder]=\"speciesTaxRankPlaceholder\" [formControl]=\"speciesRank\">\n            <mat-option *ngFor=\"let r of speciesRanks\" [value]=\"r.rank\">{{r.label}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    <mat-form-field class=\"species-input\">\n        <input matInput [placeholder]=\"speciesPlaceholder\" aria-label=\"Species\"\n            [matAutocomplete]=\"sp\"\n            [formControl]=\"species\" (focus)=\"speciesFocus()\" />\n        <mat-autocomplete #sp=\"matAutocomplete\" [displayWith]=\"speciesLabel\">\n            <mat-option *ngFor=\"let o of $filteredSpeciesList | async\" [value]=\"o.item\">\n              {{o.label}}\n            </mat-option>\n        </mat-autocomplete>\n        <mat-progress-bar *ngIf=\"fetchingSpeciesList\" mode=\"query\"></mat-progress-bar>\n        <mat-hint *ngIf=\"showSpeciesHint\" align=\"end\"><fa-icon [icon]=\"hintIcon\" [matTooltip]=\"speciesHint\"></fa-icon></mat-hint>\n    </mat-form-field>\n    <mat-form-field class=\"pheno-input\">\n        <mat-select [placeholder]=\"phenophasePlaceholder\" [formControl]=\"phenophase\">\n            <mat-option *ngFor=\"let o of phenophaseList\" [value]=\"o.item\">{{o.label}}</mat-option>\n        </mat-select>\n        <mat-progress-bar *ngIf=\"fetchingPhenophaseList\" mode=\"query\"></mat-progress-bar>\n        <mat-hint *ngIf=\"phenophaseHint\" align=\"end\"><fa-icon [icon]=\"hintIcon\" [matTooltip]=\"phenophaseHint\"></fa-icon></mat-hint>\n    </mat-form-field>\n    <mat-form-field *ngIf=\"gatherColor\" class=\"color-input\">\n        <mat-select  [placeholder]=\"colorPlaceholder\" [formControl]=\"color\">\n        <mat-select-trigger><div class=\"color-swatch\" [ngStyle]=\"{'background-color':color.value}\"></div></mat-select-trigger>\n        <mat-option *ngFor=\"let c of colorList\" [value]=\"c\"><div class=\"color-swatch\" [ngStyle]=\"{'background-color':c}\"></div></mat-option>\n        </mat-select>\n    </mat-form-field>\n<pre *ngIf=\"debug\">\nspecies={{speciesTaxInfo?.species.length | number}} classes={{speciesTaxInfo?.classes.length | number}} orders={{speciesTaxInfo?.orders.length | number}} families={{speciesTaxInfo?.families.length | number}}\nphenophases={{phenophaseTaxInfo?.phenophases.length | number}} classes={{phenophaseTaxInfo?.classes.length | number}}\n</pre>\n    ",
+            template: "\n    <mat-form-field class=\"species-rank-input\">\n        <mat-select [placeholder]=\"speciesTaxRankPlaceholder\" [formControl]=\"speciesRank\">\n            <mat-option *ngFor=\"let r of speciesRanks\" [value]=\"r.rank\">{{r.label}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    <mat-form-field class=\"species-input\">\n        <input matInput [placeholder]=\"speciesPlaceholder\" aria-label=\"Species\"\n            [matAutocomplete]=\"sp\"\n            [formControl]=\"species\" (focus)=\"speciesFocus()\" />\n        <mat-autocomplete #sp=\"matAutocomplete\" [displayWith]=\"speciesLabel\">\n            <mat-option *ngFor=\"let o of $filteredSpeciesList | async\" [value]=\"o.item\">\n              {{o.label}}\n            </mat-option>\n        </mat-autocomplete>\n        <mat-progress-bar *ngIf=\"fetchingSpeciesList\" mode=\"query\"></mat-progress-bar>\n        <mat-hint *ngIf=\"showSpeciesHint\" align=\"end\"><fa-icon [icon]=\"hintIcon\" [matTooltip]=\"speciesHint\"></fa-icon></mat-hint>\n    </mat-form-field>\n    <mat-form-field class=\"pheno-input\">\n        <mat-select [placeholder]=\"phenophasePlaceholder\" [formControl]=\"phenophase\">\n            <mat-option *ngFor=\"let o of phenophaseList\" [value]=\"o.item\">{{o.label}}</mat-option>\n        </mat-select>\n        <mat-progress-bar *ngIf=\"fetchingPhenophaseList\" mode=\"query\"></mat-progress-bar>\n        <mat-hint *ngIf=\"phenophaseHint\" align=\"end\"><fa-icon [icon]=\"hintIcon\" [matTooltip]=\"phenophaseHint\"></fa-icon></mat-hint>\n    </mat-form-field>\n    <mat-form-field *ngIf=\"actuallyGatherColor\" class=\"color-input\">\n        <mat-select  [placeholder]=\"colorPlaceholder\" [formControl]=\"color\">\n        <mat-select-trigger><div class=\"color-swatch\" [ngStyle]=\"{'background-color':color.value}\"></div></mat-select-trigger>\n        <mat-option *ngFor=\"let c of colorList\" [value]=\"c\"><div class=\"color-swatch\" [ngStyle]=\"{'background-color':c}\"></div></mat-option>\n        </mat-select>\n    </mat-form-field>\n<pre *ngIf=\"debug\">\nspecies={{speciesTaxInfo?.species.length | number}} classes={{speciesTaxInfo?.classes.length | number}} orders={{speciesTaxInfo?.orders.length | number}} families={{speciesTaxInfo?.families.length | number}}\nphenophases={{phenophaseTaxInfo?.phenophases.length | number}} classes={{phenophaseTaxInfo?.classes.length | number}}\n</pre>\n    ",
             styles: ["\n    .color-swatch {\n        display: inline-block;\n        width: 20px;\n        height: 20px;\n    }\n    .color-input {\n        width: 70px;\n    }\n    "]
         }),
-        __metadata("design:paramtypes", [_npn_common_common__WEBPACK_IMPORTED_MODULE_0__["SpeciesService"],
-            _npn_common_common_species_title_pipe__WEBPACK_IMPORTED_MODULE_6__["TaxonomicSpeciesTitlePipe"]])
+        __metadata("design:paramtypes", [_common__WEBPACK_IMPORTED_MODULE_5__["SpeciesService"],
+            _common__WEBPACK_IMPORTED_MODULE_5__["TaxonomicSpeciesTitlePipe"]])
     ], HigherSpeciesPhenophaseInputComponent);
     return HigherSpeciesPhenophaseInputComponent;
-}(_npn_common_common__WEBPACK_IMPORTED_MODULE_0__["MonitorsDestroy"]));
+}(_common__WEBPACK_IMPORTED_MODULE_5__["MonitorsDestroy"]));
 
 
 
@@ -9476,16 +9650,12 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
 /*!*********************************************************************!*\
   !*** ../npn/common/src/lib/visualizations/common-controls/index.ts ***!
   \*********************************************************************/
-/*! exports provided: SPECIES_PHENO_INPUT_COLORS, SpeciesPhenophaseInputComponent, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _public_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./public_api */ "../npn/common/src/lib/visualizations/common-controls/public_api.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SPECIES_PHENO_INPUT_COLORS", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["SPECIES_PHENO_INPUT_COLORS"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpeciesPhenophaseInputComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["SpeciesPhenophaseInputComponent"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "YearRangeInputComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["YearRangeInputComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "HigherSpeciesPhenophaseInputComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["HigherSpeciesPhenophaseInputComponent"]; });
@@ -9499,362 +9669,18 @@ __webpack_require__.r(__webpack_exports__);
 /*!**************************************************************************!*\
   !*** ../npn/common/src/lib/visualizations/common-controls/public_api.ts ***!
   \**************************************************************************/
-/*! exports provided: SPECIES_PHENO_INPUT_COLORS, SpeciesPhenophaseInputComponent, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _species_phenophase_input_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./species-phenophase-input.component */ "../npn/common/src/lib/visualizations/common-controls/species-phenophase-input.component.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SPECIES_PHENO_INPUT_COLORS", function() { return _species_phenophase_input_component__WEBPACK_IMPORTED_MODULE_0__["SPECIES_PHENO_INPUT_COLORS"]; });
+/* harmony import */ var _year_range_input_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./year-range-input.component */ "../npn/common/src/lib/visualizations/common-controls/year-range-input.component.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "YearRangeInputComponent", function() { return _year_range_input_component__WEBPACK_IMPORTED_MODULE_0__["YearRangeInputComponent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpeciesPhenophaseInputComponent", function() { return _species_phenophase_input_component__WEBPACK_IMPORTED_MODULE_0__["SpeciesPhenophaseInputComponent"]; });
-
-/* harmony import */ var _year_range_input_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./year-range-input.component */ "../npn/common/src/lib/visualizations/common-controls/year-range-input.component.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "YearRangeInputComponent", function() { return _year_range_input_component__WEBPACK_IMPORTED_MODULE_1__["YearRangeInputComponent"]; });
-
-/* harmony import */ var _higher_species_phenophase_input_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./higher-species-phenophase-input.component */ "../npn/common/src/lib/visualizations/common-controls/higher-species-phenophase-input.component.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "HigherSpeciesPhenophaseInputComponent", function() { return _higher_species_phenophase_input_component__WEBPACK_IMPORTED_MODULE_2__["HigherSpeciesPhenophaseInputComponent"]; });
+/* harmony import */ var _higher_species_phenophase_input_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./higher-species-phenophase-input.component */ "../npn/common/src/lib/visualizations/common-controls/higher-species-phenophase-input.component.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "HigherSpeciesPhenophaseInputComponent", function() { return _higher_species_phenophase_input_component__WEBPACK_IMPORTED_MODULE_1__["HigherSpeciesPhenophaseInputComponent"]; });
 
 
-
-
-
-
-/***/ }),
-
-/***/ "../npn/common/src/lib/visualizations/common-controls/species-phenophase-input.component.ts":
-/*!**************************************************************************************************!*\
-  !*** ../npn/common/src/lib/visualizations/common-controls/species-phenophase-input.component.ts ***!
-  \**************************************************************************************************/
-/*! exports provided: SPECIES_PHENO_INPUT_COLORS, SpeciesPhenophaseInputComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SPECIES_PHENO_INPUT_COLORS", function() { return SPECIES_PHENO_INPUT_COLORS; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SpeciesPhenophaseInputComponent", function() { return SpeciesPhenophaseInputComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "../../node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "../../node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "../../node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../common */ "../npn/common/src/lib/common/index.ts");
-/* harmony import */ var _vis_selection__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-
-var SPECIES_PHENO_INPUT_COLORS = [
-    '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#222299', '#c51b8a', '#8c564b', '#637939', '#843c39',
-    '#5254a3', '#636363',
-    '#bcbd22', '#7b4173', '#e7ba52', '#222299', '#f03b20', '#1b9e77', '#e377c2', '#ef8a62', '#91cf60', '#9467bd'
-];
-var SpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
-    __extends(SpeciesPhenophaseInputComponent, _super);
-    function SpeciesPhenophaseInputComponent(speciesService, speciesTitle) {
-        var _this = _super.call(this) || this;
-        _this.speciesService = speciesService;
-        _this.speciesTitle = speciesTitle;
-        _this.required = true;
-        _this.disabled = false;
-        _this.speciesChange = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
-        _this.onSpeciesChange = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
-        _this.phenophaseChange = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
-        _this.onPhenophaseChange = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
-        _this.gatherColor = false;
-        _this.colorChange = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
-        _this.onColorChange = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
-        _this.colorList = SPECIES_PHENO_INPUT_COLORS;
-        _this.requiredValidator = function (c) {
-            if (_this.required && !c.disabled && !c.value) {
-                return {
-                    required: true
-                };
-            }
-            return null;
-        };
-        _this.phenophaseList = [];
-        _this.speciesParams = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
-        _this.initialSpeciesSet = true;
-        _this.isIE = !!Object(_common__WEBPACK_IMPORTED_MODULE_4__["detectIE"])();
-        return _this;
-    }
-    SpeciesPhenophaseInputComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.speciesControl = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"](this.species, this.requiredValidator);
-        this.colorControl = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"](this.color, this.requiredValidator);
-        if (this.disabled) {
-            this.speciesControl.disable();
-            this.colorControl.disable();
-        }
-        this.filteredSpecies = this.speciesControl.valueChanges
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["debounceTime"])(500), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["filter"])(function (s) { return typeof (s) === 'string'; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (s) {
-            return s && _this.speciesList ?
-                _this.filterSpecies(s) :
-                _this.speciesList ? _this.speciesList.slice() : [];
-        }));
-        this.speciesParams
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["takeUntil"])(this.componentDestroyed))
-            .subscribe(function (params) {
-            _this.speciesList = undefined;
-            // load up the available species
-            _this.speciesService.getAllSpecies(params)
-                .then(function (species) {
-                species.sort(function (a, b) {
-                    if (a.number_observations < b.number_observations) {
-                        return 1;
-                    }
-                    if (a.number_observations > b.number_observations) {
-                        return -1;
-                    }
-                    return 0;
-                });
-                if (_this.speciesValue) {
-                    for (var i = 0; i < species.length; i++) {
-                        if (_this.speciesValue.species_id === species[i].species_id) {
-                            species[i] = _this.speciesValue;
-                        }
-                    }
-                }
-                _this.speciesList = species;
-            });
-        });
-        this.colorControl.valueChanges.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["takeUntil"])(this.componentDestroyed))
-            .subscribe(function (v) { return _this.color = v; });
-        this.speciesControl.valueChanges.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["takeUntil"])(this.componentDestroyed))
-            .subscribe(function (v) { return _this.species = v; });
-    };
-    SpeciesPhenophaseInputComponent.prototype.ngOnChanges = function (changes) {
-        if (changes.disabled && this.speciesControl && this.colorControl) {
-            if (changes.disabled.currentValue) {
-                this.speciesControl.disable();
-                this.colorControl.disable();
-            }
-            else {
-                this.speciesControl.enable();
-                this.colorControl.enable();
-            }
-        }
-    };
-    SpeciesPhenophaseInputComponent.prototype.ngDoCheck = function () {
-        if (this.selection) {
-            var params_1 = {}, paramsS = void 0;
-            (this.selection.networkIds || []).forEach(function (id, i) { return params_1["network_id[" + i + "]"] = "" + id; });
-            (this.selection.stationIds || []).forEach(function (id, i) { return params_1["station_ids[" + i + "]"] = "" + id; });
-            paramsS = JSON.stringify(params_1);
-            if (paramsS !== this.lastSpeciesParams) {
-                this.lastSpeciesParams = paramsS;
-                this.speciesParams.next(params_1);
-            }
-        }
-    };
-    // this kicks speciesControl.valueChanges to display a list of
-    // all species on focus
-    SpeciesPhenophaseInputComponent.prototype.speciesFocus = function () {
-        if (!this.isIE && !this.species && this.speciesList) {
-            this.speciesControl.setValue(' ');
-        }
-    };
-    SpeciesPhenophaseInputComponent.prototype.filterSpecies = function (s) {
-        var _this = this;
-        s = s.trim().toLowerCase();
-        return s !== '' ?
-            (this.speciesList || []).filter(function (sp) {
-                var title = _this.speciesTitle.transform(sp).toLowerCase();
-                ;
-                return title.indexOf(s) !== -1;
-            }) : (this.speciesList || []);
-    };
-    SpeciesPhenophaseInputComponent.prototype.displayPhenophase = function (p) {
-        return p ? p.phenophase_name : p;
-    };
-    Object.defineProperty(SpeciesPhenophaseInputComponent.prototype, "species", {
-        get: function () {
-            return this.speciesValue;
-        },
-        set: function (s) {
-            var _this = this;
-            if (!s || typeof (s) === 'object') { // might as well use any
-                // the first check makes sure we're not changing say from
-                // null to udnefined or vice-versa, this is perhaps a workaround
-                // but there was a common "changed after detection" error that was
-                // happening related to species going from undefined to null.
-                if ((!!s || !!this.speciesValue) && s !== this.speciesValue) {
-                    var oldValue = this.speciesValue;
-                    this.speciesValue = s;
-                    if (!this.initialSpeciesSet) {
-                        this.speciesChange.emit(this.speciesValue);
-                        this.onSpeciesChange.emit({
-                            oldValue: oldValue,
-                            newValue: this.speciesValue
-                        });
-                    }
-                    this.phenophaseList = [];
-                    if (s) {
-                        this.speciesService.getPhenophasesContiguousYears(s, _common__WEBPACK_IMPORTED_MODULE_4__["TaxonomicSpeciesRank"].SPECIES, this.startYear, this.endYear)
-                            .then(function (phenophases) {
-                            var found = false;
-                            if (_this.phenophase) {
-                                for (var i = 0; i < phenophases.length; i++) {
-                                    found = (_this.phenophase.phenophase_id === phenophases[i].phenophase_id);
-                                    if (found) {
-                                        phenophases[i] = _this.phenophase;
-                                        break;
-                                    }
-                                }
-                                if (!found) {
-                                    _this.phenophase = undefined;
-                                }
-                            }
-                            _this.phenophaseList = phenophases;
-                            if (!found) {
-                                _this.phenophaseBinding = _this.phenophaseList[0];
-                            }
-                        });
-                    }
-                }
-            }
-            this.initialSpeciesSet = false;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SpeciesPhenophaseInputComponent.prototype, "phenophase", {
-        get: function () {
-            return this.phenophaseValue;
-        },
-        set: function (p) {
-            this.phenophaseValue = p;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SpeciesPhenophaseInputComponent.prototype, "phenophaseBinding", {
-        get: function () {
-            return this.phenophaseValue;
-        },
-        set: function (p) {
-            if (p !== this.phenophaseValue) {
-                var oldValue = this.phenophaseValue;
-                this.phenophaseChange.emit(this.phenophaseValue = p);
-                this.onPhenophaseChange.emit({
-                    oldValue: oldValue,
-                    newValue: this.phenophaseValue
-                });
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SpeciesPhenophaseInputComponent.prototype, "color", {
-        get: function () {
-            return this.colorValue;
-        },
-        set: function (c) {
-            var oldValue = this.colorValue;
-            this.colorChange.emit(this.colorValue = c);
-            this.onColorChange.emit({
-                oldValue: oldValue,
-                newValue: this.colorValue
-            });
-        },
-        enumerable: true,
-        configurable: true
-    });
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", Boolean)
-    ], SpeciesPhenophaseInputComponent.prototype, "required", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", Boolean)
-    ], SpeciesPhenophaseInputComponent.prototype, "disabled", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", Number)
-    ], SpeciesPhenophaseInputComponent.prototype, "startYear", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", Number)
-    ], SpeciesPhenophaseInputComponent.prototype, "endYear", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _vis_selection__WEBPACK_IMPORTED_MODULE_5__["VisSelection"])
-    ], SpeciesPhenophaseInputComponent.prototype, "selection", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
-        __metadata("design:type", Object)
-    ], SpeciesPhenophaseInputComponent.prototype, "speciesChange", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
-        __metadata("design:type", Object)
-    ], SpeciesPhenophaseInputComponent.prototype, "onSpeciesChange", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
-        __metadata("design:type", Object)
-    ], SpeciesPhenophaseInputComponent.prototype, "phenophaseChange", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
-        __metadata("design:type", Object)
-    ], SpeciesPhenophaseInputComponent.prototype, "onPhenophaseChange", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", Boolean)
-    ], SpeciesPhenophaseInputComponent.prototype, "gatherColor", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
-        __metadata("design:type", Object)
-    ], SpeciesPhenophaseInputComponent.prototype, "colorChange", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
-        __metadata("design:type", Object)
-    ], SpeciesPhenophaseInputComponent.prototype, "onColorChange", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])('species'),
-        __metadata("design:type", Object),
-        __metadata("design:paramtypes", [Object])
-    ], SpeciesPhenophaseInputComponent.prototype, "species", null);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])('phenophase'),
-        __metadata("design:type", _common__WEBPACK_IMPORTED_MODULE_4__["Phenophase"]),
-        __metadata("design:paramtypes", [_common__WEBPACK_IMPORTED_MODULE_4__["Phenophase"]])
-    ], SpeciesPhenophaseInputComponent.prototype, "phenophase", null);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])('color'),
-        __metadata("design:type", String),
-        __metadata("design:paramtypes", [String])
-    ], SpeciesPhenophaseInputComponent.prototype, "color", null);
-    SpeciesPhenophaseInputComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'species-phenophase-input',
-            template: "\n    <mat-form-field class=\"species-input\">\n        <input matInput [placeholder]=\"'Species'+(required ? ' *':'')\" aria-label=\"Species\"\n               [matAutocomplete]=\"sp\"\n               [formControl]=\"speciesControl\" (focus)=\"speciesFocus()\" />\n        <mat-autocomplete #sp=\"matAutocomplete\" [displayWith]=\"speciesTitle.transform\">\n          <mat-option *ngFor=\"let s of filteredSpecies | async\" [value]=\"s\">\n            {{s | speciesTitle}} ({{s.number_observations}})\n          </mat-option>\n        </mat-autocomplete>\n        <mat-error *ngIf=\"speciesControl.errors && speciesControl.errors.required\">Species is required</mat-error>\n        <mat-progress-bar *ngIf=\"!speciesList || !speciesList.length\" mode=\"query\"></mat-progress-bar>\n    </mat-form-field>\n\n    <mat-form-field class=\"phenophase-input\">\n        <mat-select placeholder=\"Phenophase\" [(ngModel)]=\"phenophaseBinding\" [disabled]=\"disabled || !phenophaseList.length\">\n          <mat-option *ngFor=\"let p of phenophaseList\" [value]=\"p\">{{p.phenophase_name}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n\n    <mat-form-field *ngIf=\"gatherColor\" class=\"color-input\">\n        <mat-select  [placeholder]=\"'Color'+(required ? ' *':'')\" [formControl]=\"colorControl\">\n          <mat-select-trigger><div class=\"color-swatch\" [ngStyle]=\"{'background-color':color}\"></div></mat-select-trigger>\n          <mat-option *ngFor=\"let c of colorList\" [value]=\"c\"><div class=\"color-swatch\" [ngStyle]=\"{'background-color':c}\"></div></mat-option>\n        </mat-select>\n        <mat-error *ngIf=\"colorControl.errors && colorControl.errors.required\">Color is required</mat-error>\n    </mat-form-field>\n    ",
-            styles: ["\n        mat-form-field {\n            padding-right: 5px;\n        }\n        .species-input {\n            width: 200px;\n        }\n        .phenophase-input {\n            width: 250px;\n        }\n        .color-swatch {\n            display: inline-block;\n            width: 20px;\n            height: 20px;\n        }\n        .color-input {\n            width: 60px;\n        }\n    "]
-        }),
-        __metadata("design:paramtypes", [_common__WEBPACK_IMPORTED_MODULE_4__["SpeciesService"],
-            _common__WEBPACK_IMPORTED_MODULE_4__["SpeciesTitlePipe"]])
-    ], SpeciesPhenophaseInputComponent);
-    return SpeciesPhenophaseInputComponent;
-}(_common__WEBPACK_IMPORTED_MODULE_4__["MonitorsDestroy"]));
 
 
 
@@ -9998,7 +9824,7 @@ var YearRangeInputComponent = /** @class */ (function () {
 /*!*****************************************************!*\
   !*** ../npn/common/src/lib/visualizations/index.ts ***!
   \*****************************************************/
-/*! exports provided: VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObvervationFrequencyStationControlComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, SPECIES_PHENO_INPUT_COLORS, SpeciesPhenophaseInputComponent, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObvervationFrequencyStationControlComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10139,10 +9965,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpringIndexMapLayerControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["SpringIndexMapLayerControlComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MapVisualizationMarkerIw", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["MapVisualizationMarkerIw"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SPECIES_PHENO_INPUT_COLORS", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["SPECIES_PHENO_INPUT_COLORS"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpeciesPhenophaseInputComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["SpeciesPhenophaseInputComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "YearRangeInputComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["YearRangeInputComponent"]; });
 
@@ -10988,19 +10810,21 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 var MapSelectionFactory = /** @class */ (function () {
-    function MapSelectionFactory(layerService, serviceUtils, speciesService) {
+    function MapSelectionFactory(layerService, serviceUtils, speciesService, networkService) {
         this.layerService = layerService;
         this.serviceUtils = serviceUtils;
         this.speciesService = speciesService;
+        this.networkService = networkService;
     }
     MapSelectionFactory.prototype.newSelection = function () {
-        return new _map_selection__WEBPACK_IMPORTED_MODULE_1__["MapSelection"](this.layerService, this.serviceUtils, this.speciesService);
+        return new _map_selection__WEBPACK_IMPORTED_MODULE_1__["MapSelection"](this.layerService, this.serviceUtils, this.speciesService, this.networkService);
     };
     MapSelectionFactory = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
         __metadata("design:paramtypes", [_gridded__WEBPACK_IMPORTED_MODULE_2__["NpnMapLayerService"],
             _common__WEBPACK_IMPORTED_MODULE_3__["NpnServiceUtils"],
-            _common__WEBPACK_IMPORTED_MODULE_3__["SpeciesService"]])
+            _common__WEBPACK_IMPORTED_MODULE_3__["SpeciesService"],
+            _common__WEBPACK_IMPORTED_MODULE_3__["NetworkService"]])
     ], MapSelectionFactory);
     return MapSelectionFactory;
 }());
@@ -11063,11 +10887,12 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
  */
 var MapSelection = /** @class */ (function (_super) {
     __extends(MapSelection, _super);
-    function MapSelection(layerService, serviceUtils, speciesService) {
-        var _this = _super.call(this, serviceUtils, speciesService) || this;
+    function MapSelection(layerService, serviceUtils, speciesService, networkService) {
+        var _this = _super.call(this, serviceUtils, speciesService, networkService) || this;
         _this.layerService = layerService;
         _this.serviceUtils = serviceUtils;
         _this.speciesService = speciesService;
+        _this.networkService = networkService;
         _this.$supportsPop = true;
         _this.$class = 'MapSelection';
         _this.opacity = 0.75;
@@ -11805,11 +11630,12 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var ObservationDateVisSelection = /** @class */ (function (_super) {
     __extends(ObservationDateVisSelection, _super);
-    function ObservationDateVisSelection(serviceUtils, speciesTitle, speciesService) {
-        var _this = _super.call(this, serviceUtils) || this;
+    function ObservationDateVisSelection(serviceUtils, speciesTitle, speciesService, networkService) {
+        var _this = _super.call(this, serviceUtils, networkService) || this;
         _this.serviceUtils = serviceUtils;
         _this.speciesTitle = speciesTitle;
         _this.speciesService = speciesService;
+        _this.networkService = networkService;
         _this.$supportsPop = true;
         _this.requestSrc = 'observation-date-vis-selection';
         _this.negative = false;
@@ -11871,8 +11697,8 @@ var ObservationDateVisSelection = /** @class */ (function (_super) {
         if (!data || !data.length) {
             return null;
         }
-        var validPlots = this.validPlots;
-        var y = (validPlots.length * this.years.length) - 1;
+        var plots = data.map(function (d) { return d.plot; });
+        var y = (plots.length * this.years.length) - 1;
         var addDoys = function (doys, color) {
             doys.forEach(function (doy) {
                 response.data.push({
@@ -11886,8 +11712,9 @@ var ObservationDateVisSelection = /** @class */ (function (_super) {
             labels: [],
             data: []
         };
-        validPlots.forEach(function (plot, i) {
-            var rData = data[i][0];
+        data.forEach(function (d, i) {
+            var plot = d.plot;
+            var rData = d.data;
             var pPhases = { years: {} }; // empty
             var pPhaseKey = plot.phenophaseRank === _common__WEBPACK_IMPORTED_MODULE_2__["TaxonomicPhenophaseRank"].CLASS ? 'pheno_classes' : 'phenophases';
             if (rData && rData[pPhaseKey] && rData[pPhaseKey].length) {
@@ -11909,6 +11736,10 @@ var ObservationDateVisSelection = /** @class */ (function (_super) {
         return response;
     };
     ObservationDateVisSelection.prototype.getData = function () {
+        // work around TypeScript Promise.all issue
+        return this._getData();
+    };
+    ObservationDateVisSelection.prototype._getData = function () {
         var _this = this;
         if (!this.isValid()) {
             return Promise.reject(this.INVALID_SELECTION);
@@ -11927,7 +11758,11 @@ var ObservationDateVisSelection = /** @class */ (function (_super) {
             if (plot.phenophaseRank === _common__WEBPACK_IMPORTED_MODULE_2__["TaxonomicPhenophaseRank"].CLASS) {
                 plotParams = plotParams.set('pheno_class_aggregate', '1');
             }
-            return _this.serviceUtils.cachedPost(serviceUrl, plotParams.toString());
+            return _this.serviceUtils.cachedPost(serviceUrl, plotParams.toString())
+                .then(function (results) {
+                var data = results[0];
+                return { plot: plot, data: data };
+            });
         })); })
             .then(function (result) {
             _this.working = false;
@@ -12121,7 +11956,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 var ObservationFrequencySelection = /** @class */ (function (_super) {
     __extends(ObservationFrequencySelection, _super);
     function ObservationFrequencySelection(serviceUtils, networkService) {
-        var _this = _super.call(this) || this;
+        var _this = _super.call(this, networkService) || this;
         _this.serviceUtils = serviceUtils;
         _this.networkService = networkService;
         _this.$class = 'ObservationFrequencySelection';
@@ -12622,15 +12457,16 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 var ObserverActivitySelectionFactory = /** @class */ (function () {
-    function ObserverActivitySelectionFactory(serviceUtils) {
+    function ObserverActivitySelectionFactory(serviceUtils, networkService) {
         this.serviceUtils = serviceUtils;
+        this.networkService = networkService;
     }
     ObserverActivitySelectionFactory.prototype.newSelection = function () {
-        return new _observer_activity_selection__WEBPACK_IMPORTED_MODULE_2__["ObserverActivitySelection"](this.serviceUtils);
+        return new _observer_activity_selection__WEBPACK_IMPORTED_MODULE_2__["ObserverActivitySelection"](this.serviceUtils, this.networkService);
     };
     ObserverActivitySelectionFactory = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
-        __metadata("design:paramtypes", [_common__WEBPACK_IMPORTED_MODULE_1__["NpnServiceUtils"]])
+        __metadata("design:paramtypes", [_common__WEBPACK_IMPORTED_MODULE_1__["NpnServiceUtils"], _common__WEBPACK_IMPORTED_MODULE_1__["NetworkService"]])
     ], ObserverActivitySelectionFactory);
     return ObserverActivitySelectionFactory;
 }());
@@ -12680,9 +12516,10 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var ObserverActivitySelection = /** @class */ (function (_super) {
     __extends(ObserverActivitySelection, _super);
-    function ObserverActivitySelection(serviceUtils) {
-        var _this = _super.call(this) || this;
+    function ObserverActivitySelection(serviceUtils, networkService) {
+        var _this = _super.call(this, networkService) || this;
         _this.serviceUtils = serviceUtils;
+        _this.networkService = networkService;
         _this.$class = 'ObserverActivitySelection';
         _this.dataCnt = 0;
         return _this;
@@ -12997,7 +12834,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!**********************************************************!*\
   !*** ../npn/common/src/lib/visualizations/public_api.ts ***!
   \**********************************************************/
-/*! exports provided: VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObvervationFrequencyStationControlComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, SPECIES_PHENO_INPUT_COLORS, SpeciesPhenophaseInputComponent, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObvervationFrequencyStationControlComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13150,10 +12987,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MapVisualizationMarkerIw", function() { return _map_public_api__WEBPACK_IMPORTED_MODULE_10__["MapVisualizationMarkerIw"]; });
 
 /* harmony import */ var _common_controls__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./common-controls */ "../npn/common/src/lib/visualizations/common-controls/index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SPECIES_PHENO_INPUT_COLORS", function() { return _common_controls__WEBPACK_IMPORTED_MODULE_11__["SPECIES_PHENO_INPUT_COLORS"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpeciesPhenophaseInputComponent", function() { return _common_controls__WEBPACK_IMPORTED_MODULE_11__["SpeciesPhenophaseInputComponent"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "YearRangeInputComponent", function() { return _common_controls__WEBPACK_IMPORTED_MODULE_11__["YearRangeInputComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "HigherSpeciesPhenophaseInputComponent", function() { return _common_controls__WEBPACK_IMPORTED_MODULE_11__["HigherSpeciesPhenophaseInputComponent"]; });
@@ -13220,7 +13053,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScatterPlotComponent", function() { return _scatter_plot_component__WEBPACK_IMPORTED_MODULE_2__["ScatterPlotComponent"]; });
 
 /* harmony import */ var _scatter_plot_controls_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./scatter-plot-controls.component */ "../npn/common/src/lib/visualizations/scatter-plot/scatter-plot-controls.component.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScatterPlotControls", function() { return _scatter_plot_controls_component__WEBPACK_IMPORTED_MODULE_3__["ScatterPlotControls"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScatterPlotControls", function() { return _scatter_plot_controls_component__WEBPACK_IMPORTED_MODULE_3__["ScatterPlotControlsComponent"]; });
 
 
 
@@ -13234,14 +13067,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!********************************************************************************************!*\
   !*** ../npn/common/src/lib/visualizations/scatter-plot/scatter-plot-controls.component.ts ***!
   \********************************************************************************************/
-/*! exports provided: ScatterPlotControls */
+/*! exports provided: ScatterPlotControlsComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScatterPlotControls", function() { return ScatterPlotControls; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScatterPlotControlsComponent", function() { return ScatterPlotControlsComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _scatter_plot_selection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./scatter-plot-selection */ "../npn/common/src/lib/visualizations/scatter-plot/scatter-plot-selection.ts");
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! d3 */ "../../node_modules/d3/index.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -13253,59 +13087,58 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
-var ScatterPlotControls = /** @class */ (function () {
-    function ScatterPlotControls() {
+
+var ScatterPlotControlsComponent = /** @class */ (function () {
+    function ScatterPlotControlsComponent() {
         this.axis = _scatter_plot_selection__WEBPACK_IMPORTED_MODULE_1__["AXIS"];
-        this.updateSent = false;
     }
-    ScatterPlotControls.prototype.ngOnInit = function () {
+    ScatterPlotControlsComponent.prototype.ngOnInit = function () {
+        var _this = this;
         if (this.selection.plots.length === 0) {
             this.addPlot();
         }
+        setTimeout(function () { return _this.updateCriteria(); });
     };
-    ScatterPlotControls.prototype.updateChange = function () {
-        if (this.selection.isValid()) {
+    ScatterPlotControlsComponent.prototype.yearChange = function () {
+        this.updateCriteria();
+        this.selection.update();
+    };
+    ScatterPlotControlsComponent.prototype.updateCriteria = function () {
+        this.criteria = {
+            years: d3__WEBPACK_IMPORTED_MODULE_2__["range"](this.selection.start, this.selection.end + 1),
+            stationIds: this.selection.getStationIds()
+        };
+    };
+    ScatterPlotControlsComponent.prototype.redrawChange = function (change) {
+        if (change && !change.oldValue && change.newValue) { // e.g. no color to a color means a plot that wasn't valid is now potentially valid.
             this.selection.update();
-            this.updateSent = true;
+        }
+        else {
+            this.selection.redraw();
         }
     };
-    ScatterPlotControls.prototype.redrawChange = function (change) {
-        if (this.selection.isValid()) {
-            if (change && !change.oldValue && change.newValue) { // e.g. no color to a color means a plot that wasn't valid is now potentially valid.
-                this.updateChange();
-            }
-            else {
-                if (this.updateSent) {
-                    this.selection.redraw();
-                }
-                else {
-                    this.updateChange();
-                }
-            }
-        }
-    };
-    ScatterPlotControls.prototype.addPlot = function () {
+    ScatterPlotControlsComponent.prototype.addPlot = function () {
         this.selection.plots.push({});
     };
-    ScatterPlotControls.prototype.removePlot = function (index) {
+    ScatterPlotControlsComponent.prototype.removePlot = function (index) {
         this.selection.plots.splice(index, 1);
-        this.updateChange();
+        this.selection.update();
     };
-    ScatterPlotControls.prototype.plotsValid = function () {
+    ScatterPlotControlsComponent.prototype.plotsValid = function () {
         return this.selection.plots.length === this.selection.validPlots.length;
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", _scatter_plot_selection__WEBPACK_IMPORTED_MODULE_1__["ScatterPlotSelection"])
-    ], ScatterPlotControls.prototype, "selection", void 0);
-    ScatterPlotControls = __decorate([
+    ], ScatterPlotControlsComponent.prototype, "selection", void 0);
+    ScatterPlotControlsComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'scatter-plot-control',
-            template: "\n    <year-range-input [(start)]=\"selection.start\" [(end)]=\"selection.end\" (onStartChange)=\"updateChange()\" (onEndChange)=\"updateChange()\"></year-range-input>\n\n    <div class=\"phenophase-input-wrapper\" *ngFor=\"let spi of selection.plots; index as idx\">\n        <species-phenophase-input\n            [(species)]=\"spi.species\" [(phenophase)]=\"spi.phenophase\" [(color)]=\"spi.color\"\n            [selection]=\"selection\"\n            [gatherColor]=\"true\"\n            (onSpeciesChange)=\"updateChange()\"\n            (onPhenophaseChange)=\"updateChange()\"\n            (onColorChange)=\"redrawChange($event)\"></species-phenophase-input>\n        <button *ngIf=\"idx > 0\" mat-button class=\"remove-plot\" (click)=\"removePlot(idx)\">Remove</button>\n        <button *ngIf=\"selection.plots.length < 3 && idx === (selection.plots.length-1)\" mat-button class=\"add-plot\" [disabled]=\"!plotsValid()\" (click)=\"addPlot()\">Add</button>\n    </div>\n\n    <div>\n        <mat-form-field>\n            <mat-select placeholder=\"X Axis\" name=\"xAxis\" [(ngModel)]=\"selection.axis\" (ngModelChange)=\"redrawChange()\">\n              <mat-option *ngFor=\"let a of axis\" [value]=\"a\">{{a.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n\n        <mat-checkbox [(ngModel)]=\"selection.regressionLines\" (change)=\"redrawChange()\">Fit Lines</mat-checkbox>\n\n        <mat-checkbox [(ngModel)]=\"selection.individualPhenometrics\" (change)=\"updateChange()\">Use Individual Phenometrics</mat-checkbox>\n\n    </div>\n    ",
+            template: "\n    <year-range-input [(start)]=\"selection.start\" [(end)]=\"selection.end\" (onStartChange)=\"yearChange()\" (onEndChange)=\"yearChange()\"></year-range-input>\n\n    <div class=\"phenophase-input-wrapper\" *ngFor=\"let spi of selection.plots; index as idx\">\n        <higher-species-phenophase-input\n            gatherColor=\"true\"\n            [selection]=\"selection\"\n            [criteria]=\"criteria\"\n            [plot]=\"spi\"\n            (plotChange)=\"selection.update()\">\n        </higher-species-phenophase-input>\n        <button *ngIf=\"idx > 0\" mat-button class=\"remove-plot\" (click)=\"removePlot(idx)\">Remove</button>\n        <button *ngIf=\"selection.plots.length < 3 && idx === (selection.plots.length-1)\" mat-button class=\"add-plot\" [disabled]=\"!plotsValid()\" (click)=\"addPlot()\">Add</button>\n    </div>\n\n    <div>\n        <mat-form-field>\n            <mat-select placeholder=\"X Axis\" name=\"xAxis\" [(ngModel)]=\"selection.axis\" (ngModelChange)=\"redrawChange()\">\n              <mat-option *ngFor=\"let a of axis\" [value]=\"a\">{{a.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n\n        <mat-checkbox [(ngModel)]=\"selection.regressionLines\" (change)=\"redrawChange()\">Fit Lines</mat-checkbox>\n\n        <mat-checkbox [(ngModel)]=\"selection.individualPhenometrics\" (change)=\"selection.update()\">Use Individual Phenometrics</mat-checkbox>\n    </div>\n    ",
             styles: ["\n        year-range-input,\n        .phenophase-input-wrapper {\n            display: block;\n            margin-top: 15px;\n        }\n        mat-form-field,\n        mat-checkbox {\n            padding-right: 10px;\n        }\n    "]
         })
-    ], ScatterPlotControls);
-    return ScatterPlotControls;
+    ], ScatterPlotControlsComponent);
+    return ScatterPlotControlsComponent;
 }());
 
 
@@ -13338,16 +13171,19 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 var ScatterPlotSelectionFactory = /** @class */ (function () {
-    function ScatterPlotSelectionFactory(serviceUtils, speciesService) {
+    function ScatterPlotSelectionFactory(serviceUtils, speciesService, networkService) {
         this.serviceUtils = serviceUtils;
         this.speciesService = speciesService;
+        this.networkService = networkService;
     }
     ScatterPlotSelectionFactory.prototype.newSelection = function () {
-        return new _scatter_plot_selection__WEBPACK_IMPORTED_MODULE_2__["ScatterPlotSelection"](this.serviceUtils, this.speciesService);
+        return new _scatter_plot_selection__WEBPACK_IMPORTED_MODULE_2__["ScatterPlotSelection"](this.serviceUtils, this.speciesService, this.networkService);
     };
     ScatterPlotSelectionFactory = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
-        __metadata("design:paramtypes", [_common__WEBPACK_IMPORTED_MODULE_1__["NpnServiceUtils"], _common__WEBPACK_IMPORTED_MODULE_1__["SpeciesService"]])
+        __metadata("design:paramtypes", [_common__WEBPACK_IMPORTED_MODULE_1__["NpnServiceUtils"],
+            _common__WEBPACK_IMPORTED_MODULE_1__["SpeciesService"],
+            _common__WEBPACK_IMPORTED_MODULE_1__["NetworkService"]])
     ], ScatterPlotSelectionFactory);
     return ScatterPlotSelectionFactory;
 }());
@@ -13543,9 +13379,8 @@ var ScatterPlotSelection = /** @class */ (function (_super) {
                 d.color = plotData.plot.color;
                 d.fyy = _this.getFirstYesYear(d);
                 for (var summaryKey in KEYS_TO_NORMALIZE) {
-                    var siteKey = KEYS_TO_NORMALIZE[summaryKey];
                     if (typeof (d[summaryKey]) === 'undefined') {
-                        d[summaryKey] = d[siteKey];
+                        d[summaryKey] = d[KEYS_TO_NORMALIZE[summaryKey]];
                     }
                 }
                 // this is the day # that will get plotted 1 being the first day of the start_year
@@ -13750,10 +13585,11 @@ var ScatterPlotComponent = /** @class */ (function (_super) {
             .append('title')
             .text(function (d) { return selection.doyDateFormat(d.day_in_range) + " [" + d.latitude + "," + d.longitude + "]"; });
         this.chart.selectAll('.regression').remove();
-        selection.validPlots.forEach(function (plot) { return delete plot.regressionLine; });
+        var plots = this.data.map(function (d) { return d.plot; });
+        plots.forEach(function (plot) { return delete plot.regressionLine; });
         if (this.selection.regressionLines) {
             var regressionLines_1 = [];
-            selection.validPlots.forEach(function (plot) {
+            plots.forEach(function (plot) {
                 var series = nonNullData.filter(function (d) { return d.color === plot.color; });
                 if (series.length) {
                     var keys = Object(_common__WEBPACK_IMPORTED_MODULE_2__["getSpeciesPlotKeys"])(plot);
@@ -13780,12 +13616,14 @@ var ScatterPlotComponent = /** @class */ (function (_super) {
             .attr('class', 'legend')
             .attr('transform', 'translate(0,-' + (this.sizing.margin.top - 10) + ')')
             .style('font-size', '1em'), r = 5, vpad = 4;
-        this.selection.validPlots.forEach(function (plot, i) {
+        this.data.forEach(function (d, i) {
+            var plot = d.plot;
+            var group = d.group;
             var row = legend.append('g')
                 .attr('class', 'legend-item')
                 .attr('transform', 'translate(10,' + (((i + 1) * _this.baseFontSize()) + (i * vpad)) + ')');
             var pp = plot.phenophase;
-            var title = _this.speciesTitle.transform(plot.species, plot.speciesRank) + '/' + (pp.phenophase_name || pp.pheno_class_name);
+            var title = (group ? group.label + ": " : '') + _this.speciesTitle.transform(plot.species, plot.speciesRank) + '/' + (pp.phenophase_name || pp.pheno_class_name);
             if (plot.regressionLine && typeof (plot.regressionLine.r2) === 'number') {
                 // NOTE: the baseline-shift doesn't appear to work on Firefox
                 if (_this.isIE) {
@@ -13911,10 +13749,11 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var SiteOrSummaryVisSelection = /** @class */ (function (_super) {
     __extends(SiteOrSummaryVisSelection, _super);
-    function SiteOrSummaryVisSelection(serviceUtils, speciesService) {
-        var _this = _super.call(this, serviceUtils) || this;
+    function SiteOrSummaryVisSelection(serviceUtils, speciesService, networkService) {
+        var _this = _super.call(this, serviceUtils, networkService) || this;
         _this.serviceUtils = serviceUtils;
         _this.speciesService = speciesService;
+        _this.networkService = networkService;
         _this.individualPhenometrics = false;
         _this._numDaysQualityFilter = 30;
         _this.plots = [];
@@ -14006,9 +13845,7 @@ var SiteOrSummaryVisSelection = /** @class */ (function (_super) {
             }
             return filtered;
         };
-        this.working = true;
-        return this.toURLSearchParams()
-            .then(function (baseParams) { return Promise.all(_this.validPlots.map(function (plot, plotIndex) {
+        var fetchDataForPlot = function (baseParams, plot, plotIndex) {
             var keys = Object(_common__WEBPACK_IMPORTED_MODULE_1__["getSpeciesPlotKeys"])(plot);
             var params = baseParams.set(keys.speciesIdKey + "[0]", "" + plot.species[keys.speciesIdKey])
                 .set(keys.phenophaseIdKey + "[0]", "" + plot.phenophase[keys.phenophaseIdKey]);
@@ -14022,7 +13859,31 @@ var SiteOrSummaryVisSelection = /** @class */ (function (_super) {
             return _this.serviceUtils.cachedPost(url, params.toString())
                 .then(function (data) { return filterLqd(data, plot, plotIndex); })
                 .then(function (data) { return ({ plot: plot, data: data }); });
-        })); })
+        };
+        this.working = true;
+        return this.toURLSearchParams()
+            .then(function (baseParams) {
+            var validPlots = _this.validPlots;
+            return (_this.groups && _this.groups.length)
+                ? _this.toGroupHttpParams(baseParams)
+                    .then(function (groupParams) {
+                    // multiply plots by groups
+                    var plotIndex = 0; // just for logging
+                    var promises = groupParams.reduce(function (promises, gp) {
+                        validPlots.forEach(function (p) {
+                            var plot = JSON.parse(JSON.stringify(p));
+                            plot.color = Object(_common__WEBPACK_IMPORTED_MODULE_1__["getStaticColor"])(plotIndex);
+                            promises.push(fetchDataForPlot(gp.params, plot, plotIndex++).then(function (result) {
+                                result.group = gp.group;
+                                return result;
+                            }));
+                        });
+                        return promises;
+                    }, []);
+                    return Promise.all(promises);
+                })
+                : Promise.all(validPlots.map(function (plot, plotIndex) { return fetchDataForPlot(baseParams, plot, plotIndex); }));
+        })
             .then(function (results) {
             _this.working = false;
             return results;
@@ -14296,7 +14157,7 @@ var SvgVisualizationBaseComponent = /** @class */ (function (_super) {
 /*!*************************************************************!*\
   !*** ../npn/common/src/lib/visualizations/vis-selection.ts ***!
   \*************************************************************/
-/*! exports provided: NULL_DATA, ONE_DAY_MILLIS, SelectionPropertyHandler, selectionProperty, GET_EXTERNAL, SET_EXTERNAL, REJECT_INVALID_SELECTION, VisSelection, completePOPDates, BASE_POP_INPUT, NetworkAwareVisSelection, isPredefinedBoundarySelection, isPolygonBoundarySelection, StationAwareVisSelection */
+/*! exports provided: NULL_DATA, ONE_DAY_MILLIS, SelectionPropertyHandler, selectionProperty, GET_EXTERNAL, SET_EXTERNAL, REJECT_INVALID_SELECTION, VisSelection, completePOPDates, BASE_POP_INPUT, SelectionGroupMode, NetworkAwareVisSelection, isPredefinedBoundarySelection, isPolygonBoundarySelection, StationAwareVisSelection */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14311,6 +14172,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VisSelection", function() { return VisSelection; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "completePOPDates", function() { return completePOPDates; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BASE_POP_INPUT", function() { return BASE_POP_INPUT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SelectionGroupMode", function() { return SelectionGroupMode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NetworkAwareVisSelection", function() { return NetworkAwareVisSelection; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPredefinedBoundarySelection", function() { return isPredefinedBoundarySelection; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPolygonBoundarySelection", function() { return isPolygonBoundarySelection; });
@@ -14672,19 +14534,81 @@ var BASE_POP_INPUT = {
     rangeType: 'Calendar'
 };
 /**
+ * The mode of a given SelectionGroup
+ */
+var SelectionGroupMode;
+(function (SelectionGroupMode) {
+    /** The group represents the data gathered by a network. */
+    SelectionGroupMode["NETWORK"] = "N";
+    /** The group represents the data gathered by a single station. */
+    SelectionGroupMode["STATION"] = "S";
+    /** The group represents the data gathered by stations within a radius of a network (specifically a network with a known boundary). */
+    SelectionGroupMode["OUTSIDE"] = "O";
+})(SelectionGroupMode || (SelectionGroupMode = {}));
+;
+/**
  * @dynamic
  */
 var NetworkAwareVisSelection = /** @class */ (function (_super) {
     __extends(NetworkAwareVisSelection, _super);
-    function NetworkAwareVisSelection() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
+    function NetworkAwareVisSelection(networkService) {
+        var _this = _super.call(this) || this;
+        _this.networkService = networkService;
         _this.networkIds = [];
         return _this;
     }
+    NetworkAwareVisSelection.prototype.getStationIdsForGroup = function (group) {
+        switch (group.mode) {
+            case SelectionGroupMode.STATION:
+                return Promise.resolve([group.id]);
+            case SelectionGroupMode.NETWORK:
+                // translate the network to its underlying stations
+                return this.networkService.getStations(group.id)
+                    // just need the station_ids
+                    .then(function (stations) { return stations.map(function (s) { return s.station_id; }); })
+                    // exclude any stations the group excludes
+                    .then(function (ids) { return ids.filter(function (id) { return (group.excludeIds || []).indexOf(id) === -1; }); });
+            case SelectionGroupMode.OUTSIDE:
+                return Promise.reject('TODO SelectionGroupMode.OUTSIDE not implemented yet');
+        }
+    };
+    /**
+     * If the `groups` property is set then the output of this function will be
+     * the compilation of all the station ids that are part of the corresponding
+     * groups, otherwise it will be based upon any networkIds set.
+     */
+    NetworkAwareVisSelection.prototype.getStationIds = function () {
+        var _this = this;
+        return !!this.groups && this.groups.length > 0
+            ? Promise.all(this.groups.map(function (group) { return _this.getStationIdsForGroup(group); }))
+                .then(function (list) { return list.reduce(function (ids, idList) {
+                idList.forEach(function (id) {
+                    if (ids.indexOf(id) === -1) {
+                        ids.push(id);
+                    }
+                });
+                return ids;
+            }, []); })
+            : this.networkIds && this.networkIds.length
+                ? this.networkService.getStations(this.networkIds)
+                    .then(function (stations) { return stations.map(function (s) { return s.station_id; }); })
+                : Promise.resolve([]);
+    };
+    /**
+     * If the `groups` property is set then no `station_id` parameters will
+     * be populated on the base `HttpParams` since separate requests will need to
+     * be issued for group data and `toGroupHttpParams` must be called to build those
+     * request parameters.
+     *
+     * @param params The HttpParams (optional)
+     */
     NetworkAwareVisSelection.prototype.toURLSearchParams = function (params) {
         if (params === void 0) { params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"](); }
-        (this.networkIds || []).forEach(function (id, i) { return params = params.set("network_id[" + i + "]", "" + id); });
-        return Promise.resolve(params);
+        return !!this.groups && this.groups.length > 0
+            ? Promise.resolve(params)
+            // translate any network_ids into station_ids
+            : this.getStationIds()
+                .then(function (sids) { return sids.reduce(function (params, id, i) { return params.set("station_id[" + i + "]", "" + id); }, params); });
     };
     NetworkAwareVisSelection.prototype.toPOPInput = function (input) {
         if (input === void 0) { input = __assign({}, BASE_POP_INPUT); }
@@ -14693,10 +14617,47 @@ var NetworkAwareVisSelection = /** @class */ (function (_super) {
             : undefined;
         return Promise.resolve(input);
     };
+    /**
+     * Removes any station_id[n] parameters from a set of HttpParams.
+     *
+     * @param params The params to remove parameters from
+     */
+    NetworkAwareVisSelection.prototype.resetStationIdParams = function (params) {
+        params.keys()
+            .filter(function (key) { return /^station_id\[\d+\]$/.test(key); })
+            .forEach(function (key) { return params = params.delete(key); });
+        return params;
+    };
+    /**
+     * Multiplies out a set of HttpParams by the value of the groups property.
+     * This function should NOT be called if the groups property is not set or empty (will result in a rejected Promise).
+     *
+     * @todo Implement SelectionGroupMode.OUTSIDE support
+     * @param params The params to multiply out by groups
+     */
+    NetworkAwareVisSelection.prototype.toGroupHttpParams = function (params) {
+        var _this = this;
+        if (params === void 0) { params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"](); }
+        if (!this.groups || !this.groups.length) {
+            return Promise.reject('selection has no SelectionGroups defined');
+        }
+        // to be safe clean out any station_id parameters that might have been set
+        params = this.resetStationIdParams(params);
+        var promises = this.groups.map(function (group) { return _this.getStationIdsForGroup(group)
+            .then(function (ids) {
+            params = ids.reduce(function (params, id, i) { return params.set("station_id[" + i + "]", "" + id); }, params);
+            return ({ group: group, params: params });
+        }); });
+        return Promise.all(promises);
+    };
     __decorate([
         selectionProperty(),
         __metadata("design:type", Array)
     ], NetworkAwareVisSelection.prototype, "networkIds", void 0);
+    __decorate([
+        selectionProperty(),
+        __metadata("design:type", Array)
+    ], NetworkAwareVisSelection.prototype, "groups", void 0);
     return NetworkAwareVisSelection;
 }(VisSelection));
 
@@ -14718,9 +14679,10 @@ function isPolygonBoundarySelection(o) {
  */
 var StationAwareVisSelection = /** @class */ (function (_super) {
     __extends(StationAwareVisSelection, _super);
-    function StationAwareVisSelection(serviceUtils) {
-        var _this = _super.call(this) || this;
+    function StationAwareVisSelection(serviceUtils, networkService) {
+        var _this = _super.call(this, networkService) || this;
         _this.serviceUtils = serviceUtils;
+        _this.networkService = networkService;
         _this.stationIds = [];
         return _this;
     }
@@ -14781,8 +14743,15 @@ var StationAwareVisSelection = /** @class */ (function (_super) {
             var predefSelection = b;
             return _this.serviceUtils.cachedGet(_this.serviceUtils.apiUrl('/npn_portal/stations/getStationsForBoundary.json'), __assign({}, baseParams, { boundary_id: predefSelection.id }));
         });
+        // If this selection has an explicit list of stationIds then return them and ignore any
+        // the parent class might supply by virtue of the value of the networkIds property.
+        // It is assumed that if they are set AND the parent has a list of networkIds
+        // that the list of stationIds is a subset of stations within the parent's networks
         if (this.stationIds && this.stationIds.length) {
             promises.push(Promise.resolve(this.stationIds.slice()));
+        }
+        else {
+            promises.push(_super.prototype.getStationIds.call(this));
         }
         return promises;
     };
@@ -14796,10 +14765,16 @@ var StationAwareVisSelection = /** @class */ (function (_super) {
         return _super.prototype.toURLSearchParams.call(this, params)
             .then(function (params) { return _this.personId ? params.set('person_id', "" + _this.personId) : params; })
             .then(function (params) { return _this.groupId ? params.set('group_id', "" + _this.groupId) : params; })
-            .then(function (params) { return _this.getStationIds().then(function (results) {
-            results.forEach(function (id, i) { return params = params.set("station_id[" + i + "]", "" + id); });
-            return params;
-        }); });
+            .then(function (params) {
+            // note: in case the parent's implementation of toURLSearchParams included station_ids parameters we need
+            // to unset them and replace them with any this class generates (which may include or exclude those supplied
+            // by the parent)
+            params = _this.resetStationIdParams(params);
+            return _this.getStationIds().then(function (results) {
+                results.forEach(function (id, i) { return params = params.set("station_id[" + i + "]", "" + id); });
+                return params;
+            });
+        });
     };
     StationAwareVisSelection.prototype.toPOPInput = function (input) {
         var _this = this;
@@ -15396,7 +15371,6 @@ var VisualizationsModule = /** @class */ (function () {
                 _map__WEBPACK_IMPORTED_MODULE_11__["MapVisualizationComponent"],
                 _visualization_download_component__WEBPACK_IMPORTED_MODULE_4__["VisualizationDownloadComponent"],
                 _visualization_component__WEBPACK_IMPORTED_MODULE_13__["VisualizationComponent"],
-                _common_controls__WEBPACK_IMPORTED_MODULE_15__["SpeciesPhenophaseInputComponent"],
                 _common_controls__WEBPACK_IMPORTED_MODULE_15__["YearRangeInputComponent"],
                 _common_controls__WEBPACK_IMPORTED_MODULE_15__["HigherSpeciesPhenophaseInputComponent"],
                 _map__WEBPACK_IMPORTED_MODULE_11__["ExtentControl"], _map__WEBPACK_IMPORTED_MODULE_11__["ExtentDateControl"], _map__WEBPACK_IMPORTED_MODULE_11__["ExtentDoyControl"], _map__WEBPACK_IMPORTED_MODULE_11__["ExtentYearControl"],
@@ -15414,7 +15388,6 @@ var VisualizationsModule = /** @class */ (function () {
                 _clipped_wms_map__WEBPACK_IMPORTED_MODULE_8__["ClippedWmsMapComponent"], _clipped_wms_map__WEBPACK_IMPORTED_MODULE_8__["ClippedWmsMapControl"], _clipped_wms_map__WEBPACK_IMPORTED_MODULE_8__["ClippedWmsMapStatisticsComponent"],
                 _map__WEBPACK_IMPORTED_MODULE_11__["MapVisualizationComponent"],
                 _visualization_component__WEBPACK_IMPORTED_MODULE_13__["VisualizationComponent"],
-                _common_controls__WEBPACK_IMPORTED_MODULE_15__["SpeciesPhenophaseInputComponent"],
                 _common_controls__WEBPACK_IMPORTED_MODULE_15__["HigherSpeciesPhenophaseInputComponent"],
                 _common_controls__WEBPACK_IMPORTED_MODULE_15__["YearRangeInputComponent"],
                 _map__WEBPACK_IMPORTED_MODULE_11__["ExtentControl"],
@@ -15512,21 +15485,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _findings_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./findings.component */ "./src/app/findings.component.ts");
 /* harmony import */ var _resources_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./resources.component */ "./src/app/resources.component.ts");
 /* harmony import */ var _fws_dashboard_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./fws-dashboard.component */ "./src/app/fws-dashboard.component.ts");
-/* harmony import */ var _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./new-visualization-dialog.component */ "./src/app/new-visualization-dialog.component.ts");
-/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/forms */ "../../node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/platform-browser/animations */ "../../node_modules/@angular/platform-browser/fesm5/animations.js");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/material */ "../../node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var _angular_flex_layout__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/flex-layout */ "../../node_modules/@angular/flex-layout/esm5/flex-layout.es5.js");
-/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../environments/environment */ "./src/environments/environment.ts");
-/* harmony import */ var _agm_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @agm/core */ "../../node_modules/@agm/core/index.js");
-/* harmony import */ var ng2_dnd__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ng2-dnd */ "../../node_modules/ng2-dnd/index.js");
+/* harmony import */ var _phenology_trail_partners_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./phenology-trail-partners.component */ "./src/app/phenology-trail-partners.component.ts");
+/* harmony import */ var _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./new-visualization-dialog.component */ "./src/app/new-visualization-dialog.component.ts");
+/* harmony import */ var _refuge_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./refuge-visualization-scope-selection.component */ "./src/app/refuge-visualization-scope-selection.component.ts");
+/* harmony import */ var _pheno_trail_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./pheno-trail-visualization-scope-selection.component */ "./src/app/pheno-trail-visualization-scope-selection.component.ts");
+/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/forms */ "../../node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/platform-browser/animations */ "../../node_modules/@angular/platform-browser/fesm5/animations.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/material */ "../../node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _angular_flex_layout__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/flex-layout */ "../../node_modules/@angular/flex-layout/esm5/flex-layout.es5.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var _agm_core__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @agm/core */ "../../node_modules/@agm/core/index.js");
+/* harmony import */ var ng2_dnd__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ng2-dnd */ "../../node_modules/ng2-dnd/index.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
+
 
 
 
@@ -15557,40 +15536,42 @@ var AppModule = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
             declarations: [
                 _fws_dashboard_component__WEBPACK_IMPORTED_MODULE_7__["FwsDashboardComponent"],
+                _phenology_trail_partners_component__WEBPACK_IMPORTED_MODULE_8__["PhenologyTrailPartnersComponent"],
                 _focal_species_component__WEBPACK_IMPORTED_MODULE_4__["FocalSpeciesComponent"],
                 _findings_component__WEBPACK_IMPORTED_MODULE_5__["FindingsComponent"],
                 _resources_component__WEBPACK_IMPORTED_MODULE_6__["ResourcesComponent"],
-                _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_8__["NewVisualizationBuilderComponent"],
-                _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_8__["VisualizationScopeSelectionComponent"],
-                _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_8__["NewVisualizationDialogComponent"]
+                _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__["NewVisualizationBuilderComponent"],
+                _refuge_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_10__["RefugeVisualizationScopeSelectionComponent"],
+                _pheno_trail_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_11__["PhenoTrailVisualizationScopeSelectionComponent"],
+                _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__["NewVisualizationDialogComponent"]
             ],
             entryComponents: [
-                _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_8__["NewVisualizationDialogComponent"]
+                _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__["NewVisualizationDialogComponent"]
             ],
             imports: [
-                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_11__["BrowserAnimationsModule"],
+                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_14__["BrowserAnimationsModule"],
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
                 _npn_common__WEBPACK_IMPORTED_MODULE_3__["NpnLibModule"],
                 _npn_common__WEBPACK_IMPORTED_MODULE_3__["VisualizationsModule"],
                 _npn_common__WEBPACK_IMPORTED_MODULE_3__["NpnCommonModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClientModule"],
-                _angular_forms__WEBPACK_IMPORTED_MODULE_10__["FormsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__["ReactiveFormsModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatCheckboxModule"], _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatGridListModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatCardModule"], _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatListModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatTooltipModule"], _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatSnackBarModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatDialogModule"], _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatStepperModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatButtonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatRadioModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatProgressSpinnerModule"], _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatSelectModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatInputModule"], _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatFormFieldModule"], _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatTabsModule"], _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatButtonToggleModule"],
-                _angular_flex_layout__WEBPACK_IMPORTED_MODULE_13__["FlexLayoutModule"],
-                _agm_core__WEBPACK_IMPORTED_MODULE_15__["AgmCoreModule"].forRoot({
-                    apiKey: _environments_environment__WEBPACK_IMPORTED_MODULE_14__["environment"].googleMapsApiKey
+                _angular_forms__WEBPACK_IMPORTED_MODULE_13__["FormsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_13__["ReactiveFormsModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatCheckboxModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatGridListModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatCardModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatListModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatTooltipModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatSnackBarModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatDialogModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatStepperModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatButtonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatRadioModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatProgressSpinnerModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatSelectModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatInputModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatFormFieldModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatTabsModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatButtonToggleModule"],
+                _angular_flex_layout__WEBPACK_IMPORTED_MODULE_16__["FlexLayoutModule"],
+                _agm_core__WEBPACK_IMPORTED_MODULE_18__["AgmCoreModule"].forRoot({
+                    apiKey: _environments_environment__WEBPACK_IMPORTED_MODULE_17__["environment"].googleMapsApiKey
                 }),
-                ng2_dnd__WEBPACK_IMPORTED_MODULE_16__["DndModule"].forRoot()
+                ng2_dnd__WEBPACK_IMPORTED_MODULE_19__["DndModule"].forRoot()
             ],
             bootstrap: [_fws_dashboard_component__WEBPACK_IMPORTED_MODULE_7__["FwsDashboardComponent"]],
             providers: [
-                _entity_service__WEBPACK_IMPORTED_MODULE_9__["EntityService"],
+                _entity_service__WEBPACK_IMPORTED_MODULE_12__["EntityService"],
                 { provide: _npn_common__WEBPACK_IMPORTED_MODULE_3__["NPN_BASE_HREF"], useFactory: baseHrefFactory },
                 { provide: _npn_common__WEBPACK_IMPORTED_MODULE_3__["NPN_CONFIGURATION"], useFactory: npnConfigurationFactory }
             ]
@@ -16026,7 +16007,7 @@ var FindingsComponent = /** @class */ (function () {
     FindingsComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'fws-dashboard-findings',
-            template: "\n<mat-list *ngIf=\"adminMode\" class=\"new-vis-list\">\n  <div>\n    <button mat-icon-button (click)=\"toggleAdminMode()\" class=\"toggle-admin-mode\"><i class=\"fa fa-2x fa-times-circle\" aria-hidden=\"true\"></i></button>\n    <p>Click and drag the visualizations below onto your Refuge Dashboard. You can have up to 10 visualizations on your Dashboard at one time. You can have multiple versions of each visualization type.</p>\n  </div>\n  <mat-list-item class=\"vis-template\"\n                *ngFor=\"let template of visTemplates\"\n                (mouseenter)=\"lookAtVisDrop = true;\" (mouseleave)=\"lookAtVisDrop = false;\"\n                [matTooltip]=\"template.$tooltip\"\n                matTooltipPosition=\"right\"\n                dnd-draggable [dragData]=\"template\"\n                [dropZones]=\"['newvis-dropZone']\">\n    <img class=\"new-vis-thumbnail\" src=\"{{baseHref}}{{template.$thumbnail}}\" />\n  </mat-list-item>\n  <mat-list-item class=\"trash\"\n                matTooltip=\"Drag and drop visualization here to remove\"\n                matTooltipPosition=\"right\"\n                dnd-droppable [dropZones]=\"['trash-dropZone']\"\n                (onDropSuccess)=\"trashVisualization($event)\"></mat-list-item>\n  <mat-list-item class=\"save\">\n    <button mat-icon-button aria-labelled=\"Save\" (click)=\"save()\" [disabled]=\"!isReordered()\" matTooltip=\"Save current visualization order\"><i class=\"fa fa-floppy-o\" aria-hidden=\"true\"></i><span *ngIf=\"isReordered()\">*</span></button>\n  </mat-list-item>\n</mat-list>\n\n<div class=\"visualizations\" *ngIf=\"entity\" dnd-sortable-container [sortableData]=\"entity.selections\" [dropZones]=\"['list-dropZone','trash-dropZone']\" >\n    <mat-card  *ngFor=\"let selection of entity.selections; first as isFirst; let i = index\"\n              dnd-sortable [sortableIndex]=\"i\"\n              [dragEnabled]=\"adminMode\"\n              [dragData]=\"selection\"\n              (onDragStart)=\"dragStart($event)\"\n              (onDropSuccess)=\"reorderVisualizations()\">\n        <div *ngIf=\"!isFirst && !mobileMode\" class=\"cover\" (click)=\"makeCurrent(selection)\">\n            <span class=\"visualization-title\">{{selection.meta.title}} <button *ngIf=\"adminMode\" mat-icon-button (click)=\"editVisualization(selection,$event)\" matTooltip=\"Edit\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></button></span>\n        </div>\n        <div *ngIf=\"isFirst || mobileMode\" class=\"visualization-details\">\n            <div class=\"visualization-title\">{{selection.meta.title}} <button *ngIf=\"adminMode\" mat-icon-button (click)=\"editVisualization(selection,$event)\" matTooltip=\"Edit\"><i class=\"fa fa-pencil fa-2x\" aria-hidden=\"true\"></i></button></div>\n            <p *ngIf=\"selection.meta.description\" class=\"visualization-description\">{{selection.meta.description}}</p>\n        </div>\n        <npn-visualization [selection]=\"selection\" [thumbnail]=\"!mobileMode && i > 0\"></npn-visualization>\n    </mat-card>\n    <mat-card *ngIf=\"adminMode && entity.selections.length < maxVisualizations\"\n        dnd-droppable [dropZones]=\"['newvis-dropZone']\"\n        (onDropSuccess)=\"addVisualization($event)\"\n        [ngClass]=\"{'new-vis-placeholder': true, 'look-at-me': lookAtVisDrop}\"></mat-card>\n</div>\n<button mat-raised-button *ngIf=\"userIsAdmin && !mobileMode && !adminMode && !isTouchDevice\" (click)=\"toggleAdminMode()\"><span class=\"admin-toggle\">Customize</span></button>\n  ",
+            template: "\n<mat-list *ngIf=\"adminMode\" class=\"new-vis-list\">\n  <div>\n    <button mat-icon-button (click)=\"toggleAdminMode()\" class=\"toggle-admin-mode\"><i class=\"fa fa-2x fa-times-circle\" aria-hidden=\"true\"></i></button>\n    <p>Click and drag the visualizations below onto your Dashboard. You can have up to 10 visualizations on your Dashboard at one time. You can have multiple versions of each visualization type.</p>\n  </div>\n  <mat-list-item class=\"vis-template\"\n                *ngFor=\"let template of visTemplates\"\n                (mouseenter)=\"lookAtVisDrop = true;\" (mouseleave)=\"lookAtVisDrop = false;\"\n                [matTooltip]=\"template.$tooltip\"\n                matTooltipPosition=\"right\"\n                dnd-draggable [dragData]=\"template\"\n                [dropZones]=\"['newvis-dropZone']\">\n    <img class=\"new-vis-thumbnail\" src=\"{{baseHref}}{{template.$thumbnail}}\" />\n  </mat-list-item>\n  <mat-list-item class=\"trash\"\n                matTooltip=\"Drag and drop visualization here to remove\"\n                matTooltipPosition=\"right\"\n                dnd-droppable [dropZones]=\"['trash-dropZone']\"\n                (onDropSuccess)=\"trashVisualization($event)\"></mat-list-item>\n  <mat-list-item class=\"save\">\n    <button mat-icon-button aria-labelled=\"Save\" (click)=\"save()\" [disabled]=\"!isReordered()\" matTooltip=\"Save current visualization order\"><i class=\"fa fa-floppy-o\" aria-hidden=\"true\"></i><span *ngIf=\"isReordered()\">*</span></button>\n  </mat-list-item>\n</mat-list>\n\n<div class=\"visualizations\" *ngIf=\"entity\" dnd-sortable-container [sortableData]=\"entity.selections\" [dropZones]=\"['list-dropZone','trash-dropZone']\" >\n    <mat-card  *ngFor=\"let selection of entity.selections; first as isFirst; let i = index\"\n              dnd-sortable [sortableIndex]=\"i\"\n              [dragEnabled]=\"adminMode\"\n              [dragData]=\"selection\"\n              (onDragStart)=\"dragStart($event)\"\n              (onDropSuccess)=\"reorderVisualizations()\">\n        <div *ngIf=\"!isFirst && !mobileMode\" class=\"cover\" (click)=\"makeCurrent(selection)\">\n            <span class=\"visualization-title\">{{selection.meta.title}} <button *ngIf=\"adminMode\" mat-icon-button (click)=\"editVisualization(selection,$event)\" matTooltip=\"Edit\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></button></span>\n        </div>\n        <div *ngIf=\"isFirst || mobileMode\" class=\"visualization-details\">\n            <div class=\"visualization-title\">{{selection.meta.title}} <button *ngIf=\"adminMode\" mat-icon-button (click)=\"editVisualization(selection,$event)\" matTooltip=\"Edit\"><i class=\"fa fa-pencil fa-2x\" aria-hidden=\"true\"></i></button></div>\n            <p *ngIf=\"selection.meta.description\" class=\"visualization-description\">{{selection.meta.description}}</p>\n        </div>\n        <npn-visualization [selection]=\"selection\" [thumbnail]=\"!mobileMode && i > 0\"></npn-visualization>\n    </mat-card>\n    <mat-card *ngIf=\"adminMode && entity.selections.length < maxVisualizations\"\n        dnd-droppable [dropZones]=\"['newvis-dropZone']\"\n        (onDropSuccess)=\"addVisualization($event)\"\n        [ngClass]=\"{'new-vis-placeholder': true, 'look-at-me': lookAtVisDrop}\"></mat-card>\n</div>\n<button mat-raised-button *ngIf=\"userIsAdmin && !mobileMode && !adminMode && !isTouchDevice\" (click)=\"toggleAdminMode()\"><span class=\"admin-toggle\">Customize</span></button>\n  ",
             styles: [__webpack_require__(/*! ./findings.component.scss */ "./src/app/findings.component.scss")],
             encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None
         }),
@@ -16198,7 +16179,7 @@ var FwsDashboardComponent = /** @class */ (function () {
     FwsDashboardComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'fws-dashboard',
-            template: "\n  <mat-tab-group [ngClass]=\"{'entity-dashboard-tabs':true, 'three-tabs': !supportsPartners}\" (selectedTabChange)=\"selectedTabChange($event)\">\n    <mat-tab label=\"What we're finding\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label findings\">\n                <label>What we're finding</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderVisualizations\">\n            <fws-dashboard-findings *ngIf=\"entity\" [entity]=\"entity\" [userIsAdmin]=\"userIsAdmin\"></fws-dashboard-findings>\n        </div>\n    </mat-tab>\n\n    <mat-tab label=\"Focal Species\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label focal-species\">\n                <label>Focal Species</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderFocalSpecies\">\n            <focal-species [entity]=\"entity\"></focal-species>\n        </div>\n    </mat-tab>\n\n    <mat-tab label=\"Resources for observers\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label resources\">\n                <label>Resources for observers</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderResources\">\n            <fws-dashboard-resources [entity]=\"entity\" [userIsLoggedIn]=\"userIsLoggedIn\"></fws-dashboard-resources>\n        </div>\n    </mat-tab>\n\n    <mat-tab label=\"Resources for observers\" *ngIf=\"supportsPartners\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label resources\">\n                <label>Partners</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderPartners\">\n            TODO partners implementation\n        </div>\n    </mat-tab>\n  </mat-tab-group>\n  ",
+            template: "\n  <mat-tab-group [ngClass]=\"{'entity-dashboard-tabs':true, 'three-tabs': !supportsPartners}\" (selectedTabChange)=\"selectedTabChange($event)\">\n    <mat-tab label=\"What we're finding\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label findings\">\n                <label>What we're finding</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderVisualizations\">\n            <fws-dashboard-findings *ngIf=\"entity\" [entity]=\"entity\" [userIsAdmin]=\"userIsAdmin\"></fws-dashboard-findings>\n        </div>\n    </mat-tab>\n\n    <mat-tab label=\"Focal Species\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label focal-species\">\n                <label>Focal Species</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderFocalSpecies\">\n            <focal-species [entity]=\"entity\"></focal-species>\n        </div>\n    </mat-tab>\n\n    <mat-tab label=\"Resources for observers\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label resources\">\n                <label>Resources for observers</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderResources\">\n            <fws-dashboard-resources [entity]=\"entity\" [userIsLoggedIn]=\"userIsLoggedIn\"></fws-dashboard-resources>\n        </div>\n    </mat-tab>\n\n    <mat-tab label=\"Resources for observers\" *ngIf=\"supportsPartners\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label resources\">\n                <label>Partners</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderPartners\">\n        <phenology-trail-partners [entity]=\"entity\"></phenology-trail-partners>\n        </div>\n    </mat-tab>\n  </mat-tab-group>\n  ",
             styles: [__webpack_require__(/*! ./fws-dashboard.component.scss */ "./src/app/fws-dashboard.component.scss")],
             encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None
         }),
@@ -16216,14 +16197,13 @@ var FwsDashboardComponent = /** @class */ (function () {
 /*!*******************************************************!*\
   !*** ./src/app/new-visualization-dialog.component.ts ***!
   \*******************************************************/
-/*! exports provided: NewVisualizationDialogComponent, NewVisualizationBuilderComponent, VisualizationScopeSelectionComponent */
+/*! exports provided: NewVisualizationDialogComponent, NewVisualizationBuilderComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NewVisualizationDialogComponent", function() { return NewVisualizationDialogComponent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NewVisualizationBuilderComponent", function() { return NewVisualizationBuilderComponent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VisualizationScopeSelectionComponent", function() { return VisualizationScopeSelectionComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/material */ "../../node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "../../node_modules/@angular/forms/fesm5/forms.js");
@@ -16251,6 +16231,7 @@ var NewVisualizationDialogComponent = /** @class */ (function () {
         this.formBuilder = formBuilder;
         this.dialogRef = dialogRef;
         this.data = data;
+        this.mode = _entity_service__WEBPACK_IMPORTED_MODULE_3__["DashboardModeState"].get();
         this.step1FormGroup = this.formBuilder.group({
             firstCtrl: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]
         });
@@ -16306,10 +16287,14 @@ var NewVisualizationDialogComponent = /** @class */ (function () {
         }
         this.showDetails = $event.selectedIndex === (visIndex + 1);
     };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])('scopeSelection'),
+        __metadata("design:type", Object)
+    ], NewVisualizationDialogComponent.prototype, "scopeSelection", void 0);
     NewVisualizationDialogComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'new-vis-dialog',
-            template: "\n    <!-- for \"station aware\" visualizations display a multi-step process -->\n    <mat-horizontal-stepper (selectionChange)=\"stepChanged($event)\">\n        <mat-step *ngIf=\"stationAware\" [stepControl]=\"step1FormGroup\" label=\"Select sites\">\n            <div class=\"step-wrapper\">\n                <div class=\"step-content\">\n                    <visualization-scope-selection [selection]=\"selection\" [refuge]=\"entity\"></visualization-scope-selection>\n                </div>\n                <div class=\"step-nav\">\n                    <button mat-raised-button (click)=\"dialogRef.close()\">Cancel</button>\n                    <button mat-raised-button matStepperNext>Next</button>\n                </div>\n            </div>\n        </mat-step>\n\n        <mat-step [stepControl]=\"step2FormGroup\" label=\"Build visualization\">\n            <div *ngIf=\"showVis\" class=\"step-wrapper\">\n                <div class=\"step-content\">\n                    <new-visualization-builder [selection]=\"selection\" [entity]=\"entity\"></new-visualization-builder>\n                </div>\n                <div class=\"step-nav\">\n                    <button mat-raised-button (click)=\"dialogRef.close()\">Cancel</button>\n                    <button mat-raised-button *ngIf=\"stationAware\" matStepperPrevious>Back</button>\n                    <button mat-raised-button matStepperNext>Next</button>\n                </div>\n            </div>\n        </mat-step>\n\n        <mat-step [stepControl]=\"step3FormGroup\" label=\"Enter visualization details\">\n            <div *ngIf=\"showDetails\" class=\"step-wrapper\">\n                <div class=\"step-content\">\n                    <mat-form-field class=\"visualization-title\">\n                        <input matInput placeholder=\"Visualization title\" [(ngModel)]=\"selection.meta.title\" required />\n                    </mat-form-field>\n                    <mat-form-field class=\"visualization-description\">\n                        <textarea matInput placeholder=\"Visualization description\" [(ngModel)]=\"selection.meta.description\"></textarea>\n                    </mat-form-field>\n                    <p class=\"step-instructions\">Add a title and a description that will accompany this visualization on your Refuge Dashboard. The description can help explain the visualization to visitors to your Refuge Dashboard, and provide other background information that will assist with interpretation.</p>\n                </div>\n                <div class=\"step-nav\">\n                    <button mat-raised-button (click)=\"dialogRef.close()\">Cancel</button>\n                    <button mat-raised-button matStepperPrevious>Back</button>\n                    <button mat-raised-button (click)=\"dialogRef.close(selection)\" [disabled]=\"!selection.meta.title || !selection.isValid()\">{{edit ? 'Save' : 'Add'}}</button>\n                </div>\n            </div>\n        </mat-step>\n    </mat-horizontal-stepper>\n    ",
+            template: "\n    <!-- for \"station aware\" visualizations display a multi-step process -->\n    <mat-horizontal-stepper (selectionChange)=\"stepChanged($event)\">\n        <mat-step *ngIf=\"stationAware\" [stepControl]=\"step1FormGroup\" label=\"Select sites\">\n            <div class=\"step-wrapper\">\n                <div class=\"step-content\">\n                    <refuge-visualization-scope-selection *ngIf=\"mode === 'refuge'\" [selection]=\"selection\" [refuge]=\"entity\" #scopeSelection></refuge-visualization-scope-selection>\n                    <pheno-trail-visualization-scope-selection *ngIf=\"mode === 'phenology_trail'\" [selection]=\"selection\" [phenoTrail]=\"entity\" #scopeSelection></pheno-trail-visualization-scope-selection>\n                </div>\n                <div class=\"step-nav\">\n                    <button mat-raised-button (click)=\"dialogRef.close()\">Cancel</button>\n                    <button mat-raised-button matStepperNext [disabled]=\"!!scopeSelection && !scopeSelection.valid\">Next</button>\n                </div>\n            </div>\n        </mat-step>\n\n        <mat-step [stepControl]=\"step2FormGroup\" label=\"Build visualization\">\n            <div *ngIf=\"showVis\" class=\"step-wrapper\">\n                <div class=\"step-content\">\n                    <new-visualization-builder [selection]=\"selection\" [entity]=\"entity\"></new-visualization-builder>\n                </div>\n                <div class=\"step-nav\">\n                    <button mat-raised-button (click)=\"dialogRef.close()\">Cancel</button>\n                    <button mat-raised-button *ngIf=\"stationAware\" matStepperPrevious>Back</button>\n                    <button mat-raised-button matStepperNext [disabled]=\"!selection.isValid()\">Next</button>\n                </div>\n            </div>\n        </mat-step>\n\n        <mat-step [stepControl]=\"step3FormGroup\" label=\"Enter visualization details\">\n            <div *ngIf=\"showDetails\" class=\"step-wrapper\">\n                <div class=\"step-content\">\n                    <mat-form-field class=\"visualization-title\">\n                        <input matInput placeholder=\"Visualization title\" [(ngModel)]=\"selection.meta.title\" required />\n                    </mat-form-field>\n                    <mat-form-field class=\"visualization-description\">\n                        <textarea matInput placeholder=\"Visualization description\" [(ngModel)]=\"selection.meta.description\"></textarea>\n                    </mat-form-field>\n                    <p class=\"step-instructions\">Add a title and a description that will accompany this visualization on your Refuge Dashboard. The description can help explain the visualization to visitors to your Refuge Dashboard, and provide other background information that will assist with interpretation.</p>\n                </div>\n                <div class=\"step-nav\">\n                    <button mat-raised-button (click)=\"dialogRef.close()\">Cancel</button>\n                    <button mat-raised-button matStepperPrevious>Back</button>\n                    <button mat-raised-button (click)=\"dialogRef.close(selection)\" [disabled]=\"!selection.meta.title || !selection.isValid()\">{{edit ? 'Save' : 'Add'}}</button>\n                </div>\n            </div>\n        </mat-step>\n    </mat-horizontal-stepper>\n    ",
             styles: ["\n        mat-horizontal-stepper {\n            height: 100%;\n        }\n        /* ViewEncapsulation.None\n           75px is slightly larger than the stepper header\n        */\n        .mat-horizontal-content-container {\n            height: calc(100% - 75px);\n        }\n        .mat-horizontal-content-container .mat-horizontal-stepper-content {\n            height: 100%;\n        }\n        .step-wrapper {\n            height: 100%;\n        }\n        .step-nav {\n            padding: 5px;\n            height: 46px;\n        }\n        .step-content {\n            height: calc(100% - 46px);\n            overflow-y: auto;\n        }\n\n        .step-nav >button {\n            margin-right: 5px;\n        }\n\n        .visualization-title,\n        .visualization-description {\n            display: block;\n            width: 100%;\n        }\n        .visualization-description textarea {\n            height: 5em;\n        }\n        .step-instructions {\n            color: #666;\n            font-size: 0.95em;\n            margin-top: 20px;\n        }\n    "],
             encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None
         }),
@@ -16359,24 +16344,265 @@ var NewVisualizationBuilderComponent = /** @class */ (function () {
     NewVisualizationBuilderComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'new-visualization-builder',
-            template: "\n    <activity-curves-control  *ngIf=\"activity\" [selection]=\"activity\"></activity-curves-control>\n    <scatter-plot-control *ngIf=\"scatter\" [selection]=\"scatter\"></scatter-plot-control>\n    <calendar-control *ngIf=\"calendar\" [selection]=\"calendar\"></calendar-control>\n    <observer-activity-control *ngIf=\"observer\" [selection]=\"observer\"></observer-activity-control>\n    <observation-frequency-control *ngIf=\"observationFreq\" [selection]=\"observationFreq\"></observation-frequency-control>\n    <clipped-wms-map-control *ngIf=\"clipped\" [selection]=\"clipped\"></clipped-wms-map-control>\n\n    <npn-visualization *ngIf=\"selection\" [selection]=\"selection\"></npn-visualization>\n    <pre *ngIf=\"selection\">{{selection.external | json}}</pre>\n    ",
+            template: "\n    <activity-curves-control  *ngIf=\"activity\" [selection]=\"activity\"></activity-curves-control>\n    <scatter-plot-control *ngIf=\"scatter\" [selection]=\"scatter\"></scatter-plot-control>\n    <calendar-control *ngIf=\"calendar\" [selection]=\"calendar\"></calendar-control>\n    <observer-activity-control *ngIf=\"observer\" [selection]=\"observer\"></observer-activity-control>\n    <observation-frequency-control *ngIf=\"observationFreq\" [selection]=\"observationFreq\"></observation-frequency-control>\n    <clipped-wms-map-control *ngIf=\"clipped\" [selection]=\"clipped\"></clipped-wms-map-control>\n\n    <npn-visualization *ngIf=\"selection\" [selection]=\"selection\"></npn-visualization>\n    <!--pre *ngIf=\"selection\">{{selection.external | json}}</pre-->\n    ",
             styles: ["\n        npn-visualization {\n            margin-top: 20px;\n            width: 90%; // within stepper o/w horizontal scroll\n        }\n    "]
         })
     ], NewVisualizationBuilderComponent);
     return NewVisualizationBuilderComponent;
 }());
 
-// TODO this component is refuge specific
-var VisualizationScopeSelectionComponent = /** @class */ (function () {
-    function VisualizationScopeSelectionComponent(networkService) {
+
+
+/***/ }),
+
+/***/ "./src/app/pheno-trail-visualization-scope-selection.component.ts":
+/*!************************************************************************!*\
+  !*** ./src/app/pheno-trail-visualization-scope-selection.component.ts ***!
+  \************************************************************************/
+/*! exports provided: PhenoTrailVisualizationScopeSelectionComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhenoTrailVisualizationScopeSelectionComponent", function() { return PhenoTrailVisualizationScopeSelectionComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
+/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var PhenoTrailVisualizationScopeSelectionComponent = /** @class */ (function () {
+    function PhenoTrailVisualizationScopeSelectionComponent() {
+    }
+    Object.defineProperty(PhenoTrailVisualizationScopeSelectionComponent.prototype, "valid", {
+        get: function () {
+            return true;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", _npn_common__WEBPACK_IMPORTED_MODULE_1__["StationAwareVisSelection"])
+    ], PhenoTrailVisualizationScopeSelectionComponent.prototype, "selection", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", _entity_service__WEBPACK_IMPORTED_MODULE_2__["PhenologyTrail"])
+    ], PhenoTrailVisualizationScopeSelectionComponent.prototype, "phenoTrail", void 0);
+    PhenoTrailVisualizationScopeSelectionComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'pheno-trail-visualization-scope-selection',
+            template: "\n    TODO\n    "
+        })
+    ], PhenoTrailVisualizationScopeSelectionComponent);
+    return PhenoTrailVisualizationScopeSelectionComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/phenology-trail-partners.component.scss":
+/*!*********************************************************!*\
+  !*** ./src/app/phenology-trail-partners.component.scss ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "agm-map {\n  height: 500px; }\n\n.in-info-window {\n  width: 60px;\n  height: 60px;\n  padding: 20px; }\n\n.info-window-card {\n  max-width: 400px; }\n\n.info-window-card h3 {\n    font-weight: 400;\n    font-size: 2em;\n    text-align: center;\n    margin-bottom: 0;\n    line-height: 1em; }\n\n.info-window-card h4 {\n    text-align: center;\n    font-size: 1.4em;\n    margin-top: 0;\n    margin-bottom: 12px;\n    line-height: 1.5em;\n    font-weight: 200; }\n\n.info-window-card ul {\n    margin-top: 0;\n    margin-bottom: 6px;\n    display: flex;\n    justify-content: space-between; }\n\n.info-window-card ul li {\n      width: 170px;\n      margin: 10px auto;\n      list-style: none;\n      text-align: center; }\n\n.info-window-card ul li h3 {\n        line-height: 1em; }\n\n.map-legend {\n  padding: 20px; }\n\n.map-legend h3 {\n    font-size: 2em;\n    line-height: 1em;\n    margin-bottom: 20px; }\n\n.map-legend ul li {\n    margin-bottom: 0;\n    line-height: .5em;\n    list-style: none; }\n\n.map-legend ul li div.legend-box {\n      width: 14px;\n      height: 14px;\n      display: inline-block;\n      margin-right: 10px; }\n"
+
+/***/ }),
+
+/***/ "./src/app/phenology-trail-partners.component.ts":
+/*!*******************************************************!*\
+  !*** ./src/app/phenology-trail-partners.component.ts ***!
+  \*******************************************************/
+/*! exports provided: PhenologyTrailPartnersComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhenologyTrailPartnersComponent", function() { return PhenologyTrailPartnersComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
+/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
+/* harmony import */ var _agm_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @agm/core */ "../../node_modules/@agm/core/index.js");
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! d3 */ "../../node_modules/d3/index.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+var PhenologyTrailPartnersComponent = /** @class */ (function () {
+    function PhenologyTrailPartnersComponent(networkService, stationService, mapsAPILoader) {
+        this.networkService = networkService;
+        this.stationService = stationService;
+        this.mapsAPILoader = mapsAPILoader;
+        this.itemPluralMapping = {
+            'record': {
+                '=0': 'Records',
+                '=1': 'Record',
+                'other': 'Records'
+            },
+            'individual': {
+                '=0': 'Individuals',
+                '=1': 'Individual',
+                'other': 'Individuals'
+            }
+        };
+        this.mapStyles = _npn_common__WEBPACK_IMPORTED_MODULE_2__["MAP_STYLES"];
+    }
+    PhenologyTrailPartnersComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        // map of network_id to a color
+        var colorMap = this.entity.network_ids.reduce(function (map, id, i) {
+            var color = Object(_npn_common__WEBPACK_IMPORTED_MODULE_2__["getStaticColor"])(i);
+            var outline = d3__WEBPACK_IMPORTED_MODULE_4__["color"](color).darker().toString();
+            map["" + id] = { color: color, outline: outline };
+            return map;
+        }, {});
+        var mapColors = function (list) { return list.map(function (o) {
+            o.colors = colorMap["" + o.network_id];
+            return o;
+        }); };
+        this.networks = this.networkService.getNetworks(this.entity.network_ids).then(mapColors);
+        this.stations = this.networkService.getStations(this.entity.network_ids).then(mapColors).then(function (stations) {
+            return _this.mapsAPILoader.load().then(function () {
+                stations.forEach(function (station) {
+                    station.icon = _this.newGoogleMapsSymbol(station);
+                });
+                return stations;
+            });
+        });
+    };
+    PhenologyTrailPartnersComponent.prototype.ngAfterViewInit = function () {
+        var _this = this;
+        //cycle through the map elements and get the center position of the map
+        this.agmMap.mapReady.subscribe(function (map) {
+            _this.map = map;
+            _this.stations.then(function (stations) {
+                var bounds = new google.maps.LatLngBounds();
+                for (var _i = 0, stations_1 = stations; _i < stations_1.length; _i++) {
+                    var mm = stations_1[_i];
+                    bounds.extend(new google.maps.LatLng(mm.latitude, mm.longitude));
+                }
+                _this.bounds = bounds;
+                _this.resize();
+            });
+        });
+    };
+    PhenologyTrailPartnersComponent.prototype.resize = function () {
+        if (this.map && this.bounds) {
+            this.map.fitBounds(this.bounds);
+        }
+    };
+    /**
+     * Get the station information for display in the agm-info-window
+     * @param selectedStation - The station that is selected. Needs latitude, longitude, and station_id
+     */
+    PhenologyTrailPartnersComponent.prototype.selectMarker = function (selectedStation) {
+        var _this = this;
+        this.selectedStation = selectedStation;
+        this.stationService.getStation(selectedStation.station_id).then(function (station) { return _this.stationInfo = station; });
+    };
+    PhenologyTrailPartnersComponent.prototype.newGoogleMapsSymbol = function (station) {
+        return {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 7,
+            fillOpacity: 1,
+            fillColor: station.colors.color,
+            strokeColor: station.colors.outline,
+            strokeWeight: 1
+        };
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])('AgmMap'),
+        __metadata("design:type", _agm_core__WEBPACK_IMPORTED_MODULE_3__["AgmMap"])
+    ], PhenologyTrailPartnersComponent.prototype, "agmMap", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", _entity_service__WEBPACK_IMPORTED_MODULE_1__["PhenologyTrail"])
+    ], PhenologyTrailPartnersComponent.prototype, "entity", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["HostListener"])('window:resize'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], PhenologyTrailPartnersComponent.prototype, "resize", null);
+    PhenologyTrailPartnersComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'phenology-trail-partners',
+            template: "\n  <agm-map #AgmMap [streetViewControl]=\"false\" [scrollwheel]=\"false\" [styles]=\"mapStyles\">\n    <agm-marker\n        *ngFor=\"let station of stations | async; let i = index\"\n        [latitude]=\"station.latitude\"\n        [longitude]=\"station.longitude\"\n        [iconUrl]=\"station.icon\"\n        (markerClick)=\"selectMarker(station)\"\n    ></agm-marker>\n    <agm-info-window [isOpen]=\"!!selectedStation\" (infoWindowClose)=\"selectedStation = stationInfo = null\"\n    [latitude]=\"selectedStation?.latitude\" [longitude]=\"selectedStation?.longitude\">\n        <npn-logo class=\"in-info-window\" spin=\"true\" *ngIf=\"!stationInfo\"></npn-logo>\n        <div class=\"info-window-card\" *ngIf=\"stationInfo\">\n            <h3>{{stationInfo.site_name}}</h3>\n            <h4>{{stationInfo.group_name}}</h4>\n            <ul>\n                <li><h3>{{stationInfo.num_individuals}}</h3> {{stationInfo.num_individuals | i18nPlural: itemPluralMapping['individual'] }}</li>\n                <li><h3>{{stationInfo.num_records}}</h3> {{stationInfo.num_records | i18nPlural: itemPluralMapping['record']}}</li>\n            </ul>\n        </div>\n    </agm-info-window>\n    \n  </agm-map>\n  <div class=\"map-legend\">\n    <h3>Legend</h3>\n    <ul>\n        <ng-container *ngFor=\"let network of networks | async; let i = index\">\n            <li *ngIf=\"!!network\"><div class=\"legend-box\" [style.background-color]=\"network.colors?.color\"></div> {{network.name}}</li>\n        </ng-container>\n    </ul>\n  </div>\n  ",
+            styles: [__webpack_require__(/*! ./phenology-trail-partners.component.scss */ "./src/app/phenology-trail-partners.component.scss")]
+        }),
+        __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_2__["NetworkService"],
+            _npn_common__WEBPACK_IMPORTED_MODULE_2__["StationService"],
+            _agm_core__WEBPACK_IMPORTED_MODULE_3__["MapsAPILoader"]])
+    ], PhenologyTrailPartnersComponent);
+    return PhenologyTrailPartnersComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/refuge-visualization-scope-selection.component.ts":
+/*!*******************************************************************!*\
+  !*** ./src/app/refuge-visualization-scope-selection.component.ts ***!
+  \*******************************************************************/
+/*! exports provided: RefugeVisualizationScopeSelectionComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RefugeVisualizationScopeSelectionComponent", function() { return RefugeVisualizationScopeSelectionComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
+/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
+/* harmony import */ var _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @npn/common/visualizations/vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var RefugeVisualizationScopeSelectionComponent = /** @class */ (function () {
+    function RefugeVisualizationScopeSelectionComponent(networkService) {
         this.networkService = networkService;
         this.visScope = 'refuge';
         this.stationFetch = false;
     }
-    VisualizationScopeSelectionComponent.prototype.scopeChanged = function () {
+    RefugeVisualizationScopeSelectionComponent.prototype.scopeChanged = function () {
         var _this = this;
-        this.selection.networkIds = [];
-        this.selection.stationIds = [];
+        // reset to a clean slate
+        delete this.selection.networkIds;
+        delete this.selection.stationIds;
+        delete this.selection.groups;
         switch (this.visScope) {
             case 'all':
                 break;
@@ -16384,43 +16610,72 @@ var VisualizationScopeSelectionComponent = /** @class */ (function () {
                 this.selection.networkIds = [this.refuge.network_id];
                 break;
             case 'station':
+            case 'stationGroup':
+            case 'outsideGroup':
                 this.selection.networkIds = [this.refuge.network_id];
-                if (!this.stations) {
+                if (!this._stations) {
                     this.stationFetch = true;
-                    this.networkService.getStations(this.refuge.network_id)
+                    this._stations = this.networkService.getStations(this.refuge.network_id)
                         .then(function (stations) {
-                        stations.forEach(function (s) { return s.selected = true; });
-                        _this.stations = stations;
                         _this.stationFetch = false;
-                    })
-                        .catch(function (e) {
-                        _this.stationFetch = false;
-                        console.error(e);
+                        return stations;
                     });
+                }
+                this._stations.then(function (stations) {
+                    // all selected for station mode and all de-selected for stationGroup mode
+                    stations.forEach(function (s) { return s.selected = _this.visScope === 'station'; });
+                    _this.stations = stations;
+                });
+                if (this.visScope === 'outsideGroup') {
+                    // TODO populate selection.groups
                 }
                 break;
         }
     };
-    VisualizationScopeSelectionComponent.prototype.stationChange = function () {
-        this.selection.stationIds = this.stations.filter(function (s) { return s.selected; }).map(function (s) { return s.station_id; });
+    RefugeVisualizationScopeSelectionComponent.prototype.stationChange = function () {
+        switch (this.visScope) {
+            case 'station':
+                this.selection.stationIds = this.stations.filter(function (s) { return s.selected; }).map(function (s) { return s.station_id; });
+                break;
+            case 'stationGroup':
+                var mode_1 = _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].STATION;
+                this.selection.groups = this.stations
+                    .filter(function (s) { return s.selected; })
+                    .map(function (s) {
+                    var label = s.station_name;
+                    var id = s.station_id;
+                    return { mode: mode_1, id: id, label: label };
+                });
+                break;
+            case 'outsideGroup':
+                // TODO
+                break;
+        }
     };
+    Object.defineProperty(RefugeVisualizationScopeSelectionComponent.prototype, "valid", {
+        get: function () {
+            return this.visScope !== 'stationGroup' || !!(this.selection.groups && this.selection.groups.length);
+        },
+        enumerable: true,
+        configurable: true
+    });
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _npn_common__WEBPACK_IMPORTED_MODULE_4__["VisSelection"])
-    ], VisualizationScopeSelectionComponent.prototype, "selection", void 0);
+        __metadata("design:type", _npn_common__WEBPACK_IMPORTED_MODULE_2__["StationAwareVisSelection"])
+    ], RefugeVisualizationScopeSelectionComponent.prototype, "selection", void 0);
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _entity_service__WEBPACK_IMPORTED_MODULE_3__["Refuge"])
-    ], VisualizationScopeSelectionComponent.prototype, "refuge", void 0);
-    VisualizationScopeSelectionComponent = __decorate([
+        __metadata("design:type", _entity_service__WEBPACK_IMPORTED_MODULE_1__["Refuge"])
+    ], RefugeVisualizationScopeSelectionComponent.prototype, "refuge", void 0);
+    RefugeVisualizationScopeSelectionComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'visualization-scope-selection',
-            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <!--mat-radio-button class=\"vis-scope-radio\" [value]=\"'all'\">No restrictions</mat-radio-button-->\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'refuge'\">Show data for all sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'station'\">Show data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n    </mat-radio-group>\n    <mat-progress-spinner *ngIf=\"stationFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"visScope === 'station' && stations && stations.length\">\n        <mat-checkbox *ngFor=\"let s of stations\" class=\"station-input\" [(ngModel)]=\"s.selected\" (change)=\"stationChange()\">{{s.station_name}}</mat-checkbox>\n    </div>\n    <pre *ngIf=\"selection\">{{selection.external | json}}</pre>\n    ",
-            styles: ["\n        .vis-scope-input {\n          display: inline-flex;\n          flex-direction: column;\n        }\n        .vis-scope-radio {\n          margin: 5px;\n        }\n        .station-input {\n            display: block;\n        }\n    "]
+            selector: 'refuge-visualization-scope-selection',
+            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <!--mat-radio-button class=\"vis-scope-radio\" [value]=\"'all'\">No restrictions</mat-radio-button-->\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'refuge'\">Show data for all sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'station'\">Show data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'stationGroup'\">Compare data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n    </mat-radio-group>\n    <mat-progress-spinner *ngIf=\"stationFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"(visScope === 'station' || visScope === 'stationGroup')\">\n        <mat-checkbox *ngFor=\"let s of stations\" class=\"station-input\" [(ngModel)]=\"s.selected\" (change)=\"stationChange()\">{{s.station_name}}</mat-checkbox>\n    </div>\n    <!--pre *ngIf=\"selection\">{{selection.external | json}}</pre-->\n    ",
+            styles: ["\n        .vis-scope-input {\n          display: inline-flex;\n          flex-direction: column;\n        }\n        .vis-scope-radio {\n          margin: 5px;\n        }\n        .station-input {\n            display: block;\n            padding-left: 34px;\n        }\n    "]
         }),
-        __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_4__["NetworkService"]])
-    ], VisualizationScopeSelectionComponent);
-    return VisualizationScopeSelectionComponent;
+        __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_2__["NetworkService"]])
+    ], RefugeVisualizationScopeSelectionComponent);
+    return RefugeVisualizationScopeSelectionComponent;
 }());
 
 
