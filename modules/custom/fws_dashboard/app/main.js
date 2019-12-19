@@ -6435,6 +6435,7 @@ var CurveControlComponent = /** @class */ (function (_super) {
     });
     CurveControlComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.selection.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["filter"])(function (event) { return event === "scope_change" /* SCOPE_CHANGE */; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["debounceTime"])(500), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["takeUntil"])(this.componentDestroyed)).subscribe(function () { return _this.updateCriteria(); });
         this.yearControl = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"](this.curve.year, /*Validators.required*/ function (c) {
             if (_this.required && !c.value) {
                 return {
@@ -7866,6 +7867,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CalendarControlComponent", function() { return CalendarControlComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _calendar_selection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./calendar-selection */ "../npn/common/src/lib/visualizations/calendar/calendar-selection.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "../../node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _npn_common_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @npn/common/common */ "../npn/common/src/lib/common/index.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7877,6 +7890,8 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
+
 var THIS_YEAR = (new Date()).getFullYear();
 var VALID_YEARS = (function () {
     var max = THIS_YEAR + 1, current = 1900, years = [];
@@ -7885,9 +7900,12 @@ var VALID_YEARS = (function () {
     }
     return years;
 })();
-var CalendarControlComponent = /** @class */ (function () {
+var CalendarControlComponent = /** @class */ (function (_super) {
+    __extends(CalendarControlComponent, _super);
     function CalendarControlComponent() {
-        this.maxYears = 5;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.maxYears = 5;
+        return _this;
     }
     CalendarControlComponent.prototype.selectableYears = function (y) {
         var _this = this;
@@ -7901,6 +7919,7 @@ var CalendarControlComponent = /** @class */ (function () {
     };
     CalendarControlComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.selection.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["filter"])(function (event) { return event === "scope_change" /* SCOPE_CHANGE */; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["debounceTime"])(500), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["takeUntil"])(this.componentDestroyed)).subscribe(function () { return _this.updateCriteria(); });
         if (this.selection.years.length === 0) {
             this.addYear();
         }
@@ -7961,7 +7980,7 @@ var CalendarControlComponent = /** @class */ (function () {
         })
     ], CalendarControlComponent);
     return CalendarControlComponent;
-}());
+}(_npn_common_common__WEBPACK_IMPORTED_MODULE_3__["MonitorsDestroy"]));
 
 
 
@@ -9368,7 +9387,7 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
         });
         // whenever species changes go update the available phenophases/classes
         // TODO deal with station_ids?
-        var $phenophaseTaxInfo = Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["combineLatest"])(this.species.valueChanges, this.criteriaUpdate).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function () { return _this.fetchingPhenophaseList = true; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["switchMap"])(function (input) {
+        var $phenophaseTaxInfo = Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["combineLatest"])(this.species.valueChanges, this.criteriaUpdate.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["debounceTime"])(500))).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function () { return _this.fetchingPhenophaseList = true; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["switchMap"])(function (input) {
             console.log('$phenophaseTaxInfo.input', input);
             var species = input[0], criteria = input[1];
             return !!species && typeof (species) === 'object'
@@ -11649,8 +11668,11 @@ var ObservationDateVisSelection = /** @class */ (function (_super) {
     };
     Object.defineProperty(ObservationDateVisSelection.prototype, "validPlots", {
         get: function () {
+            var _this = this;
             return (this.plots || []).filter(function (p) {
-                return p.color && p.species && p.phenophase;
+                return p.species && p.phenophase &&
+                    // color only required if not grouping
+                    (p.color || (_this.groups && _this.groups.length > 0));
             });
         },
         enumerable: true,
@@ -11712,8 +11734,9 @@ var ObservationDateVisSelection = /** @class */ (function (_super) {
             labels: [],
             data: []
         };
-        data.forEach(function (d, i) {
+        data.forEach(function (d) {
             var plot = d.plot;
+            var group = d.group;
             var rData = d.data;
             var pPhases = { years: {} }; // empty
             var pPhaseKey = plot.phenophaseRank === _common__WEBPACK_IMPORTED_MODULE_2__["TaxonomicPhenophaseRank"].CLASS ? 'pheno_classes' : 'phenophases';
@@ -11728,7 +11751,10 @@ var ObservationDateVisSelection = /** @class */ (function (_super) {
                     addDoys(pPhases.years[year].positive, plot.color);
                 }
                 var pp = plot.phenophase;
-                response.labels.splice(0, 0, ' (' + year + '): ' + _this.speciesTitle.transform(plot.species, plot.speciesRank) + ' - ' + (pp.phenophase_name || pp.pheno_class_name));
+                response.labels.splice(0, 0, ' (' + year + '): ' +
+                    (!!group ? " " + group.label + ": " : '') +
+                    _this.speciesTitle.transform(plot.species, plot.speciesRank) +
+                    ' - ' + (pp.phenophase_name || pp.pheno_class_name));
                 y--;
             });
         });
@@ -11744,13 +11770,9 @@ var ObservationDateVisSelection = /** @class */ (function (_super) {
         if (!this.isValid()) {
             return Promise.reject(this.INVALID_SELECTION);
         }
-        this.working = true;
-        var serviceUrl = this.serviceUtils.apiUrl('/npn_portal/observations/getObservationDates.json');
-        return this.toURLSearchParams()
-            // one request per valid plot
-            .then(function (params) { return Promise.all(_this.validPlots.map(function (plot) {
+        var fetchDataForPlot = function (baseParams, plot, group) {
             var keys = Object(_common__WEBPACK_IMPORTED_MODULE_2__["getSpeciesPlotKeys"])(plot);
-            var plotParams = params.set(keys.speciesIdKey + "[0]", "" + plot.species[keys.speciesIdKey])
+            var plotParams = baseParams.set(keys.speciesIdKey + "[0]", "" + plot.species[keys.speciesIdKey])
                 .set(keys.phenophaseIdKey + "[0]", "" + plot.phenophase[keys.phenophaseIdKey]);
             if ((plot.speciesRank || _common__WEBPACK_IMPORTED_MODULE_2__["TaxonomicSpeciesRank"].SPECIES) !== _common__WEBPACK_IMPORTED_MODULE_2__["TaxonomicSpeciesRank"].SPECIES) {
                 plotParams = plotParams.set('taxonomy_aggregate', '1');
@@ -11761,9 +11783,33 @@ var ObservationDateVisSelection = /** @class */ (function (_super) {
             return _this.serviceUtils.cachedPost(serviceUrl, plotParams.toString())
                 .then(function (results) {
                 var data = results[0];
-                return { plot: plot, data: data };
+                return { plot: plot, data: data, group: group };
             });
-        })); })
+        };
+        this.working = true;
+        var serviceUrl = this.serviceUtils.apiUrl('/npn_portal/observations/getObservationDates.json');
+        return this.toURLSearchParams()
+            // one request per valid plot
+            .then(function (baseParams) {
+            var validPlots = _this.validPlots;
+            return (_this.groups && _this.groups.length)
+                ? _this.toGroupHttpParams(baseParams)
+                    .then(function (groupParams) {
+                    var plotIndex = 0;
+                    // just to make TypeScript happy...
+                    var arr = [];
+                    var promises = validPlots.reduce(function (promises, p) {
+                        groupParams.forEach(function (gp) {
+                            var plot = JSON.parse(JSON.stringify(p));
+                            plot.color = Object(_common__WEBPACK_IMPORTED_MODULE_2__["getStaticColor"])(plotIndex++);
+                            promises.push(fetchDataForPlot(gp.params, plot, gp.group));
+                        });
+                        return promises;
+                    }, arr);
+                    return Promise.all(promises);
+                })
+                : Promise.all(validPlots.map(function (plot) { return fetchDataForPlot(baseParams, plot); }));
+        })
             .then(function (result) {
             _this.working = false;
             return result;
@@ -13076,6 +13122,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _scatter_plot_selection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./scatter-plot-selection */ "../npn/common/src/lib/visualizations/scatter-plot/scatter-plot-selection.ts");
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! d3 */ "../../node_modules/d3/index.js");
+/* harmony import */ var _npn_common_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @npn/common/common */ "../npn/common/src/lib/common/index.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "../../node_modules/rxjs/_esm5/operators/index.js");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -13088,12 +13146,18 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
-var ScatterPlotControlsComponent = /** @class */ (function () {
+
+
+var ScatterPlotControlsComponent = /** @class */ (function (_super) {
+    __extends(ScatterPlotControlsComponent, _super);
     function ScatterPlotControlsComponent() {
-        this.axis = _scatter_plot_selection__WEBPACK_IMPORTED_MODULE_1__["AXIS"];
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.axis = _scatter_plot_selection__WEBPACK_IMPORTED_MODULE_1__["AXIS"];
+        return _this;
     }
     ScatterPlotControlsComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.selection.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["filter"])(function (event) { return event === "scope_change" /* SCOPE_CHANGE */; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["debounceTime"])(500), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["takeUntil"])(this.componentDestroyed)).subscribe(function () { return _this.updateCriteria(); });
         if (this.selection.plots.length === 0) {
             this.addPlot();
         }
@@ -13139,7 +13203,7 @@ var ScatterPlotControlsComponent = /** @class */ (function () {
         })
     ], ScatterPlotControlsComponent);
     return ScatterPlotControlsComponent;
-}());
+}(_npn_common_common__WEBPACK_IMPORTED_MODULE_3__["MonitorsDestroy"]));
 
 
 
@@ -13845,7 +13909,7 @@ var SiteOrSummaryVisSelection = /** @class */ (function (_super) {
             }
             return filtered;
         };
-        var fetchDataForPlot = function (baseParams, plot, plotIndex) {
+        var fetchDataForPlot = function (baseParams, plot, plotIndex, group) {
             var keys = Object(_common__WEBPACK_IMPORTED_MODULE_1__["getSpeciesPlotKeys"])(plot);
             var params = baseParams.set(keys.speciesIdKey + "[0]", "" + plot.species[keys.speciesIdKey])
                 .set(keys.phenophaseIdKey + "[0]", "" + plot.phenophase[keys.phenophaseIdKey]);
@@ -13858,7 +13922,7 @@ var SiteOrSummaryVisSelection = /** @class */ (function (_super) {
             params = params.set('climate_data', '1');
             return _this.serviceUtils.cachedPost(url, params.toString())
                 .then(function (data) { return filterLqd(data, plot, plotIndex); })
-                .then(function (data) { return ({ plot: plot, data: data }); });
+                .then(function (data) { return ({ plot: plot, data: data, group: group }); });
         };
         this.working = true;
         return this.toURLSearchParams()
@@ -13873,10 +13937,7 @@ var SiteOrSummaryVisSelection = /** @class */ (function (_super) {
                         validPlots.forEach(function (p) {
                             var plot = JSON.parse(JSON.stringify(p));
                             plot.color = Object(_common__WEBPACK_IMPORTED_MODULE_1__["getStaticColor"])(plotIndex);
-                            promises.push(fetchDataForPlot(gp.params, plot, plotIndex++).then(function (result) {
-                                result.group = gp.group;
-                                return result;
-                            }));
+                            promises.push(fetchDataForPlot(gp.params, plot, plotIndex++, gp.group));
                         });
                         return promises;
                     }, []);
@@ -14554,9 +14615,36 @@ var NetworkAwareVisSelection = /** @class */ (function (_super) {
     function NetworkAwareVisSelection(networkService) {
         var _this = _super.call(this) || this;
         _this.networkService = networkService;
-        _this.networkIds = [];
+        _this._networkIds = [];
         return _this;
     }
+    Object.defineProperty(NetworkAwareVisSelection.prototype, "networkIds", {
+        get: function () {
+            return this._networkIds;
+        },
+        set: function (ids) {
+            this._networkIds = ids;
+            this.emit("scope_change" /* SCOPE_CHANGE */);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(NetworkAwareVisSelection.prototype, "groups", {
+        get: function () {
+            return this._groups;
+        },
+        set: function (groups) {
+            this._groups = groups;
+            this.emit("scope_change" /* SCOPE_CHANGE */);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Fetches the list of station ids associated with a `Selectiongroup`
+     *
+     * @param group The group
+     */
     NetworkAwareVisSelection.prototype.getStationIdsForGroup = function (group) {
         switch (group.mode) {
             case SelectionGroupMode.STATION:
@@ -14653,11 +14741,11 @@ var NetworkAwareVisSelection = /** @class */ (function (_super) {
     __decorate([
         selectionProperty(),
         __metadata("design:type", Array)
-    ], NetworkAwareVisSelection.prototype, "networkIds", void 0);
+    ], NetworkAwareVisSelection.prototype, "_networkIds", void 0);
     __decorate([
         selectionProperty(),
         __metadata("design:type", Array)
-    ], NetworkAwareVisSelection.prototype, "groups", void 0);
+    ], NetworkAwareVisSelection.prototype, "_groups", void 0);
     return NetworkAwareVisSelection;
 }(VisSelection));
 
@@ -14683,9 +14771,20 @@ var StationAwareVisSelection = /** @class */ (function (_super) {
         var _this = _super.call(this, networkService) || this;
         _this.serviceUtils = serviceUtils;
         _this.networkService = networkService;
-        _this.stationIds = [];
+        _this._stationIds = [];
         return _this;
     }
+    Object.defineProperty(StationAwareVisSelection.prototype, "stationIds", {
+        get: function () {
+            return this._stationIds;
+        },
+        set: function (ids) {
+            this._stationIds = ids;
+            this.emit("scope_change" /* SCOPE_CHANGE */);
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(StationAwareVisSelection.prototype, "personId", {
         get: function () {
             return this._personId;
@@ -14797,7 +14896,7 @@ var StationAwareVisSelection = /** @class */ (function (_super) {
     __decorate([
         selectionProperty(),
         __metadata("design:type", Array)
-    ], StationAwareVisSelection.prototype, "stationIds", void 0);
+    ], StationAwareVisSelection.prototype, "_stationIds", void 0);
     __decorate([
         selectionProperty(),
         __metadata("design:type", Array)
@@ -16600,19 +16699,16 @@ var RefugeVisualizationScopeSelectionComponent = /** @class */ (function () {
     RefugeVisualizationScopeSelectionComponent.prototype.scopeChanged = function () {
         var _this = this;
         // reset to a clean slate
-        delete this.selection.networkIds;
-        delete this.selection.stationIds;
-        delete this.selection.groups;
+        this.selection.stationIds = undefined;
+        this.selection.groups = undefined;
         switch (this.visScope) {
-            case 'all':
-                break;
             case 'refuge':
-                this.selection.networkIds = [this.refuge.network_id];
+                // it's always set and doesn't ever need to change
+                // this.selection.networkIds = [this.refuge.network_id];
                 break;
             case 'station':
             case 'stationGroup':
             case 'outsideGroup':
-                this.selection.networkIds = [this.refuge.network_id];
                 if (!this._stations) {
                     this.stationFetch = true;
                     this._stations = this.networkService.getStations(this.refuge.network_id)
@@ -16670,7 +16766,7 @@ var RefugeVisualizationScopeSelectionComponent = /** @class */ (function () {
     RefugeVisualizationScopeSelectionComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'refuge-visualization-scope-selection',
-            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <!--mat-radio-button class=\"vis-scope-radio\" [value]=\"'all'\">No restrictions</mat-radio-button-->\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'refuge'\">Show data for all sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'station'\">Show data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'stationGroup'\">Compare data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n    </mat-radio-group>\n    <mat-progress-spinner *ngIf=\"stationFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"(visScope === 'station' || visScope === 'stationGroup')\">\n        <mat-checkbox *ngFor=\"let s of stations\" class=\"station-input\" [(ngModel)]=\"s.selected\" (change)=\"stationChange()\">{{s.station_name}}</mat-checkbox>\n    </div>\n    <!--pre *ngIf=\"selection\">{{selection.external | json}}</pre-->\n    ",
+            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'refuge'\">Show data for all sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'station'\">Show data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'stationGroup'\">Compare data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n    </mat-radio-group>\n    <mat-progress-spinner *ngIf=\"stationFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"(visScope === 'station' || visScope === 'stationGroup')\">\n        <mat-checkbox *ngFor=\"let s of stations\" class=\"station-input\" [(ngModel)]=\"s.selected\" (change)=\"stationChange()\">{{s.station_name}}</mat-checkbox>\n    </div>\n    <!--pre *ngIf=\"selection\">{{selection.external | json}}</pre-->\n    ",
             styles: ["\n        .vis-scope-input {\n          display: inline-flex;\n          flex-direction: column;\n        }\n        .vis-scope-radio {\n          margin: 5px;\n        }\n        .station-input {\n            display: block;\n            padding-left: 34px;\n        }\n    "]
         }),
         __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_2__["NetworkService"]])
