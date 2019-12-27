@@ -16480,15 +16480,56 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 var PhenoTrailVisualizationScopeSelectionComponent = /** @class */ (function () {
-    function PhenoTrailVisualizationScopeSelectionComponent() {
+    function PhenoTrailVisualizationScopeSelectionComponent(networkService) {
+        this.networkService = networkService;
+        this.visScope = 'allGroups';
+        this.groupFetch = false;
     }
     Object.defineProperty(PhenoTrailVisualizationScopeSelectionComponent.prototype, "valid", {
         get: function () {
-            return true;
+            return this.visScope === 'allGroups' || !!(this.selection.networkIds && this.selection.networkIds.length);
         },
         enumerable: true,
         configurable: true
     });
+    PhenoTrailVisualizationScopeSelectionComponent.prototype.scopeChanged = function () {
+        var _this = this;
+        // reset to a clean slate
+        this.selection.stationIds = undefined;
+        this.selection.groups = undefined;
+        this.selection.networkIds = undefined;
+        switch (this.visScope) {
+            case 'allGroups':
+                // it's always set and doesn't ever need to change
+                this.selection.networkIds = this.phenoTrail.network_ids.slice();
+                break;
+            case 'selectGroups':
+                this.selection.networkIds = this.phenoTrail.network_ids.slice();
+                if (!this._groups) {
+                    this.groupFetch = true;
+                    this._groups = this.networkService.getNetworks(this.phenoTrail.network_ids)
+                        .then(function (groups) {
+                        _this.groupFetch = false;
+                        return groups;
+                    });
+                }
+                this._groups.then(function (groups) {
+                    // all selected for selectGroups mode and all de-selected for compareGroups mode
+                    groups.forEach(function (g) { return g.selected = _this.visScope === 'selectGroups'; });
+                    _this.groups = groups;
+                });
+                break;
+            case 'compareGroups':
+                break;
+        }
+    };
+    PhenoTrailVisualizationScopeSelectionComponent.prototype.groupChange = function () {
+        switch (this.visScope) {
+            case 'selectGroups':
+                this.selection.networkIds = this.groups.filter(function (g) { return g.selected; }).map(function (g) { return g.network_id; });
+                break;
+        }
+    };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", _npn_common__WEBPACK_IMPORTED_MODULE_1__["StationAwareVisSelection"])
@@ -16500,8 +16541,10 @@ var PhenoTrailVisualizationScopeSelectionComponent = /** @class */ (function () 
     PhenoTrailVisualizationScopeSelectionComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'pheno-trail-visualization-scope-selection',
-            template: "\n    TODO\n    "
-        })
+            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'allGroups'\">Show data for all groups within \"{{phenoTrail.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'selectGroups'\">Show data for select groups within \"{{phenoTrail.title}}\"</mat-radio-button>\n      <!--mat-radio-button class=\"vis-scope-radio\" [value]=\"'compareGroups'\">Compare data between groups within \"{{phenoTrail.title}}\"</mat-radio-button-->\n    </mat-radio-group>\n    <mat-progress-spinner *ngIf=\"groupFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"(visScope === 'selectGroups' || visScope === 'compareGroups')\">\n    <hr>\n        <h3 class=\"group-select-header\">Select Groups</h3>\n        <mat-checkbox *ngFor=\"let g of groups\" class=\"group-input\" [(ngModel)]=\"g.selected\" (change)=\"groupChange()\">{{g.name}}</mat-checkbox>\n    </div>\n    <!--pre *ngIf=\"selection\">{{selection.external | json}}</pre-->\n    ",
+            styles: ["\n        .vis-scope-input {\n          display: inline-flex;\n          flex-direction: column;\n        }\n        .vis-scope-radio {\n          margin: 5px;\n        }\n        .group-input {\n            display: block;\n            padding-left: 34px;\n        }\n        .group-select-header{\n          margin-bottom:20px;\n        }\n    "]
+        }),
+        __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_1__["NetworkService"]])
     ], PhenoTrailVisualizationScopeSelectionComponent);
     return PhenoTrailVisualizationScopeSelectionComponent;
 }());
@@ -16696,6 +16739,45 @@ var RefugeVisualizationScopeSelectionComponent = /** @class */ (function () {
         this.visScope = 'refuge';
         this.stationFetch = false;
     }
+    RefugeVisualizationScopeSelectionComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        var selection = this.selection;
+        if (selection.groups && selection.groups.length) {
+            // this control is simplistic when it comes to groups, there are only two use cases
+            this.visScope = selection.groups[0].mode === _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].STATION
+                ? 'stationGroup'
+                : 'outsideGroup';
+        }
+        else if (selection.stationIds && selection.stationIds.length) {
+            this.visScope = 'station';
+        }
+        else {
+            this.visScope = 'refuge';
+        }
+        if (this.visScope !== 'refuge') {
+            this.loadStations().then(function (stations) { return stations.forEach(function (s) {
+                if (_this.visScope === 'station') {
+                    s.selected = selection.stationIds.indexOf(s.station_id) !== -1;
+                }
+                else {
+                    s.selected = !!selection.groups.reduce(function (found, g) { return (found || (g.id === s.station_id ? s : undefined)); }, undefined);
+                }
+            }); });
+        }
+    };
+    RefugeVisualizationScopeSelectionComponent.prototype.loadStations = function () {
+        var _this = this;
+        if (!this._stations) {
+            this.stationFetch = true;
+            this._stations = this.networkService.getStations(this.refuge.network_id)
+                .then(function (stations) {
+                _this.stations = stations;
+                _this.stationFetch = false;
+                return stations;
+            });
+        }
+        return this._stations;
+    };
     RefugeVisualizationScopeSelectionComponent.prototype.scopeChanged = function () {
         var _this = this;
         // reset to a clean slate
@@ -16709,18 +16791,9 @@ var RefugeVisualizationScopeSelectionComponent = /** @class */ (function () {
             case 'station':
             case 'stationGroup':
             case 'outsideGroup':
-                if (!this._stations) {
-                    this.stationFetch = true;
-                    this._stations = this.networkService.getStations(this.refuge.network_id)
-                        .then(function (stations) {
-                        _this.stationFetch = false;
-                        return stations;
-                    });
-                }
-                this._stations.then(function (stations) {
+                this.loadStations().then(function (stations) {
                     // all selected for station mode and all de-selected for stationGroup mode
                     stations.forEach(function (s) { return s.selected = _this.visScope === 'station'; });
-                    _this.stations = stations;
                 });
                 if (this.visScope === 'outsideGroup') {
                     // TODO populate selection.groups
