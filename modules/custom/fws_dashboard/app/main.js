@@ -5153,8 +5153,40 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var ActivityCurve = /** @class */ (function () {
     function ActivityCurve() {
+        this.childId = 0;
         this.dataPoints = true;
     }
+    Object.defineProperty(ActivityCurve.prototype, "children", {
+        get: function () {
+            return this._children || [];
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ActivityCurve.prototype, "curveId", {
+        get: function () {
+            return this.id + "-" + this.childId;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ActivityCurve.prototype.copy = function (childIndex) {
+        var copy = new ActivityCurve();
+        copy.id = this.id;
+        copy.childId = childIndex;
+        copy.color = this.color;
+        copy.orient = this.orient;
+        copy.interpolate = this.interpolate;
+        copy.speciesRank = this.speciesRank;
+        copy._species = this._species;
+        copy._metric = this._metric;
+        copy.phenophaseRank = this.phenophaseRank;
+        copy._phenophase = this._phenophase;
+        copy._year = this._year;
+        copy._color = this._color;
+        copy.selection = this.selection;
+        return copy;
+    };
     Object.defineProperty(ActivityCurve.prototype, "external", {
         get: function () { return _vis_selection__WEBPACK_IMPORTED_MODULE_0__["GET_EXTERNAL"].apply(this, arguments); },
         set: function (o) { _vis_selection__WEBPACK_IMPORTED_MODULE_0__["SET_EXTERNAL"].apply(this, arguments); },
@@ -5164,6 +5196,10 @@ var ActivityCurve = /** @class */ (function () {
     ActivityCurve.prototype.reset = function () {
         delete this.$data;
         delete this.$metricData;
+        this.children.forEach(function (c) {
+            delete c.$data;
+            delete c.$metricData;
+        });
     };
     ActivityCurve.prototype.updateCheck = function (requiresUpdate) {
         if (this.selection && this.isValid()) {
@@ -5182,6 +5218,7 @@ var ActivityCurve = /** @class */ (function () {
         set: function (y) {
             this.reset();
             this._year = y;
+            this.children.forEach(function (c) { return c._year = y; });
             this.updateCheck(true);
         },
         enumerable: true,
@@ -5194,6 +5231,7 @@ var ActivityCurve = /** @class */ (function () {
         set: function (p) {
             this.reset();
             this._phenophase = p;
+            this.children.forEach(function (c) { return c._phenophase = p; });
             this.updateCheck(true);
         },
         enumerable: true,
@@ -5217,6 +5255,7 @@ var ActivityCurve = /** @class */ (function () {
         set: function (m) {
             this.reset();
             this._metric = m;
+            this.children.forEach(function (c) { return c._metric = m; });
             this.updateCheck();
         },
         enumerable: true,
@@ -5229,6 +5268,7 @@ var ActivityCurve = /** @class */ (function () {
         set: function (s) {
             this.reset();
             this._species = s;
+            this.children.forEach(function (c) { return c._species = s; });
             this.phenophase = undefined;
             this._metrics = this._species && this._species.kingdom
                 ? (ACTIVITY_CURVE_KINGDOM_METRICS[this._species.kingdom] || [])
@@ -5236,7 +5276,7 @@ var ActivityCurve = /** @class */ (function () {
             this._originalMetrics = this._metrics;
             if (this._metric && this._metrics.indexOf(this._metric) === -1) {
                 // previous metric has become invalid
-                delete this.metric;
+                this.metric = undefined;
             }
             if (this._metrics.length && !this._metric) {
                 this.metric = this._metrics[0];
@@ -5302,7 +5342,9 @@ var ActivityCurve = /** @class */ (function () {
     ActivityCurve.prototype.legendLabel = function (includeMetric) {
         var doyFocusValue = this.doyDataValue();
         var pp = this.phenophase;
-        return this.year + ': ' + SPECIES_TITLE(this.species, this.speciesRank) + ' - ' + (pp.phenophase_name || pp.pheno_class_name) +
+        return (this._group ? this._group.label + ": " : '') +
+            (this.year + ": ") +
+            SPECIES_TITLE(this.species, this.speciesRank) + ' - ' + (pp.phenophase_name || pp.pheno_class_name) +
             (includeMetric ? (' (' + this.metric.label + ')') : '') +
             (typeof (doyFocusValue) !== 'undefined' ? (' [' + doyFocusValue + ']') : '');
     };
@@ -5311,6 +5353,10 @@ var ActivityCurve = /** @class */ (function () {
      */
     ActivityCurve.prototype.metricId = function () {
         return this.metric ? this.metric.id : undefined;
+    };
+    ActivityCurve.prototype.group = function (g) {
+        this._group = g;
+        return this;
     };
     ActivityCurve.prototype.data = function (_) {
         if (arguments.length) {
@@ -5370,6 +5416,15 @@ var ActivityCurve = /** @class */ (function () {
         }
         return year + '-12-31';
     };
+    /**
+     * Load data for this curve, or curves.  This function will return
+     * multiple curves if its selection is using grouping.  In that case the
+     * returned curves will be copies of this curve with the corresponding data populated
+     * on them.  Changes to this curve (what to plot, year, etc.) will ripple down into
+     * the curve copies so when rendered (via draw) on a visualization they will update.
+     *
+     * @param baseParams
+     */
     ActivityCurve.prototype.loadData = function (baseParams) {
         var _this = this;
         var curveParams = baseParams
@@ -5384,9 +5439,22 @@ var ActivityCurve = /** @class */ (function () {
         if (this.phenophaseRank === _common__WEBPACK_IMPORTED_MODULE_1__["TaxonomicPhenophaseRank"].CLASS) {
             curveParams = curveParams.set('pheno_class_aggregate', '1');
         }
-        return this.selection.serviceUtils
-            .cachedPost(this.selection.serviceUtils.apiUrl('/npn_portal/observations/getMagnitudeData.json'), curveParams.toString())
-            .then(function (data) { return _this.data(data); });
+        var apiUrl = this.selection.serviceUtils.apiUrl('/npn_portal/observations/getMagnitudeData.json');
+        if (this.selection.groups && this.selection.groups.length) {
+            return this.selection.toGroupHttpParams(curveParams)
+                .then(function (groupParams) {
+                // parallel arrays
+                _this._children = groupParams.map(function (gp, i) { return _this.copy(i); });
+                return Promise.all(_this._children.map(function (curve, i) { return _this.selection.serviceUtils
+                    .cachedPost(apiUrl, groupParams[i].params.toString())
+                    .then(function (data) { return curve.group(groupParams[i].group).data(data); }); }));
+            });
+        }
+        else {
+            return this.selection.serviceUtils
+                .cachedPost(apiUrl, curveParams.toString())
+                .then(function (data) { return [_this.data(data)]; });
+        }
     };
     ActivityCurve.prototype.axis = function () {
         var y = this.y(), ticks = y.ticks(), // default is ~10 ticks
@@ -5425,7 +5493,8 @@ var ActivityCurve = /** @class */ (function () {
     ActivityCurve.prototype.plotted = function () {
         // not keeping track of a flag but curves are plotted if they
         // are valid and have data
-        return this.isValid() && this.data();
+        var data = this.data();
+        return this.isValid() && !!data;
     };
     ActivityCurve.prototype.shouldRevisualize = function () {
         return this.isValid() && !this.data();
@@ -5449,11 +5518,21 @@ var ActivityCurve = /** @class */ (function () {
             return extents;
         }
     };
+    /**
+     * Searches this curve's data for a data point nearest to a doy.
+     *
+     * @param doy The doy to find the nearest data to.
+     * @returns ActivityCurveMagnitudeData or undefined
+     */
+    ActivityCurve.prototype.nearest = function (doy) {
+        var data = this.data();
+        return data.reduce(function (found, md) { return (found || (doy >= md.start_doy && doy <= md.end_doy ? md : undefined)); }, undefined);
+    };
     ActivityCurve.prototype.draw = function (chart) {
         var self = this, data = self.data(), datas = [[]], x, y, i, d, dn, line, r = 3;
-        chart.selectAll("g.curve.curve-" + self.id).remove();
+        chart.selectAll("g.curve.curve-" + self.curveId).remove();
         var g = chart.append('g')
-            .attr('class', "curve curve-" + self.id);
+            .attr('class', "curve curve-" + self.curveId);
         if (data && data.length) {
             // detect any gaps in the data, break it into multiple curves/points
             // to plot
@@ -5488,7 +5567,7 @@ var ActivityCurve = /** @class */ (function () {
                 if (curve_data.length === 1 || self.dataPoints) {
                     curve_data.forEach(function (d) {
                         g.append('circle')
-                            .attr('class', 'curve-point curve-point-' + self.id)
+                            .attr('class', 'curve-point curve-point-' + self.curveId)
                             .attr('r', r)
                             .attr('fill', self.color)
                             .attr('cx', x_functor_1(d))
@@ -5497,7 +5576,7 @@ var ActivityCurve = /** @class */ (function () {
                 }
                 if (curve_data.length > 1) {
                     g.append('path')
-                        .attr('class', 'curve curve-' + self.id)
+                        .attr('class', 'curve curve-' + self.curveId)
                         .attr('fill', 'none')
                         .attr('stroke', self.color)
                         .attr('stroke-linejoin', 'round')
@@ -5756,8 +5835,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCIES", function() { return ACTIVITY_FREQUENCIES; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesSelection", function() { return ActivityCurvesSelection; });
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var _activity_curve__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./activity-curve */ "../npn/common/src/lib/visualizations/activity-curves/activity-curve.ts");
-/* harmony import */ var _vis_selection__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../common */ "../npn/common/src/lib/common/index.ts");
+/* harmony import */ var _activity_curve__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./activity-curve */ "../npn/common/src/lib/visualizations/activity-curves/activity-curve.ts");
+/* harmony import */ var _vis_selection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -5785,6 +5865,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -5822,13 +5903,13 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
         _this.networkService = networkService;
         _this.$supportsPop = true;
         _this.$class = 'ActivityCurvesSelection';
-        _this.defaultInterpolate = _activity_curve__WEBPACK_IMPORTED_MODULE_1__["INTERPOLATE"].monotone;
-        _this._interpolate = _activity_curve__WEBPACK_IMPORTED_MODULE_1__["INTERPOLATE"].monotone;
+        _this.defaultInterpolate = _activity_curve__WEBPACK_IMPORTED_MODULE_2__["INTERPOLATE"].monotone;
+        _this._interpolate = _activity_curve__WEBPACK_IMPORTED_MODULE_2__["INTERPOLATE"].monotone;
         _this._dataPoints = true;
         _this.defaultFrequency = ACTIVITY_FREQUENCIES[0];
         _this._frequency = ACTIVITY_FREQUENCIES[0];
         _this.curves = [{ color: '#0000ff', orient: 'left' }, { color: 'orange', orient: 'right' }].map(function (o, i) {
-            var c = new _activity_curve__WEBPACK_IMPORTED_MODULE_1__["ActivityCurve"]();
+            var c = new _activity_curve__WEBPACK_IMPORTED_MODULE_2__["ActivityCurve"]();
             c.id = i;
             c.color = o.color;
             c.orient = o.orient;
@@ -5838,7 +5919,7 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
     }
     ActivityCurvesSelection.prototype.toPOPInput = function (input) {
         var _this = this;
-        if (input === void 0) { input = __assign({}, _vis_selection__WEBPACK_IMPORTED_MODULE_2__["BASE_POP_INPUT"]); }
+        if (input === void 0) { input = __assign({}, _vis_selection__WEBPACK_IMPORTED_MODULE_3__["BASE_POP_INPUT"]); }
         return _super.prototype.toPOPInput.call(this, input)
             .then(function (input) {
             var yearRange = _this.validCurves.reduce(function (range, curve) {
@@ -5949,7 +6030,12 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    ActivityCurvesSelection.prototype.loadCurveData = function () {
+    /**
+     * Load all the curves and their data.  It's ipmortant to understand that this function
+     * may return more curves than are defined on the selection and the resulting curves may
+     * not be references to those held on this selection.
+     */
+    ActivityCurvesSelection.prototype.loadCurves = function () {
         var _this = this;
         this.working = true;
         return this.toURLSearchParams(new _angular_common_http__WEBPACK_IMPORTED_MODULE_0__["HttpParams"]()
@@ -5959,11 +6045,19 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
                 .filter(function (c) { return c.data(null).isValid(); })
                 .map(function (c) { return c.loadData(baseParams); });
             return Promise.all(promises)
-                .then(function () { return _this.working = false; })
+                .then(function (curves) {
+                _this.working = false;
+                var toPlot = curves.reduce(function (arr, list) { return arr.concat(list); }, []);
+                if (_this.groups && _this.groups.length) {
+                    toPlot.forEach(function (curve, index) { return curve.color = Object(_common__WEBPACK_IMPORTED_MODULE_1__["getStaticColor"])(index); });
+                }
+                return toPlot;
+            })
                 .catch(function (err) {
                 _this.working = false;
                 //throw err;
                 _this.handleError(err);
+                return [];
             });
         });
     };
@@ -5971,19 +6065,19 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
         console.error('ERROR', error);
     };
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_2__["selectionProperty"])(),
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_3__["selectionProperty"])(),
         __metadata("design:type", String)
     ], ActivityCurvesSelection.prototype, "$class", void 0);
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_2__["selectionProperty"])(),
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_3__["selectionProperty"])(),
         __metadata("design:type", Number)
     ], ActivityCurvesSelection.prototype, "_interpolate", void 0);
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_2__["selectionProperty"])(),
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_3__["selectionProperty"])(),
         __metadata("design:type", Boolean)
     ], ActivityCurvesSelection.prototype, "_dataPoints", void 0);
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_2__["selectionProperty"])({
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_3__["selectionProperty"])({
             ser: function (d) { return d; },
             des: function (d) {
                 // when deserializing re-align with the actual metric object
@@ -5996,10 +6090,10 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
         __metadata("design:type", ActivityFrequency)
     ], ActivityCurvesSelection.prototype, "_frequency", void 0);
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_2__["selectionProperty"])({
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_3__["selectionProperty"])({
             ser: function (d) { return d ? d.external : undefined; },
             des: function (d) {
-                var ac = new _activity_curve__WEBPACK_IMPORTED_MODULE_1__["ActivityCurve"]();
+                var ac = new _activity_curve__WEBPACK_IMPORTED_MODULE_2__["ActivityCurve"]();
                 ac.external = d;
                 return ac;
             }
@@ -6007,7 +6101,7 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
         __metadata("design:type", Array)
     ], ActivityCurvesSelection.prototype, "_curves", void 0);
     return ActivityCurvesSelection;
-}(_vis_selection__WEBPACK_IMPORTED_MODULE_2__["StationAwareVisSelection"]));
+}(_vis_selection__WEBPACK_IMPORTED_MODULE_3__["StationAwareVisSelection"]));
 
 
 
@@ -6107,11 +6201,18 @@ var ActivityCurvesComponent = /** @class */ (function (_super) {
         _this.margins = { top: 80, left: 80, right: 80, bottom: 80 };
         return _this;
     }
+    Object.defineProperty(ActivityCurvesComponent.prototype, "curves", {
+        get: function () {
+            return (this._curves || []).filter(function (c) { return c.isValid(); });
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Organizes the valid curves into a map of metric to curves using that metric.
      */
     ActivityCurvesComponent.prototype.byMetric = function () {
-        return this.selection.validCurves.reduce(function (map, c) {
+        return this.curves.reduce(function (map, c) {
             map[c.metric.id] = map[c.metric.id] || {
                 metric: c.metric,
                 curves: []
@@ -6124,11 +6225,11 @@ var ActivityCurvesComponent = /** @class */ (function (_super) {
      * Tests to see if the curves are all using the same metric.
      */
     ActivityCurvesComponent.prototype.usingCommonMetric = function () {
-        var validCurves = this.selection.validCurves;
+        var curves = this.curves;
         // could be byMetric().length === 1 but this could be more performant
-        return validCurves.length > 0
+        return curves.length > 0
             // all curves using same metric.
-            ? validCurves.reduce(function (metric, curve) { return metric === curve.metric ? metric : undefined; }, validCurves[0].metric)
+            ? curves.reduce(function (metric, curve) { return metric === curve.metric ? metric : undefined; }, curves[0].metric)
             : undefined;
     };
     ActivityCurvesComponent.prototype.newY = function () {
@@ -6150,8 +6251,7 @@ var ActivityCurvesComponent = /** @class */ (function (_super) {
         var inRow = 0;
         var xTrans = 0;
         var maxInRow = 3;
-        // TODO each curve (plot) may now actually draw multiple curves
-        selection.validCurves.forEach(function (c) {
+        this.curves.forEach(function (c) {
             if (c.plotted()) {
                 var yTrans = (((inRow + 1) * _this.baseFontSize()) + (inRow * vpad));
                 var legendItem = legend.append('g')
@@ -6208,12 +6308,12 @@ var ActivityCurvesComponent = /** @class */ (function (_super) {
             .attr('x', 0)
             .text('hover doy');
         var focusOff = function () {
-            selection.validCurves.forEach(function (c) { delete c.doyFocus; });
+            _this.curves.forEach(function (c) { delete c.doyFocus; });
             hover.style('display', 'none');
             _this.updateLegend();
         }, focusOn = function () {
             // only turn on if something has been plotted
-            if (selection.validCurves.reduce(function (plotted, c) {
+            if (_this.curves.reduce(function (plotted, c) {
                 return plotted || c.plotted();
             }, false)) {
                 hover.style('display', null);
@@ -6221,14 +6321,12 @@ var ActivityCurvesComponent = /** @class */ (function (_super) {
         };
         // left as function due to d3's use of `this`
         function updateFocus() {
-            var coords = d3__WEBPACK_IMPORTED_MODULE_8__["mouse"](this), xCoord = coords[0], yCoord = coords[1], doy = Math.round(x.invert(xCoord)), validCurves = selection.validCurves, dataPoint = validCurves.reduce(function (dp, curve) {
+            var coords = d3__WEBPACK_IMPORTED_MODULE_8__["mouse"](this), xCoord = coords[0], yCoord = coords[1], doy = Math.round(x.invert(xCoord)), dataPoint = self.curves.reduce(function (dp, curve) {
                 if (!dp && curve.plotted()) {
-                    dp = curve.data().reduce(function (found, point) {
-                        return found || (doy >= point.start_doy && doy <= point.end_doy ? point : undefined);
-                    }, undefined);
+                    dp = curve.nearest(doy);
                 }
                 return dp;
-            }, undefined); // TS thinks dataPoint is an "ActivityCurve"
+            }, undefined);
             hoverLine.attr('transform', 'translate(' + xCoord + ')');
             hoverDoy
                 .style('text-anchor', doy < 324 ? 'start' : 'end')
@@ -6236,7 +6334,7 @@ var ActivityCurvesComponent = /** @class */ (function (_super) {
                 .text(dataPoint ?
                 self.legendDoyPipe.transform(dataPoint.start_doy) + ' - ' + self.legendDoyPipe.transform(dataPoint.end_doy) :
                 self.legendDoyPipe.transform(doy));
-            validCurves.forEach(function (c) { c.doyFocus = doy; });
+            self.curves.forEach(function (c) { c.doyFocus = doy; });
             self.updateLegend();
         }
         svg.append('rect')
@@ -6255,10 +6353,10 @@ var ActivityCurvesComponent = /** @class */ (function (_super) {
     ActivityCurvesComponent.prototype.reset = function () {
         var _this = this;
         _super.prototype.reset.call(this);
-        var chart = this.chart, sizing = this.sizing, selection = this.selection;
+        var chart = this.chart, sizing = this.sizing;
         this.x = Object(d3_scale__WEBPACK_IMPORTED_MODULE_7__["scaleLinear"])().range([0, sizing.width]).domain([1, 365]);
         this.xAxis = Object(d3_axis__WEBPACK_IMPORTED_MODULE_6__["axisBottom"])(this.x).tickFormat(DATE_FMT);
-        selection.validCurves.forEach(function (c) { return c.x(_this.x).y(_this.newY()); });
+        this.curves.forEach(function (c) { return c.x(_this.x).y(_this.newY()); });
         chart.append('g')
             .attr('class', 'chart-title')
             .append('text')
@@ -6274,12 +6372,15 @@ var ActivityCurvesComponent = /** @class */ (function (_super) {
     ActivityCurvesComponent.prototype.update = function () {
         var _this = this;
         this.reset();
-        var selection = this.selection;
-        selection.loadCurveData().then(function () { return _this.redraw(); });
+        this.selection.loadCurves().then(function (curves) {
+            _this._curves = curves;
+            _this.reset();
+            _this.redraw();
+        });
     };
     ActivityCurvesComponent.prototype.redrawSvg = function () {
         var _this = this;
-        var chart = this.chart, sizing = this.sizing, selection = this.selection, validCurves = selection.validCurves;
+        var chart = this.chart, sizing = this.sizing, selection = this.selection;
         chart.selectAll('g .axis').remove();
         var mapped = this.byMetric();
         var metricIds = Object.keys(mapped);
@@ -6339,7 +6440,7 @@ var ActivityCurvesComponent = /** @class */ (function (_super) {
         });
         this.commonUpdates();
         // draw the curves
-        validCurves.forEach(function (c) { return c.draw(chart); });
+        this.curves.forEach(function (c) { return c.draw(chart); });
         this.updateLegend();
         this.hover();
     };
