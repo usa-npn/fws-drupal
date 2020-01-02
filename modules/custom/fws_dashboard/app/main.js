@@ -15588,20 +15588,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./new-visualization-dialog.component */ "./src/app/new-visualization-dialog.component.ts");
 /* harmony import */ var _refuge_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./refuge-visualization-scope-selection.component */ "./src/app/refuge-visualization-scope-selection.component.ts");
 /* harmony import */ var _pheno_trail_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./pheno-trail-visualization-scope-selection.component */ "./src/app/pheno-trail-visualization-scope-selection.component.ts");
-/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/forms */ "../../node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/platform-browser/animations */ "../../node_modules/@angular/platform-browser/fesm5/animations.js");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/material */ "../../node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var _angular_flex_layout__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/flex-layout */ "../../node_modules/@angular/flex-layout/esm5/flex-layout.es5.js");
-/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../environments/environment */ "./src/environments/environment.ts");
-/* harmony import */ var _agm_core__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @agm/core */ "../../node_modules/@agm/core/index.js");
-/* harmony import */ var ng2_dnd__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ng2-dnd */ "../../node_modules/ng2-dnd/index.js");
+/* harmony import */ var _pheno_trail_visualization_scope_groups_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./pheno-trail-visualization-scope-groups.component */ "./src/app/pheno-trail-visualization-scope-groups.component.ts");
+/* harmony import */ var _pheno_trail_visualization_scope_group_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./pheno-trail-visualization-scope-group.component */ "./src/app/pheno-trail-visualization-scope-group.component.ts");
+/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/forms */ "../../node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/platform-browser/animations */ "../../node_modules/@angular/platform-browser/fesm5/animations.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @angular/material */ "../../node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _angular_flex_layout__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @angular/flex-layout */ "../../node_modules/@angular/flex-layout/esm5/flex-layout.es5.js");
+/* harmony import */ var _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @fortawesome/angular-fontawesome */ "../../node_modules/@fortawesome/angular-fontawesome/fesm5/angular-fontawesome.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var _agm_core__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @agm/core */ "../../node_modules/@agm/core/index.js");
+/* harmony import */ var ng2_dnd__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ng2-dnd */ "../../node_modules/ng2-dnd/index.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
+
 
 
 
@@ -15642,35 +15648,38 @@ var AppModule = /** @class */ (function () {
                 _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__["NewVisualizationBuilderComponent"],
                 _refuge_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_10__["RefugeVisualizationScopeSelectionComponent"],
                 _pheno_trail_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_11__["PhenoTrailVisualizationScopeSelectionComponent"],
+                _pheno_trail_visualization_scope_groups_component__WEBPACK_IMPORTED_MODULE_12__["PhenoTrailVisualizationScopeGroupsComponent"],
+                _pheno_trail_visualization_scope_group_component__WEBPACK_IMPORTED_MODULE_13__["PhenoTrailVisualizationScopeGroupComponent"],
                 _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__["NewVisualizationDialogComponent"]
             ],
             entryComponents: [
                 _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__["NewVisualizationDialogComponent"]
             ],
             imports: [
-                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_14__["BrowserAnimationsModule"],
+                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_16__["BrowserAnimationsModule"],
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
                 _npn_common__WEBPACK_IMPORTED_MODULE_3__["NpnLibModule"],
                 _npn_common__WEBPACK_IMPORTED_MODULE_3__["VisualizationsModule"],
                 _npn_common__WEBPACK_IMPORTED_MODULE_3__["NpnCommonModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClientModule"],
-                _angular_forms__WEBPACK_IMPORTED_MODULE_13__["FormsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_13__["ReactiveFormsModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatCheckboxModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatGridListModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatCardModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatListModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatTooltipModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatSnackBarModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatDialogModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatStepperModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatButtonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatRadioModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatProgressSpinnerModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatSelectModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatInputModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatFormFieldModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatTabsModule"], _angular_material__WEBPACK_IMPORTED_MODULE_15__["MatButtonToggleModule"],
-                _angular_flex_layout__WEBPACK_IMPORTED_MODULE_16__["FlexLayoutModule"],
-                _agm_core__WEBPACK_IMPORTED_MODULE_18__["AgmCoreModule"].forRoot({
-                    apiKey: _environments_environment__WEBPACK_IMPORTED_MODULE_17__["environment"].googleMapsApiKey
+                _angular_forms__WEBPACK_IMPORTED_MODULE_15__["FormsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_15__["ReactiveFormsModule"],
+                _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_19__["FontAwesomeModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatIconModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatCheckboxModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatGridListModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatCardModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatListModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatTooltipModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatSnackBarModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatDialogModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatStepperModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatButtonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatRadioModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatProgressSpinnerModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatSelectModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatInputModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatFormFieldModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatTabsModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatButtonToggleModule"],
+                _angular_flex_layout__WEBPACK_IMPORTED_MODULE_18__["FlexLayoutModule"],
+                _agm_core__WEBPACK_IMPORTED_MODULE_21__["AgmCoreModule"].forRoot({
+                    apiKey: _environments_environment__WEBPACK_IMPORTED_MODULE_20__["environment"].googleMapsApiKey
                 }),
-                ng2_dnd__WEBPACK_IMPORTED_MODULE_19__["DndModule"].forRoot()
+                ng2_dnd__WEBPACK_IMPORTED_MODULE_22__["DndModule"].forRoot()
             ],
             bootstrap: [_fws_dashboard_component__WEBPACK_IMPORTED_MODULE_7__["FwsDashboardComponent"]],
             providers: [
-                _entity_service__WEBPACK_IMPORTED_MODULE_12__["EntityService"],
+                _entity_service__WEBPACK_IMPORTED_MODULE_14__["EntityService"],
                 { provide: _npn_common__WEBPACK_IMPORTED_MODULE_3__["NPN_BASE_HREF"], useFactory: baseHrefFactory },
                 { provide: _npn_common__WEBPACK_IMPORTED_MODULE_3__["NPN_CONFIGURATION"], useFactory: npnConfigurationFactory }
             ]
@@ -16454,19 +16463,20 @@ var NewVisualizationBuilderComponent = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/pheno-trail-visualization-scope-selection.component.ts":
-/*!************************************************************************!*\
-  !*** ./src/app/pheno-trail-visualization-scope-selection.component.ts ***!
-  \************************************************************************/
-/*! exports provided: PhenoTrailVisualizationScopeSelectionComponent */
+/***/ "./src/app/pheno-trail-visualization-scope-group.component.ts":
+/*!********************************************************************!*\
+  !*** ./src/app/pheno-trail-visualization-scope-group.component.ts ***!
+  \********************************************************************/
+/*! exports provided: PhenoTrailVisualizationScopeGroupComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhenoTrailVisualizationScopeSelectionComponent", function() { return PhenoTrailVisualizationScopeSelectionComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhenoTrailVisualizationScopeGroupComponent", function() { return PhenoTrailVisualizationScopeGroupComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
-/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
+/* harmony import */ var _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fortawesome/pro-light-svg-icons */ "../../node_modules/@fortawesome/pro-light-svg-icons/index.es.js");
+/* harmony import */ var _pheno_trail_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pheno-trail-visualization-scope-selection.component */ "./src/app/pheno-trail-visualization-scope-selection.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -16479,15 +16489,209 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
+var PhenoTrailVisualizationScopeGroupComponent = /** @class */ (function () {
+    function PhenoTrailVisualizationScopeGroupComponent(networkService) {
+        this.networkService = networkService;
+        this.change = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+        this.open = false;
+        this.chevronDownIcon = _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_2__["faChevronDown"];
+        this.chevronRightIcon = _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_2__["faChevronRight"];
+        this.loading = false;
+    }
+    PhenoTrailVisualizationScopeGroupComponent.prototype.ngOnInit = function () {
+        //Load any pre-existing selections
+        if (this.networkWrapper.selected) {
+            this.loadStations();
+        }
+    };
+    PhenoTrailVisualizationScopeGroupComponent.prototype.loadStations = function () {
+        var _this = this;
+        if (!this.stations) {
+            this.loading = true;
+            this.stations = this.networkService.getStations(this.networkWrapper.network.network_id).then(function (stations) {
+                stations.forEach(function (station) { return station.selected = (_this.networkWrapper.group.excludeIds || []).indexOf(station.station_id) > -1; });
+                _this.loading = false;
+                return stations;
+            });
+        }
+        return this.stations;
+    };
+    /**
+     * Toggles the view of the group's stations
+     */
+    PhenoTrailVisualizationScopeGroupComponent.prototype.toggleOpen = function () {
+        this.loadStations();
+        this.open = !this.open;
+    };
+    /**
+     * Toggle whether a station should be excluded for a selected group
+     */
+    PhenoTrailVisualizationScopeGroupComponent.prototype.stationChange = function () {
+        var _this = this;
+        this.loadStations().then(function (stations) {
+            _this.networkWrapper.selected = true;
+            _this.networkWrapper.group.excludeIds = stations.filter(function (station) { return station.selected; }).map(function (station) { return station.station_id; });
+            _this.change.emit();
+        });
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", _pheno_trail_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_3__["NetworkWrapper"])
+    ], PhenoTrailVisualizationScopeGroupComponent.prototype, "networkWrapper", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
+    ], PhenoTrailVisualizationScopeGroupComponent.prototype, "change", void 0);
+    PhenoTrailVisualizationScopeGroupComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'pheno-trail-visualization-scope-group',
+            template: "\n      <button mat-icon-button [attr.aria-label]=\"'Toggle ' + networkWrapper.network.name\" (click)=\"toggleOpen()\">\n        <mat-icon><fa-icon [icon]=\"open ? chevronDownIcon : chevronRightIcon\"></fa-icon></mat-icon>\n      </button>\n      <mat-checkbox [(ngModel)]=\"networkWrapper.selected\" (change)=\"change.emit()\" [indeterminate]=\"networkWrapper.group.excludeIds?.length > 0\">\n        {{networkWrapper.network.name}}\n      </mat-checkbox>\n      <div class=\"station-input\" *ngIf=\"open\">\n        <h3>Exclude Stations</h3>\n        <mat-progress-spinner *ngIf=\"loading\" mode=\"indeterminate\"></mat-progress-spinner>\n        <div *ngFor=\"let s of stations | async as all\" class=\"station-input\">\n          <mat-checkbox [(ngModel)]=\"s.selected\" (change)=\"stationChange()\" [disabled]=\"!s.selected && networkWrapper.group.excludeIds?.length === (all.length-1)\">{{s.station_name}}</mat-checkbox>\n        </div>\n      </div>\n    ",
+            styles: ["\n      .station-input {\n        display: block;\n        padding-left: 34px;\n      }\n    "]
+        }),
+        __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_1__["NetworkService"]])
+    ], PhenoTrailVisualizationScopeGroupComponent);
+    return PhenoTrailVisualizationScopeGroupComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/pheno-trail-visualization-scope-groups.component.ts":
+/*!*********************************************************************!*\
+  !*** ./src/app/pheno-trail-visualization-scope-groups.component.ts ***!
+  \*********************************************************************/
+/*! exports provided: PhenoTrailVisualizationScopeGroupsComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhenoTrailVisualizationScopeGroupsComponent", function() { return PhenoTrailVisualizationScopeGroupsComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @npn/common/visualizations/vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var PhenoTrailVisualizationScopeGroupsComponent = /** @class */ (function () {
+    function PhenoTrailVisualizationScopeGroupsComponent() {
+    }
+    PhenoTrailVisualizationScopeGroupsComponent.prototype.handleChange = function () {
+        this.selection.groups = this.networkWrappers.filter(function (w) { return w.selected; }).map(function (w) { return w.group; });
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_1__["StationAwareVisSelection"])
+    ], PhenoTrailVisualizationScopeGroupsComponent.prototype, "selection", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Array)
+    ], PhenoTrailVisualizationScopeGroupsComponent.prototype, "networkWrappers", void 0);
+    PhenoTrailVisualizationScopeGroupsComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'pheno-trail-visualization-scope-groups',
+            template: "\n    <h3>Select Groups to Compare</h3>\n    <pheno-trail-visualization-scope-group *ngFor=\"let w of networkWrappers\" [networkWrapper]=\"w\" (change)=\"handleChange()\" class=\"group-input\"></pheno-trail-visualization-scope-group>\n    ",
+            styles: ["\n      .group-input {\n        display:block;\n      }\n    "]
+        })
+    ], PhenoTrailVisualizationScopeGroupsComponent);
+    return PhenoTrailVisualizationScopeGroupsComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/pheno-trail-visualization-scope-selection.component.ts":
+/*!************************************************************************!*\
+  !*** ./src/app/pheno-trail-visualization-scope-selection.component.ts ***!
+  \************************************************************************/
+/*! exports provided: NetworkWrapper, PhenoTrailVisualizationScopeSelectionComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NetworkWrapper", function() { return NetworkWrapper; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhenoTrailVisualizationScopeSelectionComponent", function() { return PhenoTrailVisualizationScopeSelectionComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
+/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
+/* harmony import */ var _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @npn/common/visualizations/vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var NetworkWrapper = /** @class */ (function () {
+    function NetworkWrapper(selection, network) {
+        this.network = network;
+        if (selection.groups) { // existing selection
+            this.group = selection.groups.find(function (g) { return g.id === network.network_id; });
+            this.selected = !!this.group;
+        }
+        else {
+            this.selected = selection.networkIds.indexOf(network.network_id) > -1;
+        }
+        if (!this.group) {
+            // create new group
+            this.group = {
+                label: network.name,
+                mode: _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].NETWORK,
+                id: network.network_id,
+                excludeIds: []
+            };
+        }
+        // set label unconditionally in case it changed
+        this.group.label = network.name;
+    }
+    return NetworkWrapper;
+}());
+
 var PhenoTrailVisualizationScopeSelectionComponent = /** @class */ (function () {
     function PhenoTrailVisualizationScopeSelectionComponent(networkService) {
         this.networkService = networkService;
         this.visScope = 'allGroups';
-        this.groupFetch = false;
+        this.networkFetch = false;
     }
+    PhenoTrailVisualizationScopeSelectionComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.networkFetch = true;
+        this.networks = this.networkService.getNetworks(this.phenoTrail.network_ids)
+            .then(function (networks) {
+            var wrappers = networks.map(function (n) { return new NetworkWrapper(_this.selection, n); });
+            _this.networkFetch = false;
+            return wrappers;
+        });
+        var selection = this.selection;
+        if (selection.groups && selection.groups.length) {
+            this.visScope = "compareGroups";
+        }
+        else if (selection.networkIds && selection.networkIds.length && selection.networkIds.length != this.phenoTrail.network_ids.length) {
+            this.visScope = "selectGroups";
+        }
+        else {
+            this.visScope = "allGroups";
+        }
+    };
     Object.defineProperty(PhenoTrailVisualizationScopeSelectionComponent.prototype, "valid", {
         get: function () {
-            return this.visScope === 'allGroups' || !!(this.selection.networkIds && this.selection.networkIds.length);
+            return this.visScope === 'allGroups' || !!(this.selection.networkIds && this.selection.networkIds.length)
+                || !!(this.selection.groups && this.selection.groups.length);
         },
         enumerable: true,
         configurable: true
@@ -16497,38 +16701,24 @@ var PhenoTrailVisualizationScopeSelectionComponent = /** @class */ (function () 
         // reset to a clean slate
         this.selection.stationIds = undefined;
         this.selection.groups = undefined;
-        this.selection.networkIds = undefined;
+        this.selection.networkIds = this.phenoTrail.network_ids.slice();
         switch (this.visScope) {
             case 'allGroups':
                 // it's always set and doesn't ever need to change
-                this.selection.networkIds = this.phenoTrail.network_ids.slice();
-                break;
-            case 'selectGroups':
-                this.selection.networkIds = this.phenoTrail.network_ids.slice();
-                if (!this._groups) {
-                    this.groupFetch = true;
-                    this._groups = this.networkService.getNetworks(this.phenoTrail.network_ids)
-                        .then(function (groups) {
-                        _this.groupFetch = false;
-                        return groups;
-                    });
-                }
-                this._groups.then(function (groups) {
-                    // all selected for selectGroups mode and all de-selected for compareGroups mode
-                    groups.forEach(function (g) { return g.selected = _this.visScope === 'selectGroups'; });
-                    _this.groups = groups;
-                });
                 break;
             case 'compareGroups':
+            case 'selectGroups':
+                this.networks.then(function (networks) {
+                    networks.forEach(function (n) { return n.selected = _this.visScope === 'selectGroups'; });
+                });
                 break;
         }
     };
-    PhenoTrailVisualizationScopeSelectionComponent.prototype.groupChange = function () {
-        switch (this.visScope) {
-            case 'selectGroups':
-                this.selection.networkIds = this.groups.filter(function (g) { return g.selected; }).map(function (g) { return g.network_id; });
-                break;
-        }
+    PhenoTrailVisualizationScopeSelectionComponent.prototype.selectGroupChange = function () {
+        var _this = this;
+        this.networks.then(function (networks) {
+            _this.selection.networkIds = networks.filter(function (n) { return n.selected; }).map(function (n) { return n.network.network_id; });
+        });
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
@@ -16541,8 +16731,8 @@ var PhenoTrailVisualizationScopeSelectionComponent = /** @class */ (function () 
     PhenoTrailVisualizationScopeSelectionComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'pheno-trail-visualization-scope-selection',
-            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'allGroups'\">Show data for all groups within \"{{phenoTrail.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'selectGroups'\">Show data for select groups within \"{{phenoTrail.title}}\"</mat-radio-button>\n      <!--mat-radio-button class=\"vis-scope-radio\" [value]=\"'compareGroups'\">Compare data between groups within \"{{phenoTrail.title}}\"</mat-radio-button-->\n    </mat-radio-group>\n    <mat-progress-spinner *ngIf=\"groupFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"(visScope === 'selectGroups' || visScope === 'compareGroups')\">\n    <hr>\n        <h3 class=\"group-select-header\">Select Groups</h3>\n        <mat-checkbox *ngFor=\"let g of groups\" class=\"group-input\" [(ngModel)]=\"g.selected\" (change)=\"groupChange()\">{{g.name}}</mat-checkbox>\n    </div>\n    <!--pre *ngIf=\"selection\">{{selection.external | json}}</pre-->\n    ",
-            styles: ["\n        .vis-scope-input {\n          display: inline-flex;\n          flex-direction: column;\n        }\n        .vis-scope-radio {\n          margin: 5px;\n        }\n        .group-input {\n            display: block;\n            padding-left: 34px;\n        }\n        .group-select-header{\n          margin-bottom:20px;\n        }\n    "]
+            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'allGroups'\">Show data for all groups within \"{{phenoTrail.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'selectGroups'\">Show data for select groups within \"{{phenoTrail.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'compareGroups'\">Compare data between groups within \"{{phenoTrail.title}}\"</mat-radio-button>\n    </mat-radio-group>\n    <mat-progress-spinner *ngIf=\"networkFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"visScope === 'selectGroups'\">\n      <hr>\n      <h3 class=\"group-select-header\">Select Groups</h3>\n      <mat-checkbox *ngFor=\"let n of networks | async\" class=\"group-input\" [(ngModel)]=\"n.selected\" (change)=\"selectGroupChange()\" [disabled]=\"n.selected && selection.networkIds.length === 1\">{{n.network.name}}</mat-checkbox>\n    </div>\n    <div *ngIf=\"visScope === 'compareGroups' && networks | async as networkWrappers\">\n      <hr>\n      <pheno-trail-visualization-scope-groups [selection]=\"selection\" [networkWrappers]=\"networkWrappers\"></pheno-trail-visualization-scope-groups>\n    </div>\n    <!--pre *ngIf=\"selection\">{{selection.external | json}}</pre-->\n    ",
+            styles: ["\n        .vis-scope-input {\n          display: inline-flex;\n          flex-direction: column;\n        }\n        .vis-scope-radio {\n          margin: 5px;\n        }\n        .group-input {\n          display: block;\n          padding-left: 34px;\n        }\n        .group-select-header{\n          margin-bottom:20px;\n        }\n        \n    "]
         }),
         __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_1__["NetworkService"]])
     ], PhenoTrailVisualizationScopeSelectionComponent);
