@@ -16115,9 +16115,9 @@ var FindingsComponent = /** @class */ (function () {
         this.trash = [];
         this.adminMode = false;
         this.maxVisualizations = 10;
-        this.visTemplates = VIS_TEMPLATES;
         this.lookAtVisDrop = false;
         this.mobileMode = false;
+        this.DashboardMode = _entity_service__WEBPACK_IMPORTED_MODULE_3__["DashboardMode"];
         this.media.subscribe(function (mediaChange) {
             _this.mobileMode = mediaChange.mqAlias === 'xs' || mediaChange.mqAlias === 'sm';
         });
@@ -16129,6 +16129,12 @@ var FindingsComponent = /** @class */ (function () {
             console.warn('Touch device detected any administrative functionality will be disabled.');
         }
     }
+    FindingsComponent.prototype.ngOnInit = function () {
+        this.dashboardMode = _entity_service__WEBPACK_IMPORTED_MODULE_3__["DashboardModeState"].get();
+        this.visTemplates = (this.dashboardMode === _entity_service__WEBPACK_IMPORTED_MODULE_3__["DashboardMode"].PHENO_TRAIL)
+            ? VIS_TEMPLATES.filter(function (t) { return t.$class !== 'ClippedWmsMapSelection'; })
+            : VIS_TEMPLATES;
+    };
     FindingsComponent.prototype.toggleAdminMode = function () {
         this.adminMode = !this.adminMode;
         this.resizeAllAfterDelay();
@@ -16149,19 +16155,6 @@ var FindingsComponent = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    /*
-        setRefuge(entity:EntityBase) {
-            this.entity = entity;
-            entity.selections.forEach((s,i) => {
-                //s.debug = (i === 0);
-                s.update()
-            });
-            this.guidOrder = entity.selections.map(s => s.guid);
-        }
-    
-        ngOnInit() {
-            this.setRefuge(this.entity);
-        }*/
     FindingsComponent.prototype.resizeAll = function () {
         this.entity.selections.forEach(function (s, i) {
             //s.debug = i === 0;
@@ -16300,7 +16293,7 @@ var FindingsComponent = /** @class */ (function () {
     FindingsComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'fws-dashboard-findings',
-            template: "\n<mat-list *ngIf=\"adminMode\" class=\"new-vis-list\">\n  <div>\n    <button mat-icon-button (click)=\"toggleAdminMode()\" class=\"toggle-admin-mode\"><i class=\"fa fa-2x fa-times-circle\" aria-hidden=\"true\"></i></button>\n    <p>Click and drag the visualizations below onto your Dashboard. You can have up to 10 visualizations on your Dashboard at one time. You can have multiple versions of each visualization type.</p>\n  </div>\n  <mat-list-item class=\"vis-template\"\n                *ngFor=\"let template of visTemplates\"\n                (mouseenter)=\"lookAtVisDrop = true;\" (mouseleave)=\"lookAtVisDrop = false;\"\n                [matTooltip]=\"template.$tooltip\"\n                matTooltipPosition=\"right\"\n                dnd-draggable [dragData]=\"template\"\n                [dropZones]=\"['newvis-dropZone']\">\n    <img class=\"new-vis-thumbnail\" src=\"{{baseHref}}{{template.$thumbnail}}\" />\n  </mat-list-item>\n  <mat-list-item class=\"trash\"\n                matTooltip=\"Drag and drop visualization here to remove\"\n                matTooltipPosition=\"right\"\n                dnd-droppable [dropZones]=\"['trash-dropZone']\"\n                (onDropSuccess)=\"trashVisualization($event)\"></mat-list-item>\n  <mat-list-item class=\"save\">\n    <button mat-icon-button aria-labelled=\"Save\" (click)=\"save()\" [disabled]=\"!isReordered()\" matTooltip=\"Save current visualization order\"><i class=\"fa fa-floppy-o\" aria-hidden=\"true\"></i><span *ngIf=\"isReordered()\">*</span></button>\n  </mat-list-item>\n</mat-list>\n\n<div class=\"visualizations\" *ngIf=\"entity\" dnd-sortable-container [sortableData]=\"entity.selections\" [dropZones]=\"['list-dropZone','trash-dropZone']\" >\n    <mat-card  *ngFor=\"let selection of entity.selections; first as isFirst; let i = index\"\n              dnd-sortable [sortableIndex]=\"i\"\n              [dragEnabled]=\"adminMode\"\n              [dragData]=\"selection\"\n              (onDragStart)=\"dragStart($event)\"\n              (onDropSuccess)=\"reorderVisualizations()\">\n        <div *ngIf=\"!isFirst && !mobileMode\" class=\"cover\" (click)=\"makeCurrent(selection)\">\n            <span class=\"visualization-title\">{{selection.meta.title}} <button *ngIf=\"adminMode\" mat-icon-button (click)=\"editVisualization(selection,$event)\" matTooltip=\"Edit\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></button></span>\n        </div>\n        <div *ngIf=\"isFirst || mobileMode\" class=\"visualization-details\">\n            <div class=\"visualization-title\">{{selection.meta.title}} <button *ngIf=\"adminMode\" mat-icon-button (click)=\"editVisualization(selection,$event)\" matTooltip=\"Edit\"><i class=\"fa fa-pencil fa-2x\" aria-hidden=\"true\"></i></button></div>\n            <p *ngIf=\"selection.meta.description\" class=\"visualization-description\">{{selection.meta.description}}</p>\n        </div>\n        <npn-visualization [selection]=\"selection\" [thumbnail]=\"!mobileMode && i > 0\"></npn-visualization>\n    </mat-card>\n    <mat-card *ngIf=\"adminMode && entity.selections.length < maxVisualizations\"\n        dnd-droppable [dropZones]=\"['newvis-dropZone']\"\n        (onDropSuccess)=\"addVisualization($event)\"\n        [ngClass]=\"{'new-vis-placeholder': true, 'look-at-me': lookAtVisDrop}\"></mat-card>\n</div>\n<button mat-raised-button *ngIf=\"userIsAdmin && !mobileMode && !adminMode && !isTouchDevice\" (click)=\"toggleAdminMode()\"><span class=\"admin-toggle\">Customize</span></button>\n  ",
+            template: "\n<mat-list *ngIf=\"adminMode\" class=\"new-vis-list\">\n  <div>\n    <button mat-icon-button (click)=\"toggleAdminMode()\" class=\"toggle-admin-mode\"><i class=\"fa fa-2x fa-times-circle\" aria-hidden=\"true\"></i></button>\n    <p>Click and drag the visualizations below onto your Dashboard. You can have up to 10 visualizations on your Dashboard at one time. You can have multiple versions of each visualization type.</p>\n  </div>\n  <mat-list-item class=\"vis-template\"\n                *ngFor=\"let template of visTemplates\"\n                (mouseenter)=\"lookAtVisDrop = true;\" (mouseleave)=\"lookAtVisDrop = false;\"\n                [matTooltip]=\"template.$tooltip\"\n                matTooltipPosition=\"right\"\n                dnd-draggable [dragData]=\"template\"\n                [dropZones]=\"['newvis-dropZone']\">\n    <img class=\"new-vis-thumbnail\" src=\"{{baseHref}}{{template.$thumbnail}}\" />\n  </mat-list-item>\n  <mat-list-item *ngIf=\"dashboardMode === DashboardMode.PHENO_TRAIL\">\n    <!-- empty item to just to keep the number even -->\n  </mat-list-item>\n  <mat-list-item class=\"trash\"\n                matTooltip=\"Drag and drop visualization here to remove\"\n                matTooltipPosition=\"right\"\n                dnd-droppable [dropZones]=\"['trash-dropZone']\"\n                (onDropSuccess)=\"trashVisualization($event)\"></mat-list-item>\n  <mat-list-item class=\"save\">\n    <button mat-icon-button aria-labelled=\"Save\" (click)=\"save()\" [disabled]=\"!isReordered()\" matTooltip=\"Save current visualization order\"><i class=\"fa fa-floppy-o\" aria-hidden=\"true\"></i><span *ngIf=\"isReordered()\">*</span></button>\n  </mat-list-item>\n</mat-list>\n\n<div class=\"visualizations\" *ngIf=\"entity\" dnd-sortable-container [sortableData]=\"entity.selections\" [dropZones]=\"['list-dropZone','trash-dropZone']\" >\n    <mat-card  *ngFor=\"let selection of entity.selections; first as isFirst; let i = index\"\n              dnd-sortable [sortableIndex]=\"i\"\n              [dragEnabled]=\"adminMode\"\n              [dragData]=\"selection\"\n              (onDragStart)=\"dragStart($event)\"\n              (onDropSuccess)=\"reorderVisualizations()\">\n        <div *ngIf=\"!isFirst && !mobileMode\" class=\"cover\" (click)=\"makeCurrent(selection)\">\n            <span class=\"visualization-title\">{{selection.meta.title}} <button *ngIf=\"adminMode\" mat-icon-button (click)=\"editVisualization(selection,$event)\" matTooltip=\"Edit\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></button></span>\n        </div>\n        <div *ngIf=\"isFirst || mobileMode\" class=\"visualization-details\">\n            <div class=\"visualization-title\">{{selection.meta.title}} <button *ngIf=\"adminMode\" mat-icon-button (click)=\"editVisualization(selection,$event)\" matTooltip=\"Edit\"><i class=\"fa fa-pencil fa-2x\" aria-hidden=\"true\"></i></button></div>\n            <p *ngIf=\"selection.meta.description\" class=\"visualization-description\">{{selection.meta.description}}</p>\n        </div>\n        <npn-visualization [selection]=\"selection\" [thumbnail]=\"!mobileMode && i > 0\"></npn-visualization>\n    </mat-card>\n    <mat-card *ngIf=\"adminMode && entity.selections.length < maxVisualizations\"\n        dnd-droppable [dropZones]=\"['newvis-dropZone']\"\n        (onDropSuccess)=\"addVisualization($event)\"\n        [ngClass]=\"{'new-vis-placeholder': true, 'look-at-me': lookAtVisDrop}\"></mat-card>\n</div>\n<button mat-raised-button *ngIf=\"userIsAdmin && !mobileMode && !adminMode && !isTouchDevice\" (click)=\"toggleAdminMode()\"><span class=\"admin-toggle\">Customize</span></button>\n  ",
             styles: [__webpack_require__(/*! ./findings.component.scss */ "./src/app/findings.component.scss")],
             encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None
         }),
