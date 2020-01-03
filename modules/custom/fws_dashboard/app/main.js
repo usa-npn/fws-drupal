@@ -5154,7 +5154,6 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 var ActivityCurve = /** @class */ (function () {
     function ActivityCurve() {
         this.childId = 0;
-        this.dataPoints = true;
     }
     Object.defineProperty(ActivityCurve.prototype, "children", {
         get: function () {
@@ -5176,7 +5175,6 @@ var ActivityCurve = /** @class */ (function () {
         copy.childId = childIndex;
         copy.color = this.color;
         copy.orient = this.orient;
-        copy.interpolate = this.interpolate;
         copy.speciesRank = this.speciesRank;
         copy._species = this._species;
         copy._metric = this._metric;
@@ -5494,7 +5492,11 @@ var ActivityCurve = /** @class */ (function () {
         // not keeping track of a flag but curves are plotted if they
         // are valid and have data
         var data = this.data();
-        return this.isValid() && !!data;
+        if (this.isValid() && !!data) {
+            return true; // this curve is plotted
+        }
+        // plotted if any children are plotted
+        return this.children.reduce(function (plotted, child) { return (plotted || (child.plotted ? true : false)); }, false);
     };
     ActivityCurve.prototype.shouldRevisualize = function () {
         return this.isValid() && !this.data();
@@ -5548,7 +5550,7 @@ var ActivityCurve = /** @class */ (function () {
             y = self.y();
             var x_functor_1 = function (d) { return x(d.start_doy + Math.round((d.end_doy - d.start_doy) / 2)); }, y_functor_1 = function (d) { return y(d[self.metric.id]); };
             line = d3__WEBPACK_IMPORTED_MODULE_2__["line"]();
-            switch (self.interpolate) {
+            switch (self.selection.interpolate) {
                 case INTERPOLATE.monotone:
                     line.curve(d3__WEBPACK_IMPORTED_MODULE_2__["curveMonotoneX"]);
                     break;
@@ -5564,7 +5566,7 @@ var ActivityCurve = /** @class */ (function () {
             console.debug('ActivityCurve.draw', self.species, self.phenophase, self.year, self.metric, self.domain(), y.domain());
             console.debug('draw.datas', datas);
             datas.forEach(function (curve_data, i) {
-                if (curve_data.length === 1 || self.dataPoints) {
+                if (curve_data.length === 1 || self.selection.dataPoints) {
                     curve_data.forEach(function (d) {
                         g.append('circle')
                             .attr('class', 'curve-point curve-point-' + self.curveId)
@@ -5723,6 +5725,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _activity_curve__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./activity-curve */ "../npn/common/src/lib/visualizations/activity-curves/activity-curve.ts");
 /* harmony import */ var _activity_curves_selection__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./activity-curves-selection */ "../npn/common/src/lib/visualizations/activity-curves/activity-curves-selection.ts");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../common */ "../npn/common/src/lib/common/index.ts");
+/* harmony import */ var _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fortawesome/pro-light-svg-icons */ "../../node_modules/@fortawesome/pro-light-svg-icons/index.es.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -5732,6 +5736,8 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
+
 
 
 
@@ -5749,7 +5755,35 @@ var ActivityCurvesControlComponent = /** @class */ (function () {
     function ActivityCurvesControlComponent() {
         this.frequencies = _activity_curves_selection__WEBPACK_IMPORTED_MODULE_2__["ACTIVITY_FREQUENCIES"];
         this.interpolates = ACTIVITY_CURVES_INTERPOLATES;
+        this.faExclamationTriangle = _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_4__["faExclamationTriangle"];
     }
+    ActivityCurvesControlComponent.prototype.addCurve = function () {
+        var curve = new _activity_curve__WEBPACK_IMPORTED_MODULE_1__["ActivityCurve"]();
+        curve.id = this.selection.curves.length;
+        curve.color = _common__WEBPACK_IMPORTED_MODULE_3__["STATIC_COLORS"][curve.id];
+        curve.selection = this.selection;
+        this.selection.curves.push(curve);
+    };
+    ActivityCurvesControlComponent.prototype.removeCurve = function (i) {
+        this.selection.curves.splice(i, 1);
+        this.selection.update();
+        this.speciesMetricChange();
+    };
+    ActivityCurvesControlComponent.prototype.speciesMetricChange = function () {
+        // need to prevent more than two metrics being selected
+        var curves = this.selection.curves || [];
+        var selectedMetrics = [];
+        curves.forEach(function (c) {
+            c.overrideValidMetricsReset();
+            if (selectedMetrics.length === 2) {
+                var valid_1 = c.validMetrics;
+                c.overrideValidMetrics(selectedMetrics.filter(function (m) { return valid_1.indexOf(m) !== -1; }));
+            }
+            else if (c.metric && selectedMetrics.indexOf(c.metric) === -1) {
+                selectedMetrics.push(c.metric);
+            }
+        });
+    };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", _activity_curves_selection__WEBPACK_IMPORTED_MODULE_2__["ActivityCurvesSelection"])
@@ -5757,8 +5791,8 @@ var ActivityCurvesControlComponent = /** @class */ (function () {
     ActivityCurvesControlComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'activity-curves-control',
-            template: "\n    <div class=\"curve one\">\n        <label [ngStyle]=\"{'color': selection.curves[0].color}\">Curve 1</label>\n        <curve-selection-control [selection]=\"selection\" [curve]=\"selection.curves[0]\"></curve-selection-control>\n    </div>\n    <div class=\"curve two\">\n        <label [ngStyle]=\"{'color': selection.curves[1].color}\">Curve 2</label>\n        <curve-selection-control [selection]=\"selection\"  [curve]=\"selection.curves[1]\" [disabled]=\"!selection.curves[0].isValid()\" [required]=\"false\"></curve-selection-control>\n    </div>\n    <div class=\"curve-common\">\n        <mat-form-field class=\"date-interval\">\n            <mat-select placeholder=\"Date Interval\" [(ngModel)]=\"selection.frequency\">\n                <mat-option *ngFor=\"let f of frequencies\" [value]=\"f\">{{f.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n\n        <mat-form-field class=\"line-interpolateion\">\n            <mat-select placeholder=\"Line Interpolation\" [(ngModel)]=\"selection.interpolate\">\n                <mat-option *ngFor=\"let i of interpolates\" [value]=\"i.value\">{{i.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n    </div>\n    ",
-            styles: ["\n        .curve >label:after {\n            content: ':';\n            margin-right: 10px;\n        }\n        .date-interval {\n            width: 125px;\n        }\n        .line-interpolateion {\n            width: 150px;\n        }\n    "]
+            template: "\n    <div *ngIf=\"!selection.canAddPlot\" class=\"max-plots-reached\"><fa-icon [icon]=\"faExclamationTriangle\"></fa-icon> One more curve would exceed the maximum of {{selection.MAX_PLOTS}} allowed</div>\n    <div class=\"curve mat-elevation-z1\" *ngFor=\"let curve of selection.curves; index as i\">\n        <label>Curve #{{i+1}}</label>\n        <curve-selection-control\n            [selection]=\"selection\"\n            [curve]=\"curve\"\n            [required]=\"i === 0\"\n            [gatherColor]=\"true\"\n            (onSpeciesChange)=\"speciesMetricChange($event)\"\n            (onMetricChange)=\"speciesMetricChange($event)\">\n            </curve-selection-control>\n        <div class=\"action-holder\">\n            <button *ngIf=\"selection.curves.length > 1\" mat-button (click)=\"removeCurve(i)\">Remove curve</button>\n            <button *ngIf=\"i === selection.curves.length-1\" mat-button (click)=\"addCurve()\" [disabled]=\"!selection.canAddPlot\">Add curve</button>\n        </div>\n    </div>\n    <div class=\"curve-common\">\n        <mat-form-field class=\"date-interval\">\n            <mat-select placeholder=\"Date Interval\" [(ngModel)]=\"selection.frequency\">\n                <mat-option *ngFor=\"let f of frequencies\" [value]=\"f\">{{f.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n\n        <mat-form-field class=\"line-interpolateion\">\n            <mat-select placeholder=\"Line Interpolation\" [(ngModel)]=\"selection.interpolate\">\n                <mat-option *ngFor=\"let i of interpolates\" [value]=\"i.value\">{{i.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n\n        <mat-checkbox [(ngModel)]=\"selection.dataPoints\">Show data points</mat-checkbox>\n    </div>\n    ",
+            styles: ["\n        .curve,\n        .curve-common {\n            display: flex;\n            align-items: center;\n            margin: 2px 2px 5px 2px;\n            padding: 4px;\n        }\n        .curve-common {\n            margin-top: 10px;\n        }\n        .curve >label {\n            white-space: nowrap;\n        }\n        .curve >label:after {\n            content: ':';\n            margin-right: 10px;\n        }\n        .curve >.action-holder {\n            display: flex;\n            flex-direction: column;\n        }\n        .date-interval {\n            width: 125px;\n        }\n        .line-interpolateion {\n            width: 150px;\n        }\n        .action-holder {\n            margin: 10px 0px;\n            text-align: right;\n        }\n    "]
         })
     ], ActivityCurvesControlComponent);
     return ActivityCurvesControlComponent;
@@ -5908,15 +5942,29 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
         _this._dataPoints = true;
         _this.defaultFrequency = ACTIVITY_FREQUENCIES[0];
         _this._frequency = ACTIVITY_FREQUENCIES[0];
-        _this.curves = [{ color: '#0000ff', orient: 'left' }, { color: 'orange', orient: 'right' }].map(function (o, i) {
-            var c = new _activity_curve__WEBPACK_IMPORTED_MODULE_2__["ActivityCurve"]();
-            c.id = i;
-            c.color = o.color;
-            c.orient = o.orient;
-            return c;
-        });
+        /** The maximum number of plots we want to allow. */
+        _this.MAX_PLOTS = 6;
+        // create a default empty curve
+        var curve0 = new _activity_curve__WEBPACK_IMPORTED_MODULE_2__["ActivityCurve"]();
+        curve0.color = _common__WEBPACK_IMPORTED_MODULE_1__["STATIC_COLORS"][0];
+        curve0.id = 0;
+        _this.curves = [curve0];
         return _this;
     }
+    Object.defineProperty(ActivityCurvesSelection.prototype, "canAddPlot", {
+        /**
+         * Indicates whether or not adding one more plot will result in a visualization exceeding
+         * the maximum number of allowed plots.
+         */
+        get: function () {
+            var groups = this.groups ? this.groups.length : 0;
+            var next_plots = (this._curves ? this._curves.length : 0) + 1;
+            var next_count = groups ? (groups * next_plots) : next_plots;
+            return next_count <= this.MAX_PLOTS;
+        },
+        enumerable: true,
+        configurable: true
+    });
     ActivityCurvesSelection.prototype.toPOPInput = function (input) {
         var _this = this;
         if (input === void 0) { input = __assign({}, _vis_selection__WEBPACK_IMPORTED_MODULE_3__["BASE_POP_INPUT"]); }
@@ -5977,7 +6025,10 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
         set: function (f) {
             this._frequency = f;
             // any change in frequency invalidates any data held by curves
-            (this._curves || []).forEach(function (c) { return c.data(null); });
+            (this._curves || []).forEach(function (c) {
+                c._frequency = f;
+                c.data(null);
+            });
             this.updateCheck(true);
         },
         enumerable: true,
@@ -5989,7 +6040,6 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
         },
         set: function (i) {
             this._interpolate = i;
-            (this._curves || []).forEach(function (c) { return c.interpolate = i; });
             this.updateCheck();
         },
         enumerable: true,
@@ -6001,7 +6051,6 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
         },
         set: function (dp) {
             this._dataPoints = dp;
-            (this._curves || []).forEach(function (c) { return c.dataPoints = dp; });
             this.updateCheck(false);
         },
         enumerable: true,
@@ -6014,11 +6063,7 @@ var ActivityCurvesSelection = /** @class */ (function (_super) {
         set: function (cs) {
             var _this = this;
             this._curves = cs;
-            (this._curves || []).forEach(function (c) {
-                c.selection = _this;
-                c.interpolate = _this._interpolate;
-                c.dataPoints = _this._dataPoints;
-            });
+            (this._curves || []).forEach(function (c) { return c.selection = _this; });
         },
         enumerable: true,
         configurable: true
@@ -7970,6 +8015,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _calendar_selection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./calendar-selection */ "../npn/common/src/lib/visualizations/calendar/calendar-selection.ts");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "../../node_modules/rxjs/_esm5/operators/index.js");
 /* harmony import */ var _npn_common_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @npn/common/common */ "../npn/common/src/lib/common/index.ts");
+/* harmony import */ var _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fortawesome/pro-light-svg-icons */ "../../node_modules/@fortawesome/pro-light-svg-icons/index.es.js");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -7993,6 +8039,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var THIS_YEAR = (new Date()).getFullYear();
 var VALID_YEARS = (function () {
     var max = THIS_YEAR + 1, current = 1900, years = [];
@@ -8006,6 +8053,7 @@ var CalendarControlComponent = /** @class */ (function (_super) {
     function CalendarControlComponent() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.maxYears = 5;
+        _this.faExclamationTriangle = _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_4__["faExclamationTriangle"];
         return _this;
     }
     CalendarControlComponent.prototype.selectableYears = function (y) {
@@ -8076,7 +8124,7 @@ var CalendarControlComponent = /** @class */ (function (_super) {
     CalendarControlComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'calendar-control',
-            template: "\n    <div>\n        <div class=\"year-input-wrapper\" *ngFor=\"let plotYear of selection.years;index as idx\">\n            <mat-form-field class=\"year-input\">\n                <mat-select placeholder=\"Year {{idx+1}}\" [(ngModel)]=\"selection.years[idx]\" (ngModelChange)=\"yearChange()\" id=\"year_{{idx}}\">\n                    <mat-option *ngFor=\"let y of selectableYears(selection.years[idx])\" [value]=\"y\">{{y}}</mat-option>\n                </mat-select>\n            </mat-form-field>\n            <button *ngIf=\"idx > 0\" mat-button class=\"remove-year\" (click)=\"removeYear(idx)\">Remove</button>\n            <button *ngIf=\"selection.years.length < 6 && idx === (selection.years.length-1)\" mat-button class=\"add-year\" (click)=\"addYear()\">Add</button>\n        </div>\n    </div>\n\n    <div class=\"phenophase-input-wrapper\" *ngFor=\"let spi of selection.plots; index as idx\">\n        <higher-species-phenophase-input\n            gatherColor=\"true\"\n            [selection]=\"selection\"\n            [criteria]=\"criteria\"\n            [plot]=\"spi\"\n            (plotChange)=\"selection.update()\"></higher-species-phenophase-input>\n        <button *ngIf=\"idx > 0\" mat-button class=\"remove-plot\" (click)=\"removePlot(idx)\">Remove</button>\n        <button *ngIf=\"idx === (selection.plots.length-1)\" mat-button class=\"add-plot\" [disabled]=\"!plotsValid()\" (click)=\"addPlot()\">Add</button>\n    </div>\n\n    <mat-checkbox [(ngModel)]=\"selection.negative\" (change)=\"redrawChange()\">Display negative data</mat-checkbox>\n\n    <label for=\"label-size-input\">Label size\n        <mat-slider id=\"label-size-input\" min=\"0\" max=\"10\" step=\"0.25\" [(ngModel)]=\"selection.fontSizeDelta\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-position-input\">Label position\n        <mat-slider id=\"label-position-input\" min=\"0\" max=\"100\" step=\"1\" [(ngModel)]=\"selection.labelOffset\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-band-size-input\">Band size\n        <mat-slider invert id=\"label-band-size-input\" min=\"0\" max=\"0.95\" step=\"0.05\" [(ngModel)]=\"selection.bandPadding\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n    ",
+            template: "\n    <div *ngIf=\"!selection.canAddPlot\" class=\"max-plots-reached\"><fa-icon [icon]=\"faExclamationTriangle\"></fa-icon> One more year or species/phenophase combination would exceed the maximum of {{selection.MAX_PLOTS}} plots</div>\n    <div>\n        <div class=\"year-input-wrapper\" *ngFor=\"let plotYear of selection.years;index as idx\">\n            <mat-form-field class=\"year-input\">\n                <mat-select placeholder=\"Year {{idx+1}}\" [(ngModel)]=\"selection.years[idx]\" (ngModelChange)=\"yearChange()\" id=\"year_{{idx}}\">\n                    <mat-option *ngFor=\"let y of selectableYears(selection.years[idx])\" [value]=\"y\">{{y}}</mat-option>\n                </mat-select>\n            </mat-form-field>\n            <button *ngIf=\"selection.years?.length > 0\" mat-button class=\"remove-year\" (click)=\"removeYear(idx)\">Remove</button>\n            <button *ngIf=\"idx === (selection.years.length-1)\" mat-button class=\"add-year\" (click)=\"addYear()\" [disabled]=\"!selection.canAddPlot\">Add</button>\n        </div>\n    </div>\n\n    <div class=\"phenophase-input-wrapper\" *ngFor=\"let spi of selection.plots; index as idx\">\n        <higher-species-phenophase-input\n            gatherColor=\"true\"\n            [selection]=\"selection\"\n            [criteria]=\"criteria\"\n            [plot]=\"spi\"\n            (plotChange)=\"selection.update()\"></higher-species-phenophase-input>\n        <button *ngIf=\"idx > 0\" mat-button class=\"remove-plot\" (click)=\"removePlot(idx)\">Remove</button>\n        <button *ngIf=\"idx === (selection.plots.length-1)\" mat-button class=\"add-plot\" (click)=\"addPlot()\" [disabled]=\"!plotsValid() || !selection.canAddPlot\">Add</button>\n    </div>\n\n    <mat-checkbox [(ngModel)]=\"selection.negative\" (change)=\"redrawChange()\">Display negative data</mat-checkbox>\n\n    <label for=\"label-size-input\">Label size\n        <mat-slider id=\"label-size-input\" min=\"0\" max=\"10\" step=\"0.25\" [(ngModel)]=\"selection.fontSizeDelta\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-position-input\">Label position\n        <mat-slider id=\"label-position-input\" min=\"0\" max=\"100\" step=\"1\" [(ngModel)]=\"selection.labelOffset\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-band-size-input\">Band size\n        <mat-slider invert id=\"label-band-size-input\" min=\"0\" max=\"0.95\" step=\"0.05\" [(ngModel)]=\"selection.bandPadding\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n    ",
             styles: ["\n        .year-input-wrapper {\n            display: inline-block;\n            margin-right: 15px;\n        }\n        .year-input {\n            width: 60px;\n        }\n        .phenophase-input-wrapper {\n            display: block;\n        }\n        label[for=\"label-size-input\"] {\n            margin-left: 15px;\n        }\n    "]
         })
     ], CalendarControlComponent);
@@ -11762,6 +11810,8 @@ var ObservationDateVisSelection = /** @class */ (function (_super) {
         _this.negativeColor = '#aaa';
         _this.years = [];
         _this.plots = [];
+        /** The maximum number of plots we want to allow. */
+        _this.MAX_PLOTS = 10;
         return _this;
     }
     ObservationDateVisSelection.prototype.isValid = function () {
@@ -11775,6 +11825,21 @@ var ObservationDateVisSelection = /** @class */ (function (_super) {
                     // color only required if not grouping
                     (p.color || (_this.groups && _this.groups.length > 0));
             });
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ObservationDateVisSelection.prototype, "canAddPlot", {
+        /**
+         * Indicates whether or not adding one more plot will result in a visualization exceeding
+         * the maximum number of allowed plots.
+         */
+        get: function () {
+            var years = this.years ? this.years.length : 0;
+            var groups = this.groups ? this.groups.length : 0;
+            var next_plots = ((this.plots ? this.plots.length : 0) + 1) * years;
+            var next_count = groups ? (groups * next_plots) : next_plots;
+            return next_count <= this.MAX_PLOTS;
         },
         enumerable: true,
         configurable: true
@@ -13225,6 +13290,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! d3 */ "../../node_modules/d3/index.js");
 /* harmony import */ var _npn_common_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @npn/common/common */ "../npn/common/src/lib/common/index.ts");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "../../node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @fortawesome/pro-light-svg-icons */ "../../node_modules/@fortawesome/pro-light-svg-icons/index.es.js");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -13249,11 +13315,13 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var ScatterPlotControlsComponent = /** @class */ (function (_super) {
     __extends(ScatterPlotControlsComponent, _super);
     function ScatterPlotControlsComponent() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.axis = _scatter_plot_selection__WEBPACK_IMPORTED_MODULE_1__["AXIS"];
+        _this.faExclamationTriangle = _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faExclamationTriangle"];
         return _this;
     }
     ScatterPlotControlsComponent.prototype.ngOnInit = function () {
@@ -13299,7 +13367,7 @@ var ScatterPlotControlsComponent = /** @class */ (function (_super) {
     ScatterPlotControlsComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'scatter-plot-control',
-            template: "\n    <year-range-input [(start)]=\"selection.start\" [(end)]=\"selection.end\" (onStartChange)=\"yearChange()\" (onEndChange)=\"yearChange()\"></year-range-input>\n\n    <div class=\"phenophase-input-wrapper\" *ngFor=\"let spi of selection.plots; index as idx\">\n        <higher-species-phenophase-input\n            gatherColor=\"true\"\n            [selection]=\"selection\"\n            [criteria]=\"criteria\"\n            [plot]=\"spi\"\n            (plotChange)=\"selection.update()\">\n        </higher-species-phenophase-input>\n        <button *ngIf=\"idx > 0\" mat-button class=\"remove-plot\" (click)=\"removePlot(idx)\">Remove</button>\n        <button *ngIf=\"selection.plots.length < 3 && idx === (selection.plots.length-1)\" mat-button class=\"add-plot\" [disabled]=\"!plotsValid()\" (click)=\"addPlot()\">Add</button>\n    </div>\n\n    <div>\n        <mat-form-field>\n            <mat-select placeholder=\"X Axis\" name=\"xAxis\" [(ngModel)]=\"selection.axis\" (ngModelChange)=\"redrawChange()\">\n              <mat-option *ngFor=\"let a of axis\" [value]=\"a\">{{a.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n\n        <mat-checkbox [(ngModel)]=\"selection.regressionLines\" (change)=\"redrawChange()\">Fit Lines</mat-checkbox>\n\n        <mat-checkbox [(ngModel)]=\"selection.individualPhenometrics\" (change)=\"selection.update()\">Use Individual Phenometrics</mat-checkbox>\n    </div>\n    ",
+            template: "\n    <div *ngIf=\"!selection.canAddPlot\" class=\"max-plots-reached\"><fa-icon [icon]=\"faExclamationTriangle\"></fa-icon> One more plot would exceed the maximum of {{selection.MAX_PLOTS}} allowed</div>\n    <year-range-input [(start)]=\"selection.start\" [(end)]=\"selection.end\" (onStartChange)=\"yearChange()\" (onEndChange)=\"yearChange()\"></year-range-input>\n\n    <div class=\"phenophase-input-wrapper\" *ngFor=\"let spi of selection.plots; index as idx\">\n        <higher-species-phenophase-input\n            gatherColor=\"true\"\n            [selection]=\"selection\"\n            [criteria]=\"criteria\"\n            [plot]=\"spi\"\n            (plotChange)=\"selection.update()\">\n        </higher-species-phenophase-input>\n        <button *ngIf=\"selection.plots.length > 1\" mat-button class=\"remove-plot\" (click)=\"removePlot(idx)\">Remove</button>\n        <button *ngIf=\"idx === (selection.plots.length-1)\" mat-button class=\"add-plot\" [disabled]=\"!plotsValid() || !selection.canAddPlot\" (click)=\"addPlot()\">Add</button>\n    </div>\n\n    <div>\n        <mat-form-field>\n            <mat-select placeholder=\"X Axis\" name=\"xAxis\" [(ngModel)]=\"selection.axis\" (ngModelChange)=\"redrawChange()\">\n              <mat-option *ngFor=\"let a of axis\" [value]=\"a\">{{a.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n\n        <mat-checkbox [(ngModel)]=\"selection.regressionLines\" (change)=\"redrawChange()\">Fit Lines</mat-checkbox>\n\n        <mat-checkbox [(ngModel)]=\"selection.individualPhenometrics\" (change)=\"selection.update()\">Use Individual Phenometrics</mat-checkbox>\n    </div>\n    ",
             styles: ["\n        year-range-input,\n        .phenophase-input-wrapper {\n            display: block;\n            margin-top: 15px;\n        }\n        mat-form-field,\n        mat-checkbox {\n            padding-right: 10px;\n        }\n    "]
         })
     ], ScatterPlotControlsComponent);
@@ -13444,9 +13512,25 @@ var ScatterPlotSelection = /** @class */ (function (_super) {
         _this._axis = AXIS[0];
         _this._minDoy = 1;
         _this._maxDoy = 365;
+        /** The maximum number of plots we want to allow. */
+        _this.MAX_PLOTS = 6;
         _this.d3DateFormat = d3__WEBPACK_IMPORTED_MODULE_3__["timeFormat"]('%x');
         return _this;
     }
+    Object.defineProperty(ScatterPlotSelection.prototype, "canAddPlot", {
+        /**
+         * Indicates whether or not adding one more plot will result in a visualization exceeding
+         * the maximum number of allowed plots.
+         */
+        get: function () {
+            var groups = this.groups ? this.groups.length : 0;
+            var next_plots = (this.plots ? this.plots.length : 0) + 1;
+            var next_count = groups ? (groups * next_plots) : next_plots;
+            return next_count <= this.MAX_PLOTS;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(ScatterPlotSelection.prototype, "minDoy", {
         get: function () { return this._minDoy; },
         set: function (doy) {
@@ -13789,7 +13873,7 @@ var ScatterPlotComponent = /** @class */ (function (_super) {
                 .attr('transform', 'translate(10,' + (((i + 1) * _this.baseFontSize()) + (i * vpad)) + ')');
             var pp = plot.phenophase;
             var title = (group ? group.label + ": " : '') + _this.speciesTitle.transform(plot.species, plot.speciesRank) + '/' + (pp.phenophase_name || pp.pheno_class_name);
-            if (plot.regressionLine && typeof (plot.regressionLine.r2) === 'number') {
+            if (plot.regressionLine && typeof (plot.regressionLine.r2) === 'number' && !isNaN(plot.regressionLine.r2)) {
                 // NOTE: the baseline-shift doesn't appear to work on Firefox
                 if (_this.isIE) {
                     title += " (R2 " + plot.regressionLine.r2.toFixed(2) + ")";
