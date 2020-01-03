@@ -13724,6 +13724,9 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+var DEFAULT_TOP_MARGIN = 80;
+var LEGEND_VPAD = 4;
+var MARGIN_VPAD = 5;
 var ScatterPlotComponent = /** @class */ (function (_super) {
     __extends(ScatterPlotComponent, _super);
     function ScatterPlotComponent(rootElement, media, speciesTitle) {
@@ -13736,22 +13739,31 @@ var ScatterPlotComponent = /** @class */ (function (_super) {
         _this.filename = 'scatter-plot.png';
         // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html#object-spread-and-rest
         // similar to _|angular.extend
-        _this.margins = __assign({}, _svg_visualization_base_component__WEBPACK_IMPORTED_MODULE_3__["DEFAULT_MARGINS"], { top: 80, left: 60 });
+        _this.margins = __assign({}, _svg_visualization_base_component__WEBPACK_IMPORTED_MODULE_3__["DEFAULT_MARGINS"], { top: DEFAULT_TOP_MARGIN, left: 60 });
         return _this;
     }
     ScatterPlotComponent.prototype.reset = function () {
         var _this = this;
+        this.margins.top = DEFAULT_TOP_MARGIN;
+        var fontSize = this.baseFontSize();
+        var plotCount = this.data ? this.data.length : 0;
+        if (plotCount) {
+            this.margins.top = ((plotCount + 1) * fontSize) + (plotCount * LEGEND_VPAD) + MARGIN_VPAD;
+        }
+        // TODO depending on legend increase top margin
         _super.prototype.reset.call(this);
         var chart = this.chart, sizing = this.sizing, titleX = sizing.width < this.minWidth ?
             (2 * (this.sizing.width / 3)) : (this.sizing.width / 2);
+        var titleFontSize = 18;
+        var titleDy = this.margins.top - titleFontSize - fontSize;
         this.title = chart.append('g')
             .attr('class', 'chart-title')
             .append('text')
             .attr('y', '0')
-            .attr('dy', '-3em')
-            .attr('x', titleX)
-            .style('text-anchor', 'middle')
-            .style('font-size', '18px');
+            .attr('dy', "-" + titleDy)
+            .attr('x', '-2.5em')
+            .style('text-anchor', 'start')
+            .style('font-size', titleFontSize + "px");
         this.x = Object(d3_scale__WEBPACK_IMPORTED_MODULE_6__["scaleLinear"])().range([0, sizing.width]).domain([0, 100]);
         this.xAxis = Object(d3_axis__WEBPACK_IMPORTED_MODULE_5__["axisBottom"])(this.x).tickFormat(function (i) {
             // TODO
@@ -13856,14 +13868,15 @@ var ScatterPlotComponent = /** @class */ (function (_super) {
         this.chart.select('.legend').remove();
         var legend = this.chart.append('g')
             .attr('class', 'legend')
-            .attr('transform', 'translate(0,-' + (this.sizing.margin.top - 10) + ')')
-            .style('font-size', '1em'), r = 5, vpad = 4;
+            .attr('transform', 'translate(75,-' + (this.sizing.margin.top - 10) + ')')
+            .style('font-size', '1em');
+        var r = 5;
         this.data.forEach(function (d, i) {
             var plot = d.plot;
             var group = d.group;
             var row = legend.append('g')
                 .attr('class', 'legend-item')
-                .attr('transform', 'translate(10,' + (((i + 1) * _this.baseFontSize()) + (i * vpad)) + ')');
+                .attr('transform', 'translate(10,' + (((i + 1) * _this.baseFontSize()) + (i * LEGEND_VPAD)) + ')');
             var pp = plot.phenophase;
             var title = _this.speciesTitle.transform(plot.species, plot.speciesRank) + '/' + (pp.phenophase_name || pp.pheno_class_name);
             if (plot.regressionLine && typeof (plot.regressionLine.r2) === 'number' && !isNaN(plot.regressionLine.r2)) {
