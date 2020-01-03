@@ -5251,9 +5251,12 @@ var ActivityCurve = /** @class */ (function () {
             return this._metric;
         },
         set: function (m) {
-            this.reset();
+            delete this.$metricData;
             this._metric = m;
-            this.children.forEach(function (c) { return c._metric = m; });
+            this.children.forEach(function (c) {
+                delete c.$metricData;
+                c._metric = m;
+            });
             this.updateCheck();
         },
         enumerable: true,
