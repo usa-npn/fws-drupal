@@ -5340,11 +5340,11 @@ var ActivityCurve = /** @class */ (function () {
     ActivityCurve.prototype.legendLabel = function (includeMetric) {
         var doyFocusValue = this.doyDataValue();
         var pp = this.phenophase;
-        return (this._group ? this._group.label + ": " : '') +
-            (this.year + ": ") +
+        return this.year + ": " +
             SPECIES_TITLE(this.species, this.speciesRank) + ' - ' + (pp.phenophase_name || pp.pheno_class_name) +
-            (includeMetric ? (' (' + this.metric.label + ')') : '') +
-            (typeof (doyFocusValue) !== 'undefined' ? (' [' + doyFocusValue + ']') : '');
+            (includeMetric ? " (" + this.metric.label + ")" : '') +
+            (this._group ? " (" + this._group.label + ")" : '') +
+            (typeof (doyFocusValue) !== 'undefined' ? " [" + doyFocusValue + "]" : '');
     };
     /**
      * @return The metric id.
@@ -6235,6 +6235,9 @@ var X_TICK_CFG = {
         values: [1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335]
     }
 };
+var DEFAULT_TOP_MARGIN = 80;
+var LEGEND_VPAD = 4;
+var MARGIN_VPAD = 10;
 var ActivityCurvesComponent = /** @class */ (function (_super) {
     __extends(ActivityCurvesComponent, _super);
     function ActivityCurvesComponent(rootElement, media, legendDoyPipe) {
@@ -6243,7 +6246,7 @@ var ActivityCurvesComponent = /** @class */ (function (_super) {
         _this.media = media;
         _this.legendDoyPipe = legendDoyPipe;
         _this.filename = 'activity-curves.png';
-        _this.margins = { top: 80, left: 80, right: 80, bottom: 80 };
+        _this.margins = { top: DEFAULT_TOP_MARGIN, left: 80, right: 80, bottom: 80 };
         return _this;
     }
     Object.defineProperty(ActivityCurvesComponent.prototype, "curves", {
@@ -6291,46 +6294,21 @@ var ActivityCurvesComponent = /** @class */ (function (_super) {
             // the 150 below was picked just based on the site of the 'Activity Curves' title
             .attr('transform', "translate(90,-" + (sizing.margin.top - 10) + ")") // relative to the chart, not the svg
             .style('font-size', '1em');
-        var r = 5, vpad = 4;
-        var rowIndex = 0;
-        var inRow = 0;
-        var xTrans = 0;
-        var maxInRow = 3;
-        this.curves.forEach(function (c) {
-            if (c.plotted()) {
-                var yTrans = (((inRow + 1) * _this.baseFontSize()) + (inRow * vpad));
-                var legendItem = legend.append('g')
-                    .attr('class', "legend-item curve-" + c.id + " row-" + rowIndex)
-                    .attr('transform', "translate(" + xTrans + "," + yTrans + ")");
-                legendItem.append('circle')
-                    .attr('r', r)
-                    .attr('fill', c.color);
-                legendItem.append('text')
-                    .style('font-size', _this.baseFontSize(true))
-                    .attr('x', (2 * r))
-                    .attr('y', (r / 2))
-                    .text(c.legendLabel(!commonMetric));
-                if (++inRow === maxInRow) {
-                    var items = legend.selectAll(".legend-item.row-" + rowIndex);
-                    // based on children added calculate the current row width
-                    // and add it to how far we move items in the x direction
-                    var maxWidth_1 = 0;
-                    items.each(function () {
-                        var w = (r * 2) + 10; // diameter of circle plue some padding
-                        d3__WEBPACK_IMPORTED_MODULE_8__["select"](this)
-                            .selectAll('text')
-                            .each(function () {
-                            w += this.getBBox().width;
-                        });
-                        if (w > maxWidth_1) {
-                            maxWidth_1 = w;
-                        }
-                    });
-                    rowIndex++;
-                    xTrans += maxWidth_1;
-                    inRow = 0;
-                }
-            }
+        var r = 5;
+        this.curves.filter(function (c) { return c.plotted(); })
+            .forEach(function (curve, index) {
+            var yTrans = (((index + 1) * _this.baseFontSize()) + (index * LEGEND_VPAD));
+            var legendItem = legend.append('g')
+                .attr('class', "legend-item curve-" + curve.id + " row-" + index)
+                .attr('transform', "translate(0," + yTrans + ")");
+            legendItem.append('circle')
+                .attr('r', r)
+                .attr('fill', curve.color);
+            legendItem.append('text')
+                .style('font-size', _this.baseFontSize(true))
+                .attr('x', (2 * r))
+                .attr('y', (r / 2))
+                .text(curve.legendLabel(!commonMetric));
         });
     };
     ActivityCurvesComponent.prototype.hover = function () {
@@ -6397,20 +6375,31 @@ var ActivityCurvesComponent = /** @class */ (function (_super) {
     };
     ActivityCurvesComponent.prototype.reset = function () {
         var _this = this;
+        // make room for the legend based on the number of plots
+        this.margins.top = DEFAULT_TOP_MARGIN;
+        var fontSize = this.baseFontSize();
+        if (this.selection) {
+            var plotCount = this.curves.filter(function (c) { return c.plotted(); }).length;
+            if (plotCount) {
+                this.margins.top = ((plotCount + 1) * fontSize) + (plotCount * LEGEND_VPAD) + MARGIN_VPAD;
+            }
+        }
         _super.prototype.reset.call(this);
         var chart = this.chart, sizing = this.sizing;
         this.x = Object(d3_scale__WEBPACK_IMPORTED_MODULE_7__["scaleLinear"])().range([0, sizing.width]).domain([1, 365]);
         this.xAxis = Object(d3_axis__WEBPACK_IMPORTED_MODULE_6__["axisBottom"])(this.x).tickFormat(DATE_FMT);
         this.curves.forEach(function (c) { return c.x(_this.x).y(_this.newY()); });
-        chart.append('g')
+        var titleFontSize = 18;
+        var titleDy = this.margins.top - titleFontSize - fontSize;
+        this.chart.append('g')
             .attr('class', 'chart-title')
             .append('text')
             .attr('y', '0')
-            .attr('dy', '-3em')
+            .attr('dy', "-" + titleDy)
             .attr('x', '0')
             .attr('dx', '-3em')
             .style('text-anchor', 'start')
-            .style('font-size', '18px')
+            .style('font-size', titleFontSize + "px")
             .text('Activity Curves');
         this.commonUpdates();
     };
@@ -11917,10 +11906,11 @@ var ObservationDateVisSelection = /** @class */ (function (_super) {
                     addDoys(pPhases.years[year].positive, plot.color);
                 }
                 var pp = plot.phenophase;
-                response.labels.splice(0, 0, ' (' + year + '): ' +
-                    (!!group ? " " + group.label + ": " : '') +
+                response.labels.splice(0, 0, " " + year + ": " +
                     _this.speciesTitle.transform(plot.species, plot.speciesRank) +
-                    ' - ' + (pp.phenophase_name || pp.pheno_class_name));
+                    ' - ' +
+                    (pp.phenophase_name || pp.pheno_class_name) +
+                    (!!group ? " (" + group.label + ")" : ''));
                 y--;
             });
         });
@@ -13872,7 +13862,7 @@ var ScatterPlotComponent = /** @class */ (function (_super) {
                 .attr('class', 'legend-item')
                 .attr('transform', 'translate(10,' + (((i + 1) * _this.baseFontSize()) + (i * vpad)) + ')');
             var pp = plot.phenophase;
-            var title = (group ? group.label + ": " : '') + _this.speciesTitle.transform(plot.species, plot.speciesRank) + '/' + (pp.phenophase_name || pp.pheno_class_name);
+            var title = _this.speciesTitle.transform(plot.species, plot.speciesRank) + '/' + (pp.phenophase_name || pp.pheno_class_name);
             if (plot.regressionLine && typeof (plot.regressionLine.r2) === 'number' && !isNaN(plot.regressionLine.r2)) {
                 // NOTE: the baseline-shift doesn't appear to work on Firefox
                 if (_this.isIE) {
@@ -13881,6 +13871,9 @@ var ScatterPlotComponent = /** @class */ (function (_super) {
                 else {
                     title += " (R<tspan style=\"baseline-shift: super; font-size: 0.65em;\">2</tspan> " + plot.regressionLine.r2.toFixed(2) + ")";
                 }
+            }
+            if (group) {
+                title += " (" + group.label + ")";
             }
             row.append('circle')
                 .attr('r', r)
