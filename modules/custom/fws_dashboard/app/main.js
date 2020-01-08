@@ -12701,14 +12701,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (undefined && undefined.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -12726,15 +12718,8 @@ var ObserverActivitySelection = /** @class */ (function (_super) {
         _this.serviceUtils = serviceUtils;
         _this.networkService = networkService;
         _this.$class = 'ObserverActivitySelection';
-        _this.dataCnt = 0;
         return _this;
     }
-    ObserverActivitySelection.prototype.isMultiStation = function () {
-        return this.stationIds && this.stationIds.length > 1;
-    };
-    ObserverActivitySelection.prototype.isSingleStation = function () {
-        return this.stationIds && this.stationIds.length === 1;
-    };
     ObserverActivitySelection.prototype.isValid = function () {
         return !!this.year;
     };
@@ -12745,16 +12730,24 @@ var ObserverActivitySelection = /** @class */ (function (_super) {
             year: this.year,
             network_id: this.networkIds[0]
         };
+        // pulls data for a given month from a server response
+        var dataForMonth = function (month, data) { return ({
+            month: month,
+            newObservers: data.months[month].new_observers.length,
+            activeObservers: data.months[month].active_observers.length
+        }); };
+        // TODO is at the moment always just a single set of data...
         return new Promise(function (resolve, reject) {
             _this.working = true;
             _this.serviceUtils.cachedGet(url, params)
                 .then(function (data) {
-                var months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (i) {
-                    return __assign({ month: i }, data.months[i]);
-                });
-                data.months = months;
+                // group label or?
+                data.label = "TODO: " + data.network_name;
+                data.months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (i) { return dataForMonth(i, data); });
                 _this.working = false;
-                resolve(data);
+                // TODO temporarily to give multiple stacks
+                var d = data;
+                resolve([d, d]);
             })
                 .catch(reject);
         });
@@ -12771,6 +12764,17 @@ var ObserverActivitySelection = /** @class */ (function (_super) {
 }(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["NetworkAwareVisSelection"]));
 
 
+
+/***/ }),
+
+/***/ "../npn/common/src/lib/visualizations/observer-activity/observer-activity.component.html":
+/*!***********************************************************************************************!*\
+  !*** ../npn/common/src/lib/visualizations/observer-activity/observer-activity.component.html ***!
+  \***********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"vis-container\">\n    <div class=\"vis-working\" *ngIf=\"selection.working\">\n        <npn-logo spin=\"false\"></npn-logo>\n    </div>\n    <div class=\"chart-container\">\n        <visualization-download *ngIf=\"!thumbnail && !mobileMode\" svgWrapperId=\"{{id}}\" filename=\"{{filename}}\"></visualization-download>\n        <div [class]=\"clazz\" id=\"{{id}}\"><svg class=\"svg-visualization\"></svg></div>\n    </div>\n    <mat-radio-group style=\"display:block; margin-top: 10px;\" *ngIf=\"!thumbnail\"\n        [(ngModel)]=\"mode\"\n        (change)=\"redraw()\">\n        <mat-radio-button [value]=\"modes.ACTIVE_OBSERVERS\" style=\"margin-right: 5px;\">{{modes.ACTIVE_OBSERVERS}}</mat-radio-button>\n        <mat-radio-button [value]=\"modes.NEW_OBSERVERS\">{{modes.NEW_OBSERVERS}}</mat-radio-button>\n    </mat-radio-group>\n</div>\n"
 
 /***/ }),
 
@@ -12791,6 +12795,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var d3_axis__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! d3-axis */ "../../node_modules/d3-axis/index.js");
 /* harmony import */ var d3_scale__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! d3-scale */ "../../node_modules/d3-scale/index.js");
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! d3 */ "../../node_modules/d3/index.js");
+/* harmony import */ var _npn_common_common__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @npn/common/common */ "../npn/common/src/lib/common/index.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -12825,75 +12830,60 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
-var TITLE = 'New/Active Observers';
+
+var DEFAULT_TOP_MARGIN = 100;
+var LEGEND_VPAD = 4;
+var MARGIN_VPAD = 5;
+var TITLE_FONT_SIZE = 18;
+var SWATCH_SIZE = 20;
+var ObserverActivityVisMode;
+(function (ObserverActivityVisMode) {
+    ObserverActivityVisMode["NEW_OBSERVERS"] = "New Observers";
+    ObserverActivityVisMode["ACTIVE_OBSERVERS"] = "Active Observers";
+})(ObserverActivityVisMode || (ObserverActivityVisMode = {}));
+;
 var ObserverActivityComponent = /** @class */ (function (_super) {
     __extends(ObserverActivityComponent, _super);
     function ObserverActivityComponent(rootElement, media) {
         var _this = _super.call(this, rootElement, media) || this;
         _this.rootElement = rootElement;
         _this.media = media;
-        _this.keyLabels = ['New observers', 'Active observers'];
-        _this.keys = ['new_observers', 'active_observers'];
-        _this.z = Object(d3_scale__WEBPACK_IMPORTED_MODULE_5__["scaleOrdinal"])()
-            .domain(_this.keys)
-            .range(["#98abc5", "#d0743c"]);
-        _this.zDarker = Object(d3_scale__WEBPACK_IMPORTED_MODULE_5__["scaleOrdinal"])()
-            .domain(_this.keys)
-            .range(_this.z.range().map(function (c) {
-            return d3__WEBPACK_IMPORTED_MODULE_6__["color"](c).darker().toString();
-        }));
+        _this.modes = ObserverActivityVisMode;
+        _this.mode = ObserverActivityVisMode.ACTIVE_OBSERVERS;
+        _this.z = Object(d3_scale__WEBPACK_IMPORTED_MODULE_5__["scaleOrdinal"])();
         _this.filename = 'observer-activity.png';
-        _this.margins = __assign({}, _svg_visualization_base_component__WEBPACK_IMPORTED_MODULE_2__["DEFAULT_MARGINS"], { top: 100, left: 80 });
+        _this.margins = __assign({}, _svg_visualization_base_component__WEBPACK_IMPORTED_MODULE_2__["DEFAULT_MARGINS"], { top: DEFAULT_TOP_MARGIN, left: 80 });
         return _this;
     }
-    ObserverActivityComponent.prototype.getMonthFormat = function () {
-        if (this.sizing && this.sizing.width < 800) {
-            return '%b';
-        }
-        return '%B';
-    };
     ObserverActivityComponent.prototype.reset = function () {
+        // dynamic top margins
+        this.margins.top = DEFAULT_TOP_MARGIN;
+        var fontSize = this.baseFontSize();
+        var plotCount = this.data ? this.data.length : 0;
+        if (plotCount) {
+            this.margins.top = fontSize + (plotCount * SWATCH_SIZE) + (plotCount * LEGEND_VPAD) + MARGIN_VPAD;
+        }
         _super.prototype.reset.call(this);
-        var chart = this.chart, sizing = this.sizing, d3_month_fmt = d3__WEBPACK_IMPORTED_MODULE_6__["timeFormat"](this.getMonthFormat()), fontSize = this.baseFontSize();
+        var _a = this, chart = _a.chart, sizing = _a.sizing, svg = _a.svg;
+        var d3_month_fmt = d3__WEBPACK_IMPORTED_MODULE_6__["timeFormat"]('%B');
+        var titleDy = this.margins.top - TITLE_FONT_SIZE - fontSize;
         this.title = chart.append('g')
             .attr('class', 'chart-title')
             .append('text')
             .attr('y', '0')
-            .attr('dy', '-4.2em')
+            .attr('dy', "-" + titleDy)
             .attr('x', '0')
             .style('text-anchor', 'start')
-            .style('font-size', '18px');
-        var legend = this.legend = chart.append('g')
-            .attr('class', 'legend')
-            .attr('transform', 'translate(0,-' + (sizing.margin.top - 10) + ')')
-            .attr('text-anchor', 'start')
-            .style('font-size', fontSize)
-            .selectAll('g')
-            .data(this.keyLabels)
-            .enter().append('g')
-            .attr('transform', function (d, i) { return "translate(0," + (i * 22 + 24) + ")"; });
-        legend.append('rect')
-            .attr('x', 0)
-            .attr('width', 20)
-            .attr('height', 20)
-            .attr('fill', this.z);
-        legend.append('text')
-            .attr('x', 24)
-            .attr('y', fontSize - 0.5)
-            .attr('dy', '0.32em')
-            .text(function (d) { return d; });
-        this.x = Object(d3_scale__WEBPACK_IMPORTED_MODULE_5__["scaleBand"])()
-            .rangeRound([0, sizing.width])
-            .padding(0.05)
-            .domain(d3__WEBPACK_IMPORTED_MODULE_6__["range"](0, 12));
+            .style('font-size', TITLE_FONT_SIZE + "px");
+        this.x = Object(d3_scale__WEBPACK_IMPORTED_MODULE_5__["scaleBand"])().rangeRound([0, sizing.width]).padding(0.05).domain(d3__WEBPACK_IMPORTED_MODULE_6__["range"](0, 12));
         this.xAxis = Object(d3_axis__WEBPACK_IMPORTED_MODULE_4__["axisBottom"])(this.x).tickFormat(function (i) { return d3_month_fmt(new Date(1900, i)); });
+        this.y = Object(d3_scale__WEBPACK_IMPORTED_MODULE_5__["scaleLinear"])().range([sizing.height, 0]).domain([0, 20]); // just a default domain
+        this.yAxis = Object(d3_axis__WEBPACK_IMPORTED_MODULE_4__["axisLeft"])(this.y).tickFormat(d3__WEBPACK_IMPORTED_MODULE_6__["format"]('.0d'));
         chart.append('g')
             .attr('class', 'x axis')
             .attr('transform', 'translate(0,' + sizing.height + ')')
             .call(this.xAxis);
-        this.y = Object(d3_scale__WEBPACK_IMPORTED_MODULE_5__["scaleLinear"])().range([sizing.height, 0]).domain([0, 20]); // just a default domain
-        this.yAxis = Object(d3_axis__WEBPACK_IMPORTED_MODULE_4__["axisLeft"])(this.y).tickFormat(d3__WEBPACK_IMPORTED_MODULE_6__["format"]('.0d'));
-        chart.append('g')
+        this.yAxisLabel = chart.append('g')
             .attr('class', 'y axis')
             .call(this.yAxis)
             .append('text')
@@ -12902,8 +12892,21 @@ var ObserverActivityComponent = /** @class */ (function (_super) {
             .attr('y', '0')
             .attr('dy', '-3em')
             .attr('x', -1 * (sizing.height / 2)) // looks odd but to move in the Y we need to change X because of transform
-            .style('text-anchor', 'middle')
-            .text('New/Active Observers');
+            .style('text-anchor', 'middle');
+        this.tooltip = svg.append('g')
+            .attr('class', 'tooltip')
+            .style('display', 'none');
+        this.tooltip.append("rect")
+            .attr("width", 60)
+            .attr("height", 20)
+            .attr("fill", "white")
+            .style("opacity", 0.5);
+        this.tooltip.append("text")
+            .attr("x", 30)
+            .attr("dy", "1.2em")
+            .style("text-anchor", "middle")
+            .attr("font-size", "12px")
+            .attr("font-weight", "bold");
         this.commonUpdates();
     };
     ObserverActivityComponent.prototype.update = function () {
@@ -12912,79 +12915,90 @@ var ObserverActivityComponent = /** @class */ (function (_super) {
         this.selection.getData()
             .then(function (data) {
             _this.data = data;
+            _this.reset();
             _this.redraw();
         })
             .catch(this.handleError);
+    };
+    ObserverActivityComponent.prototype.updateLegend = function () {
+        var _a = this, chart = _a.chart, data = _a.data, sizing = _a.sizing, z = _a.z;
+        chart.select('.legend').remove();
+        if (data && data.length) {
+            var fontSize_1 = this.baseFontSize();
+            z.domain(data.map(function (d, i) { return i; })).range(data.map(function (d, i) { return Object(_npn_common_common__WEBPACK_IMPORTED_MODULE_7__["getStaticColor"])(i); }));
+            var labels = data.map(function (d) { return d.label; });
+            var legend = chart.append('g')
+                .attr('class', 'legend')
+                .attr('transform', "translate(55,-" + sizing.margin.top + ")")
+                .attr('text-anchor', 'start')
+                .style('font-size', fontSize_1 + "px")
+                .selectAll('g')
+                .data(labels)
+                .enter().append('g')
+                // needs to be kept in sync with logic in dynamic margins in reset()
+                .attr('transform', function (d, i) { return "translate(10," + (fontSize_1 + (i * SWATCH_SIZE) + (i * LEGEND_VPAD)) + ")"; });
+            // add legend swatches
+            legend.append('rect')
+                .attr('x', 0)
+                .attr('width', SWATCH_SIZE)
+                .attr('height', SWATCH_SIZE)
+                .attr('fill', function (d, i) { return z(i); });
+            // add labels
+            legend.append('text')
+                .attr('x', SWATCH_SIZE + 4)
+                .attr('y', fontSize_1)
+                .attr('dy', '0.1em')
+                .text(function (d) { return d; });
+        }
     };
     ObserverActivityComponent.prototype.redrawSvg = function () {
         var _this = this;
         if (!this.data) {
             return;
         }
-        this.title.text(TITLE + ", " + this.data.network_name + ", " + this.selection.year);
         console.debug('ObserverActivityComponent:data', this.data);
-        var sizing = this.sizing, data = this.data.months.slice(), chart = this.chart, new_accessor = function (d) { return d.new_observers; }, active_accessor = function (d) { return d.active_observers; }, generate_set = function (accessor) { return data.reduce(function (set, d) {
-            accessor(d).forEach(function (id) {
-                if (set.indexOf(id) === -1) {
-                    set.push(id);
-                }
-            });
-            return set;
-        }, []); }, new_set = generate_set(new_accessor), active_set = generate_set(active_accessor), new_sum = new_set.length, active_sum = active_set.length, max = data.reduce(function (max, d) {
-            if (d.new_observers.length > max) {
-                max = d.new_observers.length;
-            }
-            if (d.active_observers.length > max) {
-                max = d.active_observers.length;
-            }
-            return max;
-        }, 0);
-        console.debug("ObserverActivityComponent:vis data (max=" + max + ")", data);
-        console.debug("ObserverActivityComponent:new_set", new_set);
-        console.debug("ObserverActivityComponent:active_set", active_set);
-        // update x axis with months+total
-        this.x.domain(d3__WEBPACK_IMPORTED_MODULE_6__["range"](0, data.length));
-        this.chart.selectAll('g .x.axis').call(this.xAxis);
-        // update y axis, domain is 0 to max of sum of the two keys
-        // largest will always be the total column
-        this.y.domain([0, max]);
-        this.yAxis.ticks(max < 11 ? max : 10); // at most 10 ticks
-        this.chart.selectAll('g .y.axis').call(this.yAxis);
-        var bars = function (key, idx) {
-            var barWidth = _this.x.bandwidth() / 2;
-            _this.chart.selectAll("g .bars." + key).remove();
-            _this.chart.append('g')
-                .attr('class', "bars " + key)
-                .attr('fill', function (d) { return _this.z(key); })
-                .selectAll('rect')
-                .data(data)
-                .enter().append('rect')
-                .attr('x', function (d, i) { return _this.x(i) + (barWidth * idx); })
-                .attr('y', function (d) { return _this.y(d[key].length); })
-                .attr('title', function (d) { return "" + d[key].length; })
-                .attr('height', function (d) { return sizing.height - _this.y(d[key].length); })
-                .attr('width', barWidth);
-            _this.chart.selectAll("g .bar-labels." + key).remove();
-            _this.chart.append('g')
-                .attr('class', "bar-labels " + key)
-                .attr('fill', function (d) { return _this.z(key); })
-                .selectAll('text')
-                .data(data)
-                .enter().append('text')
-                .attr('text-anchor', 'middle')
-                .attr('dy', '-0.25em')
-                .attr('x', function (d, i) { return _this.x(i) + (barWidth * idx) + (barWidth / 2); })
-                .attr('y', function (d) { return _this.y(d[key].length); })
-                .text(function (d) { return "" + d[key].length; });
-        };
-        this.keys.forEach(function (k, i) { return bars(k, i); });
-        this.legend.selectAll('text')
-            .each((function (nSum, aSum, labels) {
-            return function (d, i) {
-                var t = d3__WEBPACK_IMPORTED_MODULE_6__["select"](this), n = d === labels[0] ? nSum : aSum;
-                t.text(d + " [Total: " + n + "]");
-            };
-        })(new_sum, active_sum, this.keyLabels));
+        this.title.text("" + this.selection.year);
+        this.yAxisLabel.text(this.mode);
+        this.updateLegend();
+        var dataKey = this.mode === ObserverActivityVisMode.ACTIVE_OBSERVERS ? 'activeObservers' : 'newObservers';
+        var visData = d3__WEBPACK_IMPORTED_MODULE_6__["range"](0, 12)
+            .map(function (month) { return _this.data.reduce(function (map, d, index) {
+            map["" + index] = d.months[month][dataKey];
+            return map;
+        }, {}); });
+        var max = visData.reduce(function (max, d) {
+            var sum = Object.values(d).reduce(function (sum, n) { return (sum + n); }, 0);
+            return sum > max ? sum : max;
+        }, 0); // TS handing of reduce is stupid
+        var layers = d3__WEBPACK_IMPORTED_MODULE_6__["stack"]().keys(this.data.map(function (d, i) { return "" + i; }))(visData);
+        var _a = this, chart = _a.chart, y = _a.y, yAxis = _a.yAxis, x = _a.x, tooltip = _a.tooltip, sizing = _a.sizing;
+        y.domain([0, max]);
+        yAxis.ticks(max < 11 ? max : 10); // at most 10 ticks
+        chart.selectAll('g .y.axis').call(this.yAxis);
+        chart.selectAll('.layer').remove();
+        var layer = chart.selectAll('.layer')
+            .data(layers)
+            .enter()
+            .append('g')
+            .attr('class', 'layer')
+            .style('fill', function (d, i) { return _this.z(i); });
+        layer.selectAll('rect')
+            .data(function (d) { return d; })
+            .enter()
+            .append('rect')
+            .attr('x', function (d, i) { return x(i); })
+            .attr('y', function (d) { return y(d[1]); })
+            .attr('height', function (d) { return y(d[0]) - y(d[1]); })
+            .attr('width', x.bandwidth() - 10)
+            .on('mouseover', function () { return tooltip.style('display', null); })
+            .on('mouseout', function () { return tooltip.style('display', 'none'); })
+            .on('mousemove', function (d) {
+            var container = this;
+            var xPosition = d3__WEBPACK_IMPORTED_MODULE_6__["mouse"](container)[0] + sizing.margin.left - 5;
+            var yPosition = d3__WEBPACK_IMPORTED_MODULE_6__["mouse"](container)[1] + sizing.margin.top - 5;
+            tooltip.attr('transform', "translate(" + xPosition + "," + yPosition + ")");
+            tooltip.select('text').text(d[1] - d[0]);
+        });
         this.commonUpdates();
     };
     __decorate([
@@ -12994,8 +13008,8 @@ var ObserverActivityComponent = /** @class */ (function (_super) {
     ObserverActivityComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'observer-activity',
-            template: __webpack_require__(/*! ../svg-visualization-base.component.html */ "../npn/common/src/lib/visualizations/svg-visualization-base.component.html"),
-            styles: [__webpack_require__(/*! ../svg-visualization-base.component.scss */ "../npn/common/src/lib/visualizations/svg-visualization-base.component.scss")],
+            template: __webpack_require__(/*! ./observer-activity.component.html */ "../npn/common/src/lib/visualizations/observer-activity/observer-activity.component.html"),
+            styles: [__webpack_require__(/*! ../svg-visualization-base.component.scss */ "../npn/common/src/lib/visualizations/svg-visualization-base.component.scss")]
         }),
         __metadata("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"], _angular_flex_layout__WEBPACK_IMPORTED_MODULE_1__["ObservableMedia"]])
     ], ObserverActivityComponent);
@@ -13750,10 +13764,8 @@ var ScatterPlotComponent = /** @class */ (function (_super) {
         if (plotCount) {
             this.margins.top = ((plotCount + 1) * fontSize) + (plotCount * LEGEND_VPAD) + MARGIN_VPAD;
         }
-        // TODO depending on legend increase top margin
         _super.prototype.reset.call(this);
-        var chart = this.chart, sizing = this.sizing, titleX = sizing.width < this.minWidth ?
-            (2 * (this.sizing.width / 3)) : (this.sizing.width / 2);
+        var _a = this, chart = _a.chart, sizing = _a.sizing;
         var titleFontSize = 18;
         var titleDy = this.margins.top - titleFontSize - fontSize;
         this.title = chart.append('g')
@@ -13765,10 +13777,7 @@ var ScatterPlotComponent = /** @class */ (function (_super) {
             .style('text-anchor', 'start')
             .style('font-size', titleFontSize + "px");
         this.x = Object(d3_scale__WEBPACK_IMPORTED_MODULE_6__["scaleLinear"])().range([0, sizing.width]).domain([0, 100]);
-        this.xAxis = Object(d3_axis__WEBPACK_IMPORTED_MODULE_5__["axisBottom"])(this.x).tickFormat(function (i) {
-            // TODO
-            return _this.defaultAxisFormat(i);
-        });
+        this.xAxis = Object(d3_axis__WEBPACK_IMPORTED_MODULE_5__["axisBottom"])(this.x).tickFormat(function (i) { return _this.defaultAxisFormat(i); });
         this.y = Object(d3_scale__WEBPACK_IMPORTED_MODULE_6__["scaleLinear"])().range([sizing.height, 0]).domain([1, 365]);
         this.yAxis = Object(d3_axis__WEBPACK_IMPORTED_MODULE_5__["axisLeft"])(this.y);
         chart.append('g')
@@ -13864,7 +13873,6 @@ var ScatterPlotComponent = /** @class */ (function (_super) {
                 .attr('stroke', function (d) { return d.color; })
                 .attr('stroke-width', 2);
         }
-        // TODO abstract legend out to a class...
         this.chart.select('.legend').remove();
         var legend = this.chart.append('g')
             .attr('class', 'legend')
@@ -15644,7 +15652,7 @@ var VisualizationsModule = /** @class */ (function () {
                 _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["ReactiveFormsModule"],
                 _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_3__["FontAwesomeModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatFormFieldModule"], _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatButtonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatCheckboxModule"], _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatSelectModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatFormFieldModule"], _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatButtonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatCheckboxModule"], _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatSelectModule"], _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatRadioModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatExpansionModule"], _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatAutocompleteModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatInputModule"], _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatSliderModule"], _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatProgressBarModule"], _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatTooltipModule"], _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatDatepickerModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_16__["MatNativeDateModule"],
@@ -15784,21 +15792,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pheno_trail_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./pheno-trail-visualization-scope-selection.component */ "./src/app/pheno-trail-visualization-scope-selection.component.ts");
 /* harmony import */ var _pheno_trail_visualization_scope_groups_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./pheno-trail-visualization-scope-groups.component */ "./src/app/pheno-trail-visualization-scope-groups.component.ts");
 /* harmony import */ var _pheno_trail_visualization_scope_group_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./pheno-trail-visualization-scope-group.component */ "./src/app/pheno-trail-visualization-scope-group.component.ts");
-/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/forms */ "../../node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/platform-browser/animations */ "../../node_modules/@angular/platform-browser/fesm5/animations.js");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @angular/material */ "../../node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var _angular_flex_layout__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @angular/flex-layout */ "../../node_modules/@angular/flex-layout/esm5/flex-layout.es5.js");
-/* harmony import */ var _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @fortawesome/angular-fontawesome */ "../../node_modules/@fortawesome/angular-fontawesome/fesm5/angular-fontawesome.js");
-/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../environments/environment */ "./src/environments/environment.ts");
-/* harmony import */ var _agm_core__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @agm/core */ "../../node_modules/@agm/core/index.js");
-/* harmony import */ var ng2_dnd__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ng2-dnd */ "../../node_modules/ng2-dnd/index.js");
+/* harmony import */ var _pheno_trail_visualization_scope_station_groups_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./pheno-trail-visualization-scope-station-groups.component */ "./src/app/pheno-trail-visualization-scope-station-groups.component.ts");
+/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/forms */ "../../node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @angular/platform-browser/animations */ "../../node_modules/@angular/platform-browser/fesm5/animations.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @angular/material */ "../../node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _angular_flex_layout__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @angular/flex-layout */ "../../node_modules/@angular/flex-layout/esm5/flex-layout.es5.js");
+/* harmony import */ var _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @fortawesome/angular-fontawesome */ "../../node_modules/@fortawesome/angular-fontawesome/fesm5/angular-fontawesome.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var _agm_core__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @agm/core */ "../../node_modules/@agm/core/index.js");
+/* harmony import */ var ng2_dnd__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ng2-dnd */ "../../node_modules/ng2-dnd/index.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -15844,36 +15854,37 @@ var AppModule = /** @class */ (function () {
                 _pheno_trail_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_11__["PhenoTrailVisualizationScopeSelectionComponent"],
                 _pheno_trail_visualization_scope_groups_component__WEBPACK_IMPORTED_MODULE_12__["PhenoTrailVisualizationScopeGroupsComponent"],
                 _pheno_trail_visualization_scope_group_component__WEBPACK_IMPORTED_MODULE_13__["PhenoTrailVisualizationScopeGroupComponent"],
+                _pheno_trail_visualization_scope_station_groups_component__WEBPACK_IMPORTED_MODULE_14__["PhenoTrailVisualizationScopeStationGroupsComponent"],
                 _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__["NewVisualizationDialogComponent"]
             ],
             entryComponents: [
                 _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__["NewVisualizationDialogComponent"]
             ],
             imports: [
-                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_16__["BrowserAnimationsModule"],
+                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_17__["BrowserAnimationsModule"],
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
                 _npn_common__WEBPACK_IMPORTED_MODULE_3__["NpnLibModule"],
                 _npn_common__WEBPACK_IMPORTED_MODULE_3__["VisualizationsModule"],
                 _npn_common__WEBPACK_IMPORTED_MODULE_3__["NpnCommonModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClientModule"],
-                _angular_forms__WEBPACK_IMPORTED_MODULE_15__["FormsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_15__["ReactiveFormsModule"],
-                _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_19__["FontAwesomeModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatIconModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatCheckboxModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatGridListModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatCardModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatListModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatTooltipModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatSnackBarModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatDialogModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatStepperModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatButtonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatRadioModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatProgressSpinnerModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatSelectModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatInputModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatFormFieldModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatTabsModule"], _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatButtonToggleModule"],
-                _angular_flex_layout__WEBPACK_IMPORTED_MODULE_18__["FlexLayoutModule"],
-                _agm_core__WEBPACK_IMPORTED_MODULE_21__["AgmCoreModule"].forRoot({
-                    apiKey: _environments_environment__WEBPACK_IMPORTED_MODULE_20__["environment"].googleMapsApiKey
+                _angular_forms__WEBPACK_IMPORTED_MODULE_16__["FormsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_16__["ReactiveFormsModule"],
+                _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_20__["FontAwesomeModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatIconModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatCheckboxModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatGridListModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatCardModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatListModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatTooltipModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatSnackBarModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatDialogModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatStepperModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatButtonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatRadioModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatProgressSpinnerModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatSelectModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatInputModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatFormFieldModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatTabsModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatButtonToggleModule"],
+                _angular_flex_layout__WEBPACK_IMPORTED_MODULE_19__["FlexLayoutModule"],
+                _agm_core__WEBPACK_IMPORTED_MODULE_22__["AgmCoreModule"].forRoot({
+                    apiKey: _environments_environment__WEBPACK_IMPORTED_MODULE_21__["environment"].googleMapsApiKey
                 }),
-                ng2_dnd__WEBPACK_IMPORTED_MODULE_22__["DndModule"].forRoot()
+                ng2_dnd__WEBPACK_IMPORTED_MODULE_23__["DndModule"].forRoot()
             ],
             bootstrap: [_fws_dashboard_component__WEBPACK_IMPORTED_MODULE_7__["FwsDashboardComponent"]],
             providers: [
-                _entity_service__WEBPACK_IMPORTED_MODULE_14__["EntityService"],
+                _entity_service__WEBPACK_IMPORTED_MODULE_15__["EntityService"],
                 { provide: _npn_common__WEBPACK_IMPORTED_MODULE_3__["NPN_BASE_HREF"], useFactory: baseHrefFactory },
                 { provide: _npn_common__WEBPACK_IMPORTED_MODULE_3__["NPN_CONFIGURATION"], useFactory: npnConfigurationFactory }
             ]
@@ -16139,8 +16150,7 @@ var FindingsComponent = /** @class */ (function () {
         }
     }
     FindingsComponent.prototype.ngOnInit = function () {
-        this.dashboardMode = _entity_service__WEBPACK_IMPORTED_MODULE_3__["DashboardModeState"].get();
-        this.visTemplates = (this.dashboardMode === _entity_service__WEBPACK_IMPORTED_MODULE_3__["DashboardMode"].PHENO_TRAIL)
+        this.visTemplates = (_entity_service__WEBPACK_IMPORTED_MODULE_3__["DashboardModeState"].get() === _entity_service__WEBPACK_IMPORTED_MODULE_3__["DashboardMode"].PHENO_TRAIL)
             ? VIS_TEMPLATES.filter(function (t) { return t.$class !== 'ClippedWmsMapSelection'; })
             : VIS_TEMPLATES;
     };
@@ -16302,7 +16312,7 @@ var FindingsComponent = /** @class */ (function () {
     FindingsComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'fws-dashboard-findings',
-            template: "\n<mat-list *ngIf=\"adminMode\" class=\"new-vis-list\">\n  <div>\n    <button mat-icon-button (click)=\"toggleAdminMode()\" class=\"toggle-admin-mode\"><i class=\"fa fa-2x fa-times-circle\" aria-hidden=\"true\"></i></button>\n    <p>Click and drag the visualizations below onto your Dashboard. You can have up to 10 visualizations on your Dashboard at one time. You can have multiple versions of each visualization type.</p>\n  </div>\n  <mat-list-item class=\"vis-template\"\n                *ngFor=\"let template of visTemplates\"\n                (mouseenter)=\"lookAtVisDrop = true;\" (mouseleave)=\"lookAtVisDrop = false;\"\n                [matTooltip]=\"template.$tooltip\"\n                matTooltipPosition=\"right\"\n                dnd-draggable [dragData]=\"template\"\n                [dropZones]=\"['newvis-dropZone']\">\n    <img class=\"new-vis-thumbnail\" src=\"{{baseHref}}{{template.$thumbnail}}\" />\n  </mat-list-item>\n  <mat-list-item *ngIf=\"dashboardMode === DashboardMode.PHENO_TRAIL\">\n    <!-- empty item to just to keep the number even -->\n  </mat-list-item>\n  <mat-list-item class=\"trash\"\n                matTooltip=\"Drag and drop visualization here to remove\"\n                matTooltipPosition=\"right\"\n                dnd-droppable [dropZones]=\"['trash-dropZone']\"\n                (onDropSuccess)=\"trashVisualization($event)\"></mat-list-item>\n  <mat-list-item class=\"save\">\n    <button mat-icon-button aria-labelled=\"Save\" (click)=\"save()\" [disabled]=\"!isReordered()\" matTooltip=\"Save current visualization order\"><i class=\"fa fa-floppy-o\" aria-hidden=\"true\"></i><span *ngIf=\"isReordered()\">*</span></button>\n  </mat-list-item>\n</mat-list>\n\n<div class=\"visualizations\" *ngIf=\"entity\" dnd-sortable-container [sortableData]=\"entity.selections\" [dropZones]=\"['list-dropZone','trash-dropZone']\" >\n    <mat-card  *ngFor=\"let selection of entity.selections; first as isFirst; let i = index\"\n              dnd-sortable [sortableIndex]=\"i\"\n              [dragEnabled]=\"adminMode\"\n              [dragData]=\"selection\"\n              (onDragStart)=\"dragStart($event)\"\n              (onDropSuccess)=\"reorderVisualizations()\">\n        <div *ngIf=\"!isFirst && !mobileMode\" class=\"cover\" (click)=\"makeCurrent(selection)\">\n            <span class=\"visualization-title\">{{selection.meta.title}} <button *ngIf=\"adminMode\" mat-icon-button (click)=\"editVisualization(selection,$event)\" matTooltip=\"Edit\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></button></span>\n        </div>\n        <div *ngIf=\"isFirst || mobileMode\" class=\"visualization-details\">\n            <div class=\"visualization-title\">{{selection.meta.title}} <button *ngIf=\"adminMode\" mat-icon-button (click)=\"editVisualization(selection,$event)\" matTooltip=\"Edit\"><i class=\"fa fa-pencil fa-2x\" aria-hidden=\"true\"></i></button></div>\n            <p *ngIf=\"selection.meta.description\" class=\"visualization-description\">{{selection.meta.description}}</p>\n        </div>\n        <npn-visualization [selection]=\"selection\" [thumbnail]=\"!mobileMode && i > 0\"></npn-visualization>\n    </mat-card>\n    <mat-card *ngIf=\"adminMode && entity.selections.length < maxVisualizations\"\n        dnd-droppable [dropZones]=\"['newvis-dropZone']\"\n        (onDropSuccess)=\"addVisualization($event)\"\n        [ngClass]=\"{'new-vis-placeholder': true, 'look-at-me': lookAtVisDrop}\"></mat-card>\n</div>\n<button mat-raised-button *ngIf=\"userIsAdmin && !mobileMode && !adminMode && !isTouchDevice\" (click)=\"toggleAdminMode()\"><span class=\"admin-toggle\">Customize</span></button>\n  ",
+            template: "\n<mat-list *ngIf=\"adminMode\" class=\"new-vis-list\">\n  <div>\n    <button mat-icon-button (click)=\"toggleAdminMode()\" class=\"toggle-admin-mode\"><i class=\"fa fa-2x fa-times-circle\" aria-hidden=\"true\"></i></button>\n    <p>Click and drag the visualizations below onto your Dashboard. You can have up to 10 visualizations on your Dashboard at one time. You can have multiple versions of each visualization type.</p>\n  </div>\n  <mat-list-item class=\"vis-template\"\n                *ngFor=\"let template of visTemplates\"\n                (mouseenter)=\"lookAtVisDrop = true;\" (mouseleave)=\"lookAtVisDrop = false;\"\n                [matTooltip]=\"template.$tooltip\"\n                matTooltipPosition=\"right\"\n                dnd-draggable [dragData]=\"template\"\n                [dropZones]=\"['newvis-dropZone']\">\n    <img class=\"new-vis-thumbnail\" src=\"{{baseHref}}{{template.$thumbnail}}\" />\n  </mat-list-item>\n  <mat-list-item *ngIf=\"(visTemplates.length%2) === 1\">\n    <!-- empty item to just to keep the number even -->\n  </mat-list-item>\n  <mat-list-item class=\"trash\"\n                matTooltip=\"Drag and drop visualization here to remove\"\n                matTooltipPosition=\"right\"\n                dnd-droppable [dropZones]=\"['trash-dropZone']\"\n                (onDropSuccess)=\"trashVisualization($event)\"></mat-list-item>\n  <mat-list-item class=\"save\">\n    <button mat-icon-button aria-labelled=\"Save\" (click)=\"save()\" [disabled]=\"!isReordered()\" matTooltip=\"Save current visualization order\"><i class=\"fa fa-floppy-o\" aria-hidden=\"true\"></i><span *ngIf=\"isReordered()\">*</span></button>\n  </mat-list-item>\n</mat-list>\n\n<div class=\"visualizations\" *ngIf=\"entity\" dnd-sortable-container [sortableData]=\"entity.selections\" [dropZones]=\"['list-dropZone','trash-dropZone']\" >\n    <mat-card  *ngFor=\"let selection of entity.selections; first as isFirst; let i = index\"\n              dnd-sortable [sortableIndex]=\"i\"\n              [dragEnabled]=\"adminMode\"\n              [dragData]=\"selection\"\n              (onDragStart)=\"dragStart($event)\"\n              (onDropSuccess)=\"reorderVisualizations()\">\n        <div *ngIf=\"!isFirst && !mobileMode\" class=\"cover\" (click)=\"makeCurrent(selection)\">\n            <span class=\"visualization-title\">{{selection.meta.title}} <button *ngIf=\"adminMode\" mat-icon-button (click)=\"editVisualization(selection,$event)\" matTooltip=\"Edit\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></button></span>\n        </div>\n        <div *ngIf=\"isFirst || mobileMode\" class=\"visualization-details\">\n            <div class=\"visualization-title\">{{selection.meta.title}} <button *ngIf=\"adminMode\" mat-icon-button (click)=\"editVisualization(selection,$event)\" matTooltip=\"Edit\"><i class=\"fa fa-pencil fa-2x\" aria-hidden=\"true\"></i></button></div>\n            <p *ngIf=\"selection.meta.description\" class=\"visualization-description\">{{selection.meta.description}}</p>\n        </div>\n        <npn-visualization [selection]=\"selection\" [thumbnail]=\"!mobileMode && i > 0\"></npn-visualization>\n    </mat-card>\n    <mat-card *ngIf=\"adminMode && entity.selections.length < maxVisualizations\"\n        dnd-droppable [dropZones]=\"['newvis-dropZone']\"\n        (onDropSuccess)=\"addVisualization($event)\"\n        [ngClass]=\"{'new-vis-placeholder': true, 'look-at-me': lookAtVisDrop}\"></mat-card>\n</div>\n<button mat-raised-button *ngIf=\"userIsAdmin && !mobileMode && !adminMode && !isTouchDevice\" (click)=\"toggleAdminMode()\"><span class=\"admin-toggle\">Customize</span></button>\n  ",
             styles: [__webpack_require__(/*! ./findings.component.scss */ "./src/app/findings.component.scss")],
             encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None
         }),
@@ -16661,9 +16671,8 @@ var NewVisualizationBuilderComponent = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhenoTrailVisualizationScopeGroupComponent", function() { return PhenoTrailVisualizationScopeGroupComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
-/* harmony import */ var _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fortawesome/pro-light-svg-icons */ "../../node_modules/@fortawesome/pro-light-svg-icons/index.es.js");
-/* harmony import */ var _pheno_trail_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pheno-trail-visualization-scope-selection.component */ "./src/app/pheno-trail-visualization-scope-selection.component.ts");
+/* harmony import */ var _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @fortawesome/pro-light-svg-icons */ "../../node_modules/@fortawesome/pro-light-svg-icons/index.es.js");
+/* harmony import */ var _pheno_trail_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pheno-trail-visualization-scope-selection.component */ "./src/app/pheno-trail-visualization-scope-selection.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -16676,47 +16685,37 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
-
 var PhenoTrailVisualizationScopeGroupComponent = /** @class */ (function () {
-    function PhenoTrailVisualizationScopeGroupComponent(networkService) {
-        this.networkService = networkService;
+    function PhenoTrailVisualizationScopeGroupComponent() {
         this.change = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
         this.open = false;
-        this.chevronDownIcon = _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_2__["faChevronDown"];
-        this.chevronRightIcon = _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_2__["faChevronRight"];
+        this.chevronDownIcon = _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_1__["faChevronDown"];
+        this.chevronRightIcon = _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_1__["faChevronRight"];
         this.loading = false;
     }
     PhenoTrailVisualizationScopeGroupComponent.prototype.ngOnInit = function () {
         //Load any pre-existing selections
         if (this.networkWrapper.selected) {
-            this.loadStations();
+            this.networkWrapper.getStations();
         }
-    };
-    PhenoTrailVisualizationScopeGroupComponent.prototype.loadStations = function () {
-        var _this = this;
-        if (!this.stations) {
-            this.loading = true;
-            this.stations = this.networkService.getStations(this.networkWrapper.network.network_id).then(function (stations) {
-                stations.forEach(function (station) { return station.selected = (_this.networkWrapper.group.excludeIds || []).indexOf(station.station_id) > -1; });
-                _this.loading = false;
-                return stations;
-            });
-        }
-        return this.stations;
     };
     /**
      * Toggles the view of the group's stations
      */
     PhenoTrailVisualizationScopeGroupComponent.prototype.toggleOpen = function () {
-        this.loadStations();
-        this.open = !this.open;
+        var _this = this;
+        this.loading = true;
+        this.networkWrapper.getStations().then(function (stations) {
+            _this.open = !_this.open;
+            _this.loading = false;
+        });
     };
     /**
      * Toggle whether a station should be excluded for a selected group
      */
     PhenoTrailVisualizationScopeGroupComponent.prototype.stationChange = function () {
         var _this = this;
-        this.loadStations().then(function (stations) {
+        this.networkWrapper.getStations().then(function (stations) {
             _this.networkWrapper.selected = true;
             _this.networkWrapper.group.excludeIds = stations.filter(function (station) { return station.selected; }).map(function (station) { return station.station_id; });
             _this.change.emit();
@@ -16724,7 +16723,7 @@ var PhenoTrailVisualizationScopeGroupComponent = /** @class */ (function () {
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _pheno_trail_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_3__["NetworkWrapper"])
+        __metadata("design:type", _pheno_trail_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_2__["NetworkWrapper"])
     ], PhenoTrailVisualizationScopeGroupComponent.prototype, "networkWrapper", void 0);
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
@@ -16733,10 +16732,10 @@ var PhenoTrailVisualizationScopeGroupComponent = /** @class */ (function () {
     PhenoTrailVisualizationScopeGroupComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'pheno-trail-visualization-scope-group',
-            template: "\n      <button mat-icon-button [attr.aria-label]=\"'Toggle ' + networkWrapper.network.name\" (click)=\"toggleOpen()\">\n        <mat-icon><fa-icon [icon]=\"open ? chevronDownIcon : chevronRightIcon\"></fa-icon></mat-icon>\n      </button>\n      <mat-checkbox [(ngModel)]=\"networkWrapper.selected\" (change)=\"change.emit()\" [indeterminate]=\"networkWrapper.group.excludeIds?.length > 0\">\n        {{networkWrapper.network.name}}\n      </mat-checkbox>\n      <div class=\"station-input\" *ngIf=\"open\">\n        <h3>Exclude Stations</h3>\n        <mat-progress-spinner *ngIf=\"loading\" mode=\"indeterminate\"></mat-progress-spinner>\n        <div *ngFor=\"let s of stations | async as all\" class=\"station-input\">\n          <mat-checkbox [(ngModel)]=\"s.selected\" (change)=\"stationChange()\" [disabled]=\"!s.selected && networkWrapper.group.excludeIds?.length === (all.length-1)\">{{s.station_name}}</mat-checkbox>\n        </div>\n      </div>\n    ",
+            template: "\n      <button mat-icon-button [attr.aria-label]=\"'Toggle ' + networkWrapper.network.name\" (click)=\"toggleOpen()\">\n        <mat-icon><fa-icon [icon]=\"open ? chevronDownIcon : chevronRightIcon\"></fa-icon></mat-icon>\n      </button>\n      <mat-checkbox [(ngModel)]=\"networkWrapper.selected\" (change)=\"change.emit()\" [indeterminate]=\"networkWrapper.group.excludeIds?.length > 0\">\n        {{networkWrapper.network.name}}\n      </mat-checkbox>\n      <div class=\"station-input\" *ngIf=\"open\">\n        <h3>Exclude Stations</h3>\n        <mat-progress-spinner *ngIf=\"loading\" mode=\"indeterminate\"></mat-progress-spinner>\n        <div *ngFor=\"let s of networkWrapper.stations | async as all\" class=\"station-input\">\n          <mat-checkbox [(ngModel)]=\"s.selected\" (change)=\"stationChange()\" [disabled]=\"!s.selected && networkWrapper.group.excludeIds?.length === (all.length-1)\">{{s.station_name}}</mat-checkbox>\n        </div>\n      </div>\n    ",
             styles: ["\n      .station-input {\n        display: block;\n        padding-left: 34px;\n      }\n    "]
         }),
-        __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_1__["NetworkService"]])
+        __metadata("design:paramtypes", [])
     ], PhenoTrailVisualizationScopeGroupComponent);
     return PhenoTrailVisualizationScopeGroupComponent;
 }());
@@ -16825,14 +16824,22 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 var NetworkWrapper = /** @class */ (function () {
-    function NetworkWrapper(selection, network) {
+    function NetworkWrapper(selection, network, networkService) {
+        this.selection = selection;
         this.network = network;
-        if (selection.groups) { // existing selection
-            this.group = selection.groups.find(function (g) { return g.id === network.network_id; });
-            this.selected = !!this.group;
+        this.networkService = networkService;
+        if (this.selection.groups) { // existing selection
+            var g0 = this.selection.groups[0];
+            if (g0.mode === _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].NETWORK) {
+                this.group = this.selection.groups.find(function (g) { return g.id === network.network_id; });
+                this.selected = !!this.group;
+            }
+            else if (g0.mode === _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].STATION) {
+                this.getStationsWithGroup();
+            }
         }
         else {
-            this.selected = selection.networkIds.indexOf(network.network_id) > -1;
+            this.selected = this.selection.networkIds.indexOf(network.network_id) > -1;
         }
         if (!this.group) {
             // create new group
@@ -16846,6 +16853,32 @@ var NetworkWrapper = /** @class */ (function () {
         // set label unconditionally in case it changed
         this.group.label = network.name;
     }
+    NetworkWrapper.prototype.getStations = function () {
+        var _this = this;
+        if (!this.stations) {
+            this.stations = this.networkService.getStations(this.network.network_id).then(function (stations) {
+                stations.forEach(function (station) { return station.selected = (_this.group.excludeIds || []).indexOf(station.station_id) > -1; });
+                return stations;
+            });
+        }
+        return this.stations;
+    };
+    // component uses this Promise to render station list
+    NetworkWrapper.prototype.getStationsWithGroup = function () {
+        var _this = this;
+        this.stations = this.getStations().then(function (stations) {
+            stations.forEach(function (s) {
+                s.selected = !!_this.selection.groups ? !!_this.selection.groups.find(function (g) { return g.id === s.station_id; }) : false;
+                s.group = {
+                    label: s.station_name,
+                    mode: _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].STATION,
+                    id: s.station_id
+                };
+            });
+            return stations;
+        });
+        return this.stations;
+    };
     return NetworkWrapper;
 }());
 
@@ -16860,13 +16893,19 @@ var PhenoTrailVisualizationScopeSelectionComponent = /** @class */ (function () 
         this.networkFetch = true;
         this.networks = this.networkService.getNetworks(this.phenoTrail.network_ids)
             .then(function (networks) {
-            var wrappers = networks.map(function (n) { return new NetworkWrapper(_this.selection, n); });
+            var wrappers = networks.map(function (n) { return new NetworkWrapper(_this.selection, n, _this.networkService); });
             _this.networkFetch = false;
             return wrappers;
         });
         var selection = this.selection;
         if (selection.groups && selection.groups.length) {
-            this.visScope = "compareGroups";
+            var g0 = this.selection.groups[0];
+            if (g0.mode === _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].NETWORK) {
+                this.visScope = "compareGroups";
+            }
+            else if (g0.mode === _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].STATION) {
+                this.visScope = "compareSites";
+            }
         }
         else if (selection.networkIds && selection.networkIds.length && selection.networkIds.length != this.phenoTrail.network_ids.length) {
             this.visScope = "selectGroups";
@@ -16899,6 +16938,14 @@ var PhenoTrailVisualizationScopeSelectionComponent = /** @class */ (function () 
                     networks.forEach(function (n) { return n.selected = _this.visScope === 'selectGroups'; });
                 });
                 break;
+            case 'compareSites':
+                this.networks.then(function (networks) {
+                    networks.forEach(function (n) {
+                        n.selected = _this.visScope === 'selectGroups';
+                        n.getStationsWithGroup();
+                    });
+                });
+                break;
         }
     };
     PhenoTrailVisualizationScopeSelectionComponent.prototype.selectGroupChange = function () {
@@ -16918,12 +16965,71 @@ var PhenoTrailVisualizationScopeSelectionComponent = /** @class */ (function () 
     PhenoTrailVisualizationScopeSelectionComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'pheno-trail-visualization-scope-selection',
-            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'allGroups'\">Show data for all groups within \"{{phenoTrail.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'selectGroups'\">Show data for select groups within \"{{phenoTrail.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'compareGroups'\">Compare data between groups within \"{{phenoTrail.title}}\"</mat-radio-button>\n    </mat-radio-group>\n    <mat-progress-spinner *ngIf=\"networkFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"visScope === 'selectGroups'\">\n      <hr>\n      <h3 class=\"group-select-header\">Select Groups</h3>\n      <mat-checkbox *ngFor=\"let n of networks | async\" class=\"group-input\" [(ngModel)]=\"n.selected\" (change)=\"selectGroupChange()\" [disabled]=\"n.selected && selection.networkIds.length === 1\">{{n.network.name}}</mat-checkbox>\n    </div>\n    <div *ngIf=\"visScope === 'compareGroups' && networks | async as networkWrappers\">\n      <hr>\n      <pheno-trail-visualization-scope-groups [selection]=\"selection\" [networkWrappers]=\"networkWrappers\"></pheno-trail-visualization-scope-groups>\n    </div>\n    <!--pre *ngIf=\"selection\">{{selection.external | json}}</pre-->\n    ",
+            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'allGroups'\">Show data for all groups within \"{{phenoTrail.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'selectGroups'\">Show data for select groups within \"{{phenoTrail.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'compareGroups'\">Compare data between groups within \"{{phenoTrail.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'compareSites'\">Compare data between sites within \"{{phenoTrail.title}}\"</mat-radio-button>\n      </mat-radio-group>\n    <mat-progress-spinner *ngIf=\"networkFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"visScope === 'selectGroups'\">\n      <hr>\n      <h3 class=\"group-select-header\">Select Groups</h3>\n      <mat-checkbox *ngFor=\"let n of networks | async\" class=\"group-input\" [(ngModel)]=\"n.selected\" (change)=\"selectGroupChange()\" [disabled]=\"n.selected && selection.networkIds.length === 1\">{{n.network.name}}</mat-checkbox>\n    </div>\n    <div *ngIf=\"visScope === 'compareGroups' && networks | async as networkWrappers\">\n      <hr>\n      <pheno-trail-visualization-scope-groups [selection]=\"selection\" [networkWrappers]=\"networkWrappers\"></pheno-trail-visualization-scope-groups>\n    </div>\n    <div *ngIf=\"visScope === 'compareSites' && networks | async as networkWrappers\">\n      <hr>\n      <pheno-trail-visualization-scope-station-groups [selection]=\"selection\" [networkWrappers]=\"networkWrappers\"></pheno-trail-visualization-scope-station-groups>\n    </div>\n    <!--pre *ngIf=\"selection\">{{selection.external | json}}</pre-->\n    ",
             styles: ["\n        .vis-scope-input {\n          display: inline-flex;\n          flex-direction: column;\n        }\n        .vis-scope-radio {\n          margin: 5px;\n        }\n        .group-input {\n          display: block;\n          padding-left: 34px;\n        }\n        .group-select-header{\n          margin-bottom:20px;\n        }\n        \n    "]
         }),
         __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_1__["NetworkService"]])
     ], PhenoTrailVisualizationScopeSelectionComponent);
     return PhenoTrailVisualizationScopeSelectionComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/pheno-trail-visualization-scope-station-groups.component.ts":
+/*!*****************************************************************************!*\
+  !*** ./src/app/pheno-trail-visualization-scope-station-groups.component.ts ***!
+  \*****************************************************************************/
+/*! exports provided: PhenoTrailVisualizationScopeStationGroupsComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhenoTrailVisualizationScopeStationGroupsComponent", function() { return PhenoTrailVisualizationScopeStationGroupsComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @npn/common/visualizations/vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var PhenoTrailVisualizationScopeStationGroupsComponent = /** @class */ (function () {
+    function PhenoTrailVisualizationScopeStationGroupsComponent() {
+    }
+    /**
+     * Toggle whether a station should be excluded for a selected group
+     */
+    PhenoTrailVisualizationScopeStationGroupsComponent.prototype.stationChange = function () {
+        this.selection.groups = this.networkWrappers.reduce(function (groups, wrapper) {
+            wrapper.stations.then(function (stations) {
+                stations.filter(function (s) { return s.selected; }).forEach(function (s) { return groups.push(s.group); });
+            });
+            return groups;
+        }, []);
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_1__["StationAwareVisSelection"])
+    ], PhenoTrailVisualizationScopeStationGroupsComponent.prototype, "selection", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Array)
+    ], PhenoTrailVisualizationScopeStationGroupsComponent.prototype, "networkWrappers", void 0);
+    PhenoTrailVisualizationScopeStationGroupsComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'pheno-trail-visualization-scope-station-groups',
+            template: "\n    <h3>Select Sites to Compare</h3>\n    <div *ngFor=\"let nw of networkWrappers\">\n      {{nw.network.name}}\n      <div *ngFor=\"let s of nw.stations | async\" class=\"station-input\">\n        <mat-checkbox [(ngModel)]=\"s.selected\" (change)=\"stationChange()\">{{s.station_name}}</mat-checkbox>\n      </div>\n    </div>\n    ",
+            styles: ["\n      .group-input {\n        display:block;\n      }\n      .station-input {\n        display: block;\n        padding-left: 34px;\n      }\n    "]
+        })
+    ], PhenoTrailVisualizationScopeStationGroupsComponent);
+    return PhenoTrailVisualizationScopeStationGroupsComponent;
 }());
 
 
@@ -17216,7 +17322,7 @@ var RefugeVisualizationScopeSelectionComponent = /** @class */ (function () {
     RefugeVisualizationScopeSelectionComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'refuge-visualization-scope-selection',
-            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'refuge'\">Show data for all sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'station'\">Show data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'stationGroup'\">Compare data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n    </mat-radio-group>\n    <mat-progress-spinner *ngIf=\"stationFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"(visScope === 'station' || visScope === 'stationGroup')\">\n        <mat-checkbox *ngFor=\"let s of stations\" class=\"station-input\" [(ngModel)]=\"s.selected\" (change)=\"stationChange()\">{{s.station_name}}</mat-checkbox>\n    </div>\n    <!--pre *ngIf=\"selection\">{{selection.external | json}}</pre-->\n    ",
+            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'refuge'\">Show data for all sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'station'\">Show data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'stationGroup'\">Compare data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n    </mat-radio-group>\n    <hr *ngIf=\"visScope !== 'refuge'\" />\n    <mat-progress-spinner *ngIf=\"stationFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"(visScope === 'station' || visScope === 'stationGroup')\">\n        <mat-checkbox *ngFor=\"let s of stations\" class=\"station-input\" [(ngModel)]=\"s.selected\" (change)=\"stationChange()\"\n            [disabled]=\"visScope === 'station' && s.selected && selection.stationIds?.length === 1\">{{s.station_name}}</mat-checkbox>\n    </div>\n    <!--pre *ngIf=\"selection\">{{selection.external | json}}</pre-->\n    ",
             styles: ["\n        .vis-scope-input {\n          display: inline-flex;\n          flex-direction: column;\n        }\n        .vis-scope-radio {\n          margin: 5px;\n        }\n        .station-input {\n            display: block;\n            padding-left: 34px;\n        }\n    "]
         }),
         __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_2__["NetworkService"]])
