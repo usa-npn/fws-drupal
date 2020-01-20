@@ -4509,7 +4509,7 @@ function xmlToString(xmlData) {
 /*!**************************************!*\
   !*** ../npn/common/src/lib/index.ts ***!
   \**************************************/
-/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObvervationFrequencyStationControlComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObvervationFrequencyStationControlComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4683,6 +4683,42 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClippedStatValuePipe", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ClippedStatValuePipe"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurve", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurve"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "INTERPOLATE", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["INTERPOLATE"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_CURVE_KINGDOM_METRICS", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_CURVE_KINGDOM_METRICS"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityFrequency", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityFrequency"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_MONTHLY", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_FREQUENCY_MONTHLY"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_BIWEEKLY", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_FREQUENCY_BIWEEKLY"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_WEEKLY", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_FREQUENCY_WEEKLY"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCIES", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_FREQUENCIES"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesSelection", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesSelection"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesSelectionFactory", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesSelectionFactory"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_CURVES_INTERPOLATES", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_CURVES_INTERPOLATES"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesControlComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CurveControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["CurveControlComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelection"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelectionFactory", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelectionFactory"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivityComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityControl", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivityControl"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObservationFrequencySelection", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObservationFrequencySelection"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObservationFrequencySelectionFactory", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObservationFrequencySelectionFactory"]; });
@@ -4742,42 +4778,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpringIndexMapLayerControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["SpringIndexMapLayerControlComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MapVisualizationMarkerIw", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["MapVisualizationMarkerIw"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurve", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurve"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "INTERPOLATE", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["INTERPOLATE"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_CURVE_KINGDOM_METRICS", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_CURVE_KINGDOM_METRICS"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityFrequency", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityFrequency"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_MONTHLY", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_FREQUENCY_MONTHLY"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_BIWEEKLY", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_FREQUENCY_BIWEEKLY"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_WEEKLY", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_FREQUENCY_WEEKLY"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCIES", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_FREQUENCIES"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesSelection", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesSelection"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesSelectionFactory", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesSelectionFactory"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesComponent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_CURVES_INTERPOLATES", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_CURVES_INTERPOLATES"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesControlComponent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CurveControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["CurveControlComponent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelection"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelectionFactory", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelectionFactory"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivityComponent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityControl", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivityControl"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "YearRangeInputComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["YearRangeInputComponent"]; });
 
@@ -4839,7 +4839,7 @@ var NpnLibModule = /** @class */ (function () {
 /*!*******************************************!*\
   !*** ../npn/common/src/lib/public_api.ts ***!
   \*******************************************/
-/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObvervationFrequencyStationControlComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObvervationFrequencyStationControlComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5013,6 +5013,42 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClippedStatValuePipe", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ClippedStatValuePipe"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurve", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ActivityCurve"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "INTERPOLATE", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["INTERPOLATE"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_CURVE_KINGDOM_METRICS", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ACTIVITY_CURVE_KINGDOM_METRICS"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityFrequency", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ActivityFrequency"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_MONTHLY", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ACTIVITY_FREQUENCY_MONTHLY"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_BIWEEKLY", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ACTIVITY_FREQUENCY_BIWEEKLY"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_WEEKLY", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ACTIVITY_FREQUENCY_WEEKLY"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCIES", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ACTIVITY_FREQUENCIES"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesSelection", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ActivityCurvesSelection"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesSelectionFactory", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ActivityCurvesSelectionFactory"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ActivityCurvesComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_CURVES_INTERPOLATES", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ACTIVITY_CURVES_INTERPOLATES"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesControlComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ActivityCurvesControlComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CurveControlComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["CurveControlComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ObserverActivitySelection"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelectionFactory", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ObserverActivitySelectionFactory"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ObserverActivityComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityControl", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ObserverActivityControl"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObservationFrequencySelection", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ObservationFrequencySelection"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObservationFrequencySelectionFactory", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ObservationFrequencySelectionFactory"]; });
@@ -5072,42 +5108,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpringIndexMapLayerControlComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["SpringIndexMapLayerControlComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MapVisualizationMarkerIw", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["MapVisualizationMarkerIw"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurve", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ActivityCurve"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "INTERPOLATE", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["INTERPOLATE"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_CURVE_KINGDOM_METRICS", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ACTIVITY_CURVE_KINGDOM_METRICS"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityFrequency", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ActivityFrequency"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_MONTHLY", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ACTIVITY_FREQUENCY_MONTHLY"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_BIWEEKLY", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ACTIVITY_FREQUENCY_BIWEEKLY"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_WEEKLY", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ACTIVITY_FREQUENCY_WEEKLY"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCIES", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ACTIVITY_FREQUENCIES"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesSelection", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ActivityCurvesSelection"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesSelectionFactory", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ActivityCurvesSelectionFactory"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ActivityCurvesComponent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_CURVES_INTERPOLATES", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ACTIVITY_CURVES_INTERPOLATES"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesControlComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ActivityCurvesControlComponent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CurveControlComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["CurveControlComponent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ObserverActivitySelection"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelectionFactory", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ObserverActivitySelectionFactory"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ObserverActivityComponent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityControl", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ObserverActivityControl"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "YearRangeInputComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["YearRangeInputComponent"]; });
 
@@ -9984,7 +9984,7 @@ var YearRangeInputComponent = /** @class */ (function () {
 /*!*****************************************************!*\
   !*** ../npn/common/src/lib/visualizations/index.ts ***!
   \*****************************************************/
-/*! exports provided: VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObvervationFrequencyStationControlComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObvervationFrequencyStationControlComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10029,6 +10029,42 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClippedWmsMapStatisticsComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ClippedWmsMapStatisticsComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClippedStatValuePipe", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ClippedStatValuePipe"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurve", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurve"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "INTERPOLATE", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["INTERPOLATE"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_CURVE_KINGDOM_METRICS", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_CURVE_KINGDOM_METRICS"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityFrequency", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityFrequency"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_MONTHLY", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_FREQUENCY_MONTHLY"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_BIWEEKLY", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_FREQUENCY_BIWEEKLY"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_WEEKLY", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_FREQUENCY_WEEKLY"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCIES", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_FREQUENCIES"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesSelection", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesSelection"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesSelectionFactory", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesSelectionFactory"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_CURVES_INTERPOLATES", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_CURVES_INTERPOLATES"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesControlComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CurveControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["CurveControlComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelection"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelectionFactory", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelectionFactory"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivityComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityControl", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivityControl"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObservationFrequencySelection", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObservationFrequencySelection"]; });
 
@@ -10089,42 +10125,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpringIndexMapLayerControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["SpringIndexMapLayerControlComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MapVisualizationMarkerIw", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["MapVisualizationMarkerIw"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurve", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurve"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "INTERPOLATE", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["INTERPOLATE"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_CURVE_KINGDOM_METRICS", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_CURVE_KINGDOM_METRICS"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityFrequency", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityFrequency"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_MONTHLY", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_FREQUENCY_MONTHLY"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_BIWEEKLY", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_FREQUENCY_BIWEEKLY"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCY_WEEKLY", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_FREQUENCY_WEEKLY"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_FREQUENCIES", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_FREQUENCIES"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesSelection", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesSelection"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesSelectionFactory", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesSelectionFactory"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesComponent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ACTIVITY_CURVES_INTERPOLATES", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ACTIVITY_CURVES_INTERPOLATES"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesControlComponent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CurveControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["CurveControlComponent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelection"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelectionFactory", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelectionFactory"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivityComponent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityControl", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivityControl"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "YearRangeInputComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["YearRangeInputComponent"]; });
 
@@ -12691,6 +12691,7 @@ var ObserverActivitySelectionFactory = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return ObserverActivitySelection; });
 /* harmony import */ var _vis_selection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -12711,10 +12712,11 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
 var ObserverActivitySelection = /** @class */ (function (_super) {
     __extends(ObserverActivitySelection, _super);
     function ObserverActivitySelection(serviceUtils, networkService) {
-        var _this = _super.call(this, networkService) || this;
+        var _this = _super.call(this, serviceUtils, networkService) || this;
         _this.serviceUtils = serviceUtils;
         _this.networkService = networkService;
         _this.$class = 'ObserverActivitySelection';
@@ -12723,34 +12725,84 @@ var ObserverActivitySelection = /** @class */ (function (_super) {
     ObserverActivitySelection.prototype.isValid = function () {
         return !!this.year;
     };
+    ObserverActivitySelection.prototype.toURLSearchParams = function (params) {
+        if (params === void 0) { params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpParams"](); }
+        return _super.prototype.toURLSearchParams.call(this, params.set('year', "" + this.year));
+    };
     ObserverActivitySelection.prototype.getData = function () {
         var _this = this;
-        // /npn_portal/networks/getObserversByMonth.json?year=2015&network_id=69
-        var url = this.serviceUtils.apiUrl('/npn_portal/networks/getObserversByMonth.json'), params = {
-            year: this.year,
-            network_id: this.networkIds[0]
-        };
+        var url = this.serviceUtils.apiUrl('/npn_portal/networks/getObserversByMonth.json');
         // pulls data for a given month from a server response
         var dataForMonth = function (month, data) { return ({
             month: month,
             newObservers: data.months[month].new_observers.length,
             activeObservers: data.months[month].active_observers.length
         }); };
-        // TODO is at the moment always just a single set of data...
-        return new Promise(function (resolve, reject) {
-            _this.working = true;
-            _this.serviceUtils.cachedGet(url, params)
+        this.working = true;
+        // if $entity is not set then this selection was created prior to the phenology trail
+        // work and so needs to behave as it did previously, only single network id, etc.
+        if (!this.$entity) {
+            return this.serviceUtils.cachedGet(url, { year: this.year, network_id: this.networkIds[0] })
                 .then(function (data) {
-                // group label or?
-                data.label = "TODO: " + data.network_name;
-                data.months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (i) { return dataForMonth(i, data); });
                 _this.working = false;
-                // TODO temporarily to give multiple stacks
+                data.label = "" + data.network_name;
+                data.months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (i) { return dataForMonth(i, data); });
                 var d = data;
-                resolve([d, d]);
-            })
+                return [d];
+            });
+        }
+        // $entity is set this is a new selection that can deal with
+        return this.toURLSearchParams()
+            .then(function (baseParams) {
+            if (_this.groups && _this.groups.length) {
+                return _this.toGroupHttpParams(baseParams)
+                    .then(function (groupParams) { return Promise.all(groupParams.map(function (gp) { return _this.serviceUtils.cachedPost(url, gp.params.toString())
+                    .then(function (data) {
+                    data.label = gp.group.label;
+                    data.months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (i) { return dataForMonth(i, data); });
+                    var d = data;
+                    return d;
+                }); })); }).then(function (results) {
+                    _this.working = false;
+                    return results;
+                });
+            }
+            // a single data set
+            return _this.serviceUtils.cachedPost(url, baseParams.toString())
+                .then(function (data) {
+                _this.working = false;
+                var label = _this.$entity.title;
+                if (_this.stationIds && _this.stationIds.length) {
+                    // refuge, subset of stations
+                    label += ' (select stations)';
+                }
+                else if (_this.$entity.network_ids && _this.networkIds.length !== _this.$entity.network_ids.length) {
+                    // phenology trail, subset of groups
+                    label += ' (select groups)';
+                }
+                data.label = label;
+                data.months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (i) { return dataForMonth(i, data); });
+                var d = data;
+                return [d];
+            });
+        });
+        /*
+        // TODO is at the moment always just a single set of data...
+        return new Promise((resolve,reject) => {
+            this.working = true;
+            this.serviceUtils.cachedGet(url,params)
+                .then(data => {
+                    // group label or?
+                    data.label = `TODO: ${data.network_name}`;
+                    data.months = [1,2,3,4,5,6,7,8,9,10,11,12].map(i => dataForMonth(i,data));
+                    this.working = false;
+                    // TODO temporarily to give multiple stacks
+                    const d = data as ObserverActivityData;
+                    resolve([d,d]);
+                })
                 .catch(reject);
         });
+        */
     };
     __decorate([
         Object(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["selectionProperty"])(),
@@ -12758,10 +12810,14 @@ var ObserverActivitySelection = /** @class */ (function (_super) {
     ], ObserverActivitySelection.prototype, "$class", void 0);
     __decorate([
         Object(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["selectionProperty"])(),
+        __metadata("design:type", Object)
+    ], ObserverActivitySelection.prototype, "$entity", void 0);
+    __decorate([
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["selectionProperty"])(),
         __metadata("design:type", Number)
     ], ObserverActivitySelection.prototype, "year", void 0);
     return ObserverActivitySelection;
-}(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["NetworkAwareVisSelection"]));
+}(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["StationAwareVisSelection"]));
 
 
 
@@ -12836,6 +12892,7 @@ var LEGEND_VPAD = 4;
 var MARGIN_VPAD = 5;
 var TITLE_FONT_SIZE = 18;
 var SWATCH_SIZE = 20;
+var BAR_OPACITY = '0.75';
 var ObserverActivityVisMode;
 (function (ObserverActivityVisMode) {
     ObserverActivityVisMode["NEW_OBSERVERS"] = "New Observers";
@@ -12878,7 +12935,9 @@ var ObserverActivityComponent = /** @class */ (function (_super) {
         this.x = Object(d3_scale__WEBPACK_IMPORTED_MODULE_5__["scaleBand"])().rangeRound([0, sizing.width]).padding(0.05).domain(d3__WEBPACK_IMPORTED_MODULE_6__["range"](0, 12));
         this.xAxis = Object(d3_axis__WEBPACK_IMPORTED_MODULE_4__["axisBottom"])(this.x).tickFormat(function (i) { return d3_month_fmt(new Date(1900, i)); });
         this.y = Object(d3_scale__WEBPACK_IMPORTED_MODULE_5__["scaleLinear"])().range([sizing.height, 0]).domain([0, 20]); // just a default domain
-        this.yAxis = Object(d3_axis__WEBPACK_IMPORTED_MODULE_4__["axisLeft"])(this.y).tickFormat(d3__WEBPACK_IMPORTED_MODULE_6__["format"]('.0d'));
+        this.yAxis = Object(d3_axis__WEBPACK_IMPORTED_MODULE_4__["axisLeft"])(this.y)
+            .tickSize(-sizing.width)
+            .tickFormat(d3__WEBPACK_IMPORTED_MODULE_6__["format"]('.0d'));
         chart.append('g')
             .attr('class', 'x axis')
             .attr('transform', 'translate(0,' + sizing.height + ')')
@@ -12942,7 +13001,8 @@ var ObserverActivityComponent = /** @class */ (function (_super) {
                 .attr('x', 0)
                 .attr('width', SWATCH_SIZE)
                 .attr('height', SWATCH_SIZE)
-                .attr('fill', function (d, i) { return z(i); });
+                .attr('fill', function (d, i) { return z(i); })
+                .style('opacity', BAR_OPACITY);
             // add labels
             legend.append('text')
                 .attr('x', SWATCH_SIZE + 4)
@@ -12950,6 +13010,18 @@ var ObserverActivityComponent = /** @class */ (function (_super) {
                 .attr('dy', '0.1em')
                 .text(function (d) { return d; });
         }
+    };
+    ObserverActivityComponent.prototype.commonUpdates = function () {
+        _super.prototype.commonUpdates.call(this);
+        var chart = this.chart;
+        // undo/change some of the commonUpdates
+        var _yAxis = chart.select('.y.axis');
+        _yAxis.select('path.domain')
+            .attr('stroke', 'none')
+            .style('stroke', 'none');
+        _yAxis.selectAll('.tick>line')
+            .attr('stroke', function (i) { return i === 0 ? '#000' : '#ddd'; })
+            .style('stroke', function (i) { return i === 0 ? '#000' : '#ddd'; });
     };
     ObserverActivityComponent.prototype.redrawSvg = function () {
         var _this = this;
@@ -12990,15 +13062,17 @@ var ObserverActivityComponent = /** @class */ (function (_super) {
             .attr('y', function (d) { return y(d[1]); })
             .attr('height', function (d) { return y(d[0]) - y(d[1]); })
             .attr('width', x.bandwidth() - 10)
-            .on('mouseover', function () { return tooltip.style('display', null); })
-            .on('mouseout', function () { return tooltip.style('display', 'none'); })
-            .on('mousemove', function (d) {
-            var container = this;
-            var xPosition = d3__WEBPACK_IMPORTED_MODULE_6__["mouse"](container)[0] + sizing.margin.left - 5;
-            var yPosition = d3__WEBPACK_IMPORTED_MODULE_6__["mouse"](container)[1] + sizing.margin.top - 5;
-            tooltip.attr('transform', "translate(" + xPosition + "," + yPosition + ")");
-            tooltip.select('text').text(d[1] - d[0]);
-        });
+            .style('opacity', BAR_OPACITY);
+        /* tooltips not working nicely, flashing
+        .on('mouseover', () => tooltip.style('display',null))
+        .on('mouseout', () => tooltip.style('display','none'))
+        .on('mousemove', function(d) {
+            const container = this as d3.ContainerElement;
+            var xPosition = d3.mouse(container)[0] + sizing.margin.left - 5;
+            var yPosition = d3.mouse(container)[1] + sizing.margin.top - 5;
+            tooltip.attr('transform',`translate(${xPosition},${yPosition})`);
+            tooltip.select('text').text(d[1]-d[0]);
+        });*/
         this.commonUpdates();
     };
     __decorate([
@@ -13053,7 +13127,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!**********************************************************!*\
   !*** ../npn/common/src/lib/visualizations/public_api.ts ***!
   \**********************************************************/
-/*! exports provided: VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObvervationFrequencyStationControlComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObvervationFrequencyStationControlComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16077,6 +16151,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./new-visualization-dialog.component */ "./src/app/new-visualization-dialog.component.ts");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! jquery */ "../../node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_6__);
+var __assign = (undefined && undefined.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -16211,7 +16293,13 @@ var FindingsComponent = /** @class */ (function () {
     FindingsComponent.prototype.addVisualization = function ($event) {
         var _this = this;
         console.log('add.$event', $event);
-        var s = this.selectionFactory.newSelection($event.dragData);
+        // most selections will simply ignore $entity but some like observer activity
+        // metrics, with the introduction of the pheno trail work, need the overall
+        // $entity to decide how to label legend items when not performing grouping
+        var $entity = this.entity instanceof _entity_service__WEBPACK_IMPORTED_MODULE_3__["Refuge"]
+            ? { title: this.entity.title, network_id: this.entity.network_id }
+            : { title: this.entity.title, network_ids: this.entity.network_ids };
+        var s = this.selectionFactory.newSelection(__assign({ $entity: $entity }, $event.dragData));
         console.log('add.selection', s);
         var dialogRef = this.visDialog(s);
         dialogRef.afterClosed().subscribe(function (selection) {
