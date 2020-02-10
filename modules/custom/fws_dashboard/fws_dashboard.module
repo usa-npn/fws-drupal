@@ -12,6 +12,8 @@ define('NPN_DATA_API_ROOT','npn_data_api_root');
 define('NPN_DATA_API_ROOT_DEFAULT','//data-dev.usanpn.org:3006');
 define('NPN_DATA_API_ROOT2','npn_data_api_root2');
 define('NPN_DATA_API_ROOT2_DEFAULT','https://data-dev.usanpn.org/webservices');
+define('NPN_DATA_API_ROOT3','npn_data_api_root3');
+define('NPN_DATA_API_ROOT3_DEFAULT','https://data-dev.usanpn.org:3004');
 define('NPN_DATA_USE_STATS_CACHE','npn_data_use_stats_cache');
 
 
@@ -95,6 +97,13 @@ function fws_dashboard_settings_form() {
             '#required' => TRUE,
             '#size' => 100,
         ),
+        NPN_DATA_API_ROOT3 => array(
+            '#type' => 'textfield',
+            '#title' => t('URL of the NPN data3 web services (defaults to: "'.NPN_DATA_API_ROOT3_DEFAULT.'")'),
+            '#default_value' => variable_get(NPN_DATA_API_ROOT3,NPN_DATA_API_ROOT3_DEFAULT),
+            '#required' => TRUE,
+            '#size' => 100,
+        ),
         NPN_DATA_USE_STATS_CACHE => array(
             '#type' => 'checkbox',
             '#title' => 'Use cache for statistics',
@@ -159,6 +168,7 @@ function fws_dashboard_block_view($delta='') {
             'apiRoot' => variable_get(NPN_API_ROOT,NPN_API_ROOT_DEFAULT),
             'dataApiRoot' => variable_get(NPN_DATA_API_ROOT,NPN_DATA_API_ROOT_DEFAULT),
             'dataApiRoot2' => variable_get(NPN_DATA_API_ROOT2,NPN_DATA_API_ROOT2_DEFAULT),
+            'dataApiRoot3' => variable_get(NPN_DATA_API_ROOT3,NPN_DATA_API_ROOT3_DEFAULT),
             'dataApiUseStatisticsCache' => variable_get(NPN_DATA_USE_STATS_CACHE) ? TRUE : FALSE,
             'geoServerRoot' => variable_get(NPN_GEOSERVER_ROOT,NPN_GEOSERVER_ROOT_DEFAULT),
         );

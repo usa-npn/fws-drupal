@@ -523,6 +523,15 @@ var NetworkService = /** @class */ (function () {
         return this.serviceUtils.cachedGet(this.serviceUtils.apiUrl('/npn_portal/stations/getAllStations.json'), params);
     };
     /**
+     * Get station ids nearby to a network (functional for only networks with boundaries).
+     *
+     * @param networkId A single networkId
+     * @param radius The radius to constrain the results by.
+     */
+    NetworkService.prototype.getNearbyStationIds = function (networkId, radius) {
+        return this.serviceUtils.cachedGet(this.serviceUtils.dataApiUrl3("/v0/stations/nearby_stations/" + networkId + "/" + radius)).then(function (response) { return response.Station_IDs; });
+    };
+    /**
      * Get a single Network by id
      *
      * @todo unfortunate that this takes a single networkId and yet returns an array, the function should unwrap the response so callers don't have to.
@@ -751,6 +760,9 @@ var NpnServiceUtils = /** @class */ (function () {
     };
     NpnServiceUtils.prototype.dataApiUrl2 = function (suffix) {
         return "" + this.config.dataApiRoot2 + suffix;
+    };
+    NpnServiceUtils.prototype.dataApiUrl3 = function (suffix) {
+        return "" + this.config.dataApiRoot3 + suffix;
     };
     NpnServiceUtils.prototype.geoServerUrl = function (suffix) {
         return "" + this.config.geoServerRoot + suffix;
@@ -14933,7 +14945,7 @@ var NetworkAwareVisSelection = /** @class */ (function (_super) {
                     // exclude any stations the group excludes
                     .then(function (ids) { return ids.filter(function (id) { return (group.excludeIds || []).indexOf(id) === -1; }); });
             case SelectionGroupMode.OUTSIDE:
-                return Promise.reject('TODO SelectionGroupMode.OUTSIDE not implemented yet');
+                return this.networkService.getNearbyStationIds(group.id, group.outsideRadiusMiles);
         }
     };
     /**
@@ -17309,6 +17321,7 @@ var RefugeVisualizationScopeSelectionComponent = /** @class */ (function () {
         this.networkService = networkService;
         this.visScope = 'refuge';
         this.stationFetch = false;
+        this.radius = 10;
     }
     RefugeVisualizationScopeSelectionComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -17365,12 +17378,26 @@ var RefugeVisualizationScopeSelectionComponent = /** @class */ (function () {
                 this.loadStations().then(function (stations) {
                     // all selected for station mode and all de-selected for stationGroup mode
                     stations.forEach(function (s) { return s.selected = _this.visScope === 'station'; });
+                    if (_this.visScope === 'outsideGroup') {
+                        _this.outsideGroupChange();
+                    }
                 });
-                if (this.visScope === 'outsideGroup') {
-                    // TODO populate selection.groups
-                }
                 break;
         }
+    };
+    RefugeVisualizationScopeSelectionComponent.prototype.outsideGroupChange = function () {
+        var exludeIds = this.stations.filter(function (s) { return s.selected; }).map(function (s) { return s.station_id; });
+        this.selection.groups = [{
+                label: this.refuge.title,
+                mode: _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].NETWORK,
+                id: this.refuge.network_id,
+                excludeIds: exludeIds
+            }, {
+                label: "Sites within " + this.radius + " miles",
+                mode: _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].OUTSIDE,
+                id: this.refuge.network_id,
+                outsideRadiusMiles: this.radius
+            }];
     };
     RefugeVisualizationScopeSelectionComponent.prototype.stationChange = function () {
         switch (this.visScope) {
@@ -17388,7 +17415,7 @@ var RefugeVisualizationScopeSelectionComponent = /** @class */ (function () {
                 });
                 break;
             case 'outsideGroup':
-                // TODO
+                this.outsideGroupChange();
                 break;
         }
     };
@@ -17410,8 +17437,8 @@ var RefugeVisualizationScopeSelectionComponent = /** @class */ (function () {
     RefugeVisualizationScopeSelectionComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'refuge-visualization-scope-selection',
-            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'refuge'\">Show data for all sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'station'\">Show data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'stationGroup'\">Compare data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n    </mat-radio-group>\n    <hr *ngIf=\"visScope !== 'refuge'\" />\n    <mat-progress-spinner *ngIf=\"stationFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"(visScope === 'station' || visScope === 'stationGroup')\">\n        <mat-checkbox *ngFor=\"let s of stations\" class=\"station-input\" [(ngModel)]=\"s.selected\" (change)=\"stationChange()\"\n            [disabled]=\"visScope === 'station' && s.selected && selection.stationIds?.length === 1\">{{s.station_name}}</mat-checkbox>\n    </div>\n    <!--pre *ngIf=\"selection\">{{selection.external | json}}</pre-->\n    ",
-            styles: ["\n        .vis-scope-input {\n          display: inline-flex;\n          flex-direction: column;\n        }\n        .vis-scope-radio {\n          margin: 5px;\n        }\n        .station-input {\n            display: block;\n            padding-left: 34px;\n        }\n    "]
+            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'refuge'\">Show data for all sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'station'\">Show data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'stationGroup'\">Compare data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'outsideGroup'\">Compare refuge data to sites within a radius</mat-radio-button>\n    </mat-radio-group>\n    <hr *ngIf=\"visScope !== 'refuge'\" />\n    <h3 class=\"radius-label\" *ngIf=\"visScope === 'outsideGroup'\">Radius (in miles)</h3>\n    <mat-select class=\"vis-scope-input\" class=\"radius-input\" [(ngModel)]=\"radius\" (selectionChange)=\"outsideGroupChange()\" *ngIf=\"visScope === 'outsideGroup'\">\n        <mat-option [value]=\"10\">10</mat-option>\n        <mat-option [value]=\"20\">20</mat-option>\n        <mat-option [value]=\"30\">30</mat-option>\n    </mat-select>\n    <mat-progress-spinner *ngIf=\"stationFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"(visScope === 'station' || visScope === 'stationGroup' || visScope === 'outsideGroup')\">\n    <h3 *ngIf=\"(visScope === 'outsideGroup')\">Select Sites to Exclude</h3>\n        <mat-checkbox *ngFor=\"let s of stations\" class=\"station-input\" [(ngModel)]=\"s.selected\" (change)=\"stationChange()\"\n            [disabled]=\"visScope === 'station' && s.selected && selection.stationIds?.length === 1\">{{s.station_name}}</mat-checkbox>\n    </div>\n    <!--<pre *ngIf=\"selection\">{{selection.external | json}}</pre>-->\n    ",
+            styles: ["\n        .vis-scope-input {\n          display: inline-flex;\n          flex-direction: column;\n        }\n        .vis-scope-radio {\n          margin: 5px;\n        }\n        .station-input {\n            display: block;\n            padding-left: 34px;\n        },\n        .radius-label {\n            padding-top:20px;\n        }\n        .radius-input {\n            padding-bottom:20px;\n        }\n    "]
         }),
         __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_2__["NetworkService"]])
     ], RefugeVisualizationScopeSelectionComponent);
