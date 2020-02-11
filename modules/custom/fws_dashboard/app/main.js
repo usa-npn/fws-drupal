@@ -529,7 +529,7 @@ var NetworkService = /** @class */ (function () {
      * @param radius The radius to constrain the results by.
      */
     NetworkService.prototype.getNearbyStationIds = function (networkId, radius) {
-        return this.serviceUtils.cachedGet(this.serviceUtils.dataApiUrl3("/v0/stations/nearby_stations/" + networkId + "/" + radius)).then(function (response) { return response.Station_IDs; });
+        return this.serviceUtils.cachedGet(this.serviceUtils.dataApiUrl2("/v0/stations/nearby_stations/" + networkId + "/" + radius)).then(function (response) { return response.Station_IDs; });
     };
     /**
      * Get a single Network by id
@@ -760,9 +760,6 @@ var NpnServiceUtils = /** @class */ (function () {
     };
     NpnServiceUtils.prototype.dataApiUrl2 = function (suffix) {
         return "" + this.config.dataApiRoot2 + suffix;
-    };
-    NpnServiceUtils.prototype.dataApiUrl3 = function (suffix) {
-        return "" + this.config.dataApiRoot3 + suffix;
     };
     NpnServiceUtils.prototype.geoServerUrl = function (suffix) {
         return "" + this.config.geoServerRoot + suffix;
