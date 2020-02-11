@@ -1183,10 +1183,18 @@ var SpeciesService = /** @class */ (function () {
         }
         return this.higherSpeciesCache[cacheKey].then(function (results) { return JSON.parse(JSON.stringify(results)); });
     };
-    SpeciesService.prototype._allSpeciesPromises = function (params, years) {
+    SpeciesService.prototype._allSpeciesPromises = function (params, years, networkId, personId) {
         var _this = this;
         if (params === void 0) { params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"](); }
         if (years === void 0) { years = []; }
+        if (networkId === void 0) { networkId = null; }
+        if (personId === void 0) { personId = null; }
+        if (networkId != null) {
+            params = params.set('network_id', networkId);
+        }
+        if (personId != null) {
+            params = params.set('person_id', personId);
+        }
         years = years || []; // in case null is actually passed in
         // if we aren't doing any filtering then use the getSpecies service because
         // it's much faster for that use case, it just doesn't return numbers of observations
@@ -1216,10 +1224,12 @@ var SpeciesService = /** @class */ (function () {
                 //.map(range => [`${range[0]}-01-01`,`${range[1]}-12-31`])
                 .map(function (range) { return _this._filterSpecies(params.set('start_date', range[0] + "-01-01").set('end_date', range[1] + "-12-31")); });
     };
-    SpeciesService.prototype.getAllSpeciesConsolidated = function (params, years) {
+    SpeciesService.prototype.getAllSpeciesConsolidated = function (params, years, networkId, personId) {
         if (params === void 0) { params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"](); }
         if (years === void 0) { years = null; }
-        return Promise.all(this._allSpeciesPromises(params, years))
+        if (networkId === void 0) { networkId = null; }
+        if (personId === void 0) { personId = null; }
+        return Promise.all(this._allSpeciesPromises(params, years, networkId, personId))
             .then(function (results) {
             console.log('getAllSpeciesConsolidated.results', results.map(function (r) { return r.length; }).join(', '));
             var consolidated;
@@ -1251,10 +1261,12 @@ var SpeciesService = /** @class */ (function () {
             return consolidated;
         });
     };
-    SpeciesService.prototype.getAllSpeciesHigher = function (params, years) {
+    SpeciesService.prototype.getAllSpeciesHigher = function (params, years, networkId, personId) {
         if (params === void 0) { params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"](); }
         if (years === void 0) { years = null; }
-        return this.getAllSpeciesConsolidated(params, years)
+        if (networkId === void 0) { networkId = null; }
+        if (personId === void 0) { personId = null; }
+        return this.getAllSpeciesConsolidated(params, years, networkId, personId)
             .then(function (species) {
             var gatherById = function (key) { return mapByNumericId(species, key); };
             var classIds = gatherById('class_id');
@@ -6560,7 +6572,7 @@ var CurveControlComponent = /** @class */ (function (_super) {
             while (c <= thisYear) {
                 years.push(c++);
             }
-            return years;
+            return years.reverse();
         })();
         return _this;
     }
@@ -7489,7 +7501,7 @@ var AgddTimeSeriesComponent = /** @class */ (function (_super) {
         }
     };
     AgddTimeSeriesComponent.prototype.updateAxes = function () {
-        //console.log('AGDD: updateAxes');
+        // console.log('AGDD: updateAxes');
         this.removeLines();
         var _a = this, data = _a.data, chart = _a.chart, sizing = _a.sizing, y = _a.y, yAxis = _a.yAxis, x = _a.x, xAxis = _a.xAxis, selection = _a.selection;
         var yMax = this.yMax;
@@ -7525,17 +7537,19 @@ var AgddTimeSeriesComponent = /** @class */ (function (_super) {
             .attr('class', 'y axis')
             .call(yAxis)
             .append('text')
+            .attr('fill', '#000')
             .attr('transform', 'rotate(-90)')
             .attr('y', '0')
             .attr('dy', '-3.75em')
             .attr('x', -1 * (sizing.height / 2)) // looks odd but to move in the Y we need to change X because of transform
             .style('text-anchor', 'middle')
-            .text('Accumulated Growing Degree Days');
+            .text('Accumulated Growing Degree Day Units (AGDDs)');
         chart.append('g')
             .attr('class', 'x axis')
             .attr('transform', 'translate(0,' + sizing.height + ')')
             .call(xAxis)
             .append('text')
+            .attr('fill', '#000')
             .attr('y', '0')
             .attr('dy', '2.5em')
             .attr('x', (sizing.width / 2))
@@ -9459,7 +9473,7 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
             var params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_6__["HttpParams"]();
             (stationIds || []).forEach(function (id, idx) { return params = params.set("station_ids[" + idx + "]", "" + id); });
             return params;
-        })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["switchMap"])(function (params) { return _this.speciesService.getAllSpeciesHigher(params, criteria.years); })); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function () { return _this.fetchingSpeciesList = false; }));
+        })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["switchMap"])(function (params) { return _this.speciesService.getAllSpeciesHigher(params, criteria.years, _this.selection.groupId, _this.selection.personId); })); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function () { return _this.fetchingSpeciesList = false; }));
         Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["combineLatest"])(this.speciesRank.valueChanges, $speciesTaxonomicInfo).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["filter"])(function (input) { return !!input[0] && !!input[1]; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (input) {
             var rank = input[0], info = input[1];
             _this.speciesTaxInfo = info;
@@ -9881,10 +9895,10 @@ var YearRangeInputComponent = /** @class */ (function () {
         this.maxSpan = 10;
         this.validStarts = (function () {
             var max = (new Date()).getFullYear(), current = 1900, years = [];
-            while (current < max) {
+            while (current <= max) {
                 years.push(current++);
             }
-            return years;
+            return years.reverse();
         })();
         this.validEnds = [];
     }
@@ -9904,17 +9918,18 @@ var YearRangeInputComponent = /** @class */ (function () {
                     newValue: this.startValue
                 });
                 if (s) {
-                    var thisYear = (new Date()).getFullYear(), current = s + 1, max = current + this.maxSpan, ends = [];
+                    var thisYear = (new Date()).getFullYear(), current = s, //+1,
+                    max = current + this.maxSpan, ends = [];
                     if (max > thisYear) {
                         max = thisYear + 1;
                     }
                     while (current < max) {
                         ends.push(current++);
                     }
-                    this.validEnds = ends;
-                    if (this.end > max) {
-                        this.end = undefined;
-                    }
+                    this.validEnds = ends.reverse();
+                    // if(this.end > max) {
+                    //     this.end = undefined;
+                    // }
                 }
             }
         },
@@ -11438,7 +11453,7 @@ var MapVisualizationMarkerIw = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".vis-container {\n  display: block;\n  position: relative; }\n  .vis-container agm-map {\n    /*\n        encapsulation: ViewEncapsulation.None or this rule won't be able to apply\n        */ }\n  .vis-container agm-map img[src*=usanpn] {\n      -ms-interpolation-mode: nearest-neighbor;\n          image-rendering: pixelated;\n      image-rendering: -moz-crisp-edges; }\n  .map-wrapper {\n  position: relative;\n  width: 100%;\n  height: 100%; }\n  .map-wrapper map-layer-legend .gridded-legend {\n    margin-top: 10px;\n    border-bottom: 1px solid #aaa; }\n  .map-wrapper npn-logo.working {\n    position: absolute;\n    top: 5px;\n    right: 5px;\n    width: 30px;\n    height: 30px;\n    z-index: 100; }\n  @media (min-width: 992px) {\n    .map-wrapper map-layer-legend {\n      position: absolute;\n      left: 10px;\n      padding: 8px;\n      border: 1px solid #aaa;\n      background-color: rgba(255, 255, 255, 0.85);\n      border-radius: 5px; }\n    .map-wrapper map-layer-legend {\n      bottom: 25px;\n      width: 60%; }\n      .map-wrapper map-layer-legend .gridded-legend {\n        margin-top: 0px;\n        border-bottom: none;\n        width: 100%;\n        height: 125px;\n        border: none; } }\n  .map-wrapper .gridded-info {\n    display: flex;\n    align-items: center; }\n  .map-wrapper .gridded-info .legend-swatch {\n      width: 30px;\n      height: 30px;\n      border: 1px solid #aaa; }\n  .map-wrapper .gridded-info .spinner-logo {\n      width: 30px;\n      height: 30px; }\n  .map-wrapper .gridded-info .point-formatted {\n      font-size: 1.25em;\n      padding-left: .5em; }\n  .map-wrapper .spinner-logo > svg {\n    -webkit-animation-name: loading-anim;\n            animation-name: loading-anim;\n    -webkit-animation-duration: 1250ms;\n            animation-duration: 1250ms;\n    -webkit-animation-iteration-count: infinite;\n            animation-iteration-count: infinite;\n    -webkit-animation-timing-function: linear;\n            animation-timing-function: linear;\n    width: 28px;\n    height: 28px; }\n  .map-wrapper .spinner-logo > svg .swirl-top {\n    fill: #f37022; }\n  .map-wrapper .spinner-logo > svg .swirl-left {\n    fill: #68bd46; }\n  .map-wrapper .spinner-logo > svg .swirl-right {\n    fill: #3b94d0; }\n  @-webkit-keyframes loading-anim {\n  from {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); }\n  to {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg); } }\n  @keyframes loading-anim {\n  from {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); }\n  to {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg); } }\n"
+module.exports = ".vis-container {\n  display: block;\n  position: relative; }\n  .vis-container agm-map {\n    /*\n        encapsulation: ViewEncapsulation.None or this rule won't be able to apply\n        */ }\n  .vis-container agm-map img[src*=usanpn] {\n      -ms-interpolation-mode: nearest-neighbor;\n          image-rendering: pixelated;\n      image-rendering: -moz-crisp-edges; }\n  .map-wrapper {\n  position: relative;\n  width: 100%;\n  height: 100%; }\n  .map-wrapper map-layer-legend .gridded-legend {\n    margin-top: 10px;\n    border-bottom: 1px solid #aaa; }\n  .map-wrapper .npnlogo {\n    position: absolute;\n    width: 150px;\n    bottom: 75px;\n    right: 70px;\n    z-index: 1; }\n  .map-wrapper .usgslogo {\n    position: absolute;\n    width: 150px;\n    bottom: 15px;\n    right: 70px;\n    z-index: 1; }\n  .map-wrapper npn-logo.working {\n    position: absolute;\n    top: 5px;\n    right: 5px;\n    width: 30px;\n    height: 30px;\n    z-index: 100; }\n  @media (min-width: 992px) {\n    .map-wrapper map-layer-legend {\n      position: absolute;\n      left: 10px;\n      padding: 8px;\n      border: 1px solid #aaa;\n      background-color: rgba(255, 255, 255, 0.85);\n      border-radius: 5px; }\n    .map-wrapper map-layer-legend {\n      bottom: 25px;\n      width: 60%; }\n      .map-wrapper map-layer-legend .gridded-legend {\n        margin-top: 0px;\n        border-bottom: none;\n        width: 100%;\n        height: 125px;\n        border: none; } }\n  .map-wrapper .gridded-info {\n    display: flex;\n    align-items: center; }\n  .map-wrapper .gridded-info .legend-swatch {\n      width: 30px;\n      height: 30px;\n      border: 1px solid #aaa; }\n  .map-wrapper .gridded-info .spinner-logo {\n      width: 30px;\n      height: 30px; }\n  .map-wrapper .gridded-info .point-formatted {\n      font-size: 1.25em;\n      padding-left: .5em; }\n  .map-wrapper .spinner-logo > svg {\n    -webkit-animation-name: loading-anim;\n            animation-name: loading-anim;\n    -webkit-animation-duration: 1250ms;\n            animation-duration: 1250ms;\n    -webkit-animation-iteration-count: infinite;\n            animation-iteration-count: infinite;\n    -webkit-animation-timing-function: linear;\n            animation-timing-function: linear;\n    width: 28px;\n    height: 28px; }\n  .map-wrapper .spinner-logo > svg .swirl-top {\n    fill: #f37022; }\n  .map-wrapper .spinner-logo > svg .swirl-left {\n    fill: #68bd46; }\n  .map-wrapper .spinner-logo > svg .swirl-right {\n    fill: #3b94d0; }\n  @-webkit-keyframes loading-anim {\n  from {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); }\n  to {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg); } }\n  @keyframes loading-anim {\n  from {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); }\n  to {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg); } }\n"
 
 /***/ }),
 
@@ -11625,7 +11640,7 @@ var MapVisualizationComponent = /** @class */ (function (_super) {
     MapVisualizationComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'map-visualization',
-            template: "\n    <div class=\"vis-container\">\n        <div class=\"map-wrapper\">\n            <npn-logo class=\"working\" *ngIf=\"selection.working\" spin=\"true\"></npn-logo>\n            <agm-map (mapReady)=\"mapReady($event)\" \n                [streetViewControl]=\"false\"  [styles]=\"mapStyles\" [scrollwheel]=\"false\"\n                (mapClick)=\"mapClick($event)\">\n                <agm-info-window *ngIf=\"griddedData || griddedLoading\"\n                    [isOpen]=\"griddedOpen\"\n                    (infoWindowClose)=\"griddedOpen = false\"\n                    [latitude]=\"griddedLat\" [longitude]=\"griddedLng\">\n                    <div *ngIf=\"griddedData || griddedLoading\" class=\"gridded-info\">\n                        <div *ngIf=\"griddedLoading\" class=\"spinner-logo\">\n                        <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 391 391\"><g>\n                            <path class=\"swirl-top\" d=\"M182,1c-36.3,2.4-68.6,13.4-95.3,32.5c-5.6,4-11.8,8.7-13.7,10.4l-3.5,3L73,46c5.8-1.6,15.6-1.2,22.2,1.1\n                                    c9.4,3.1,19.3,10.1,30.3,21.3C137.1,80.2,145.6,91,168,122c17.1,23.8,26.5,34.3,39.5,44.2c16.2,12.4,28.9,16.3,49.5,15.5\n                                    c21.7-0.9,38.4-7.7,53.2-21.6c17.4-16.3,25.7-36.1,25.8-61c0-10.3,0-10.3-2.2-9.6c-21.5,6.6-48.9,3.2-72.9-9.1\n                                    c-27.3-14.1-51.2-45.7-48.4-64.1c0.7-5.1,6-11,10.6-12c5.3-1,3-2.1-5.8-2.7C199.9,0.4,193.3,0.3,182,1z\"/>\n                            <path class=\"swirl-top\" d=\"M256.5,5.9c-8.8,0.9-11.6,1.9-13.9,5.3c-2.2,3.1-2,6.5,0.8,12.5c6.1,13.1,19.8,28.5,30.3,34\n                                    c11,5.9,28.3,8.6,41.2,6.4l6.5-1.1l8.2,4.5c4.5,2.5,8.7,4.5,9.3,4.5c2.5,0,0.8-4.1-3.6-9l-4.6-5.2l-0.1-10.2\n                                    c-0.1-9.3-0.4-10.7-3.3-16.7c-5.4-10.8-16-19.1-30-23.2C291.1,5.8,267.9,4.8,256.5,5.9z M315.8,40.2c2.7,2.7,0.7,7.8-2.9,7.8\n                                    c-2.1,0-4.9-2.6-4.9-4.5C308,40,313.3,37.7,315.8,40.2z\"/>\n                            <path class=\"swirl-top\" d=\"M72.5,50.6c-9.9,2.3-10.4,2.6-18.8,11.3c-4.5,4.7-11.1,12.2-14.6,16.6c-9.7,12.3-26,37.8-23,35.9\n                                    c0.8-0.5,4.6-3,8.6-5.7c9.7-6.4,23.9-13.1,34.8-16.3c8-2.5,10.6-2.7,24-2.7s15.9,0.2,23.8,2.6c4.8,1.5,12.4,4.5,16.9,6.8l8.1,4.1\n                                    l-3.8-6.9c-11.6-20.8-25.7-37.2-36.6-42.2C85.7,51.2,76.8,49.6,72.5,50.6z\"/>\n                            <path class=\"swirl-left\" d=\"M354.6,81.9c1.3,5,0.7,31.5-1,40.5c-4.6,24.2-16.5,43.5-35.4,57.4c-14.1,10.4-23.8,14.3-55.1,22.2\n                                    c-23.8,6-32.9,8.9-44.6,14.5c-22.7,10.9-35.8,23.3-45,42.6c-5.4,11.5-7.5,21.2-7.5,35.1c0,15.5,1.9,23.6,8.5,37.4\n                                    c10.3,21.3,27.7,35.9,51.2,43c7.6,2.4,10.6,2.7,22.3,2.8c15.3,0,23.2-1.5,34.5-6.7c19-8.6,31.2-17.5,48-34.8\n                                    c17.5-18,28.4-33.6,39.6-56.3c28.1-57.2,26.1-119.5-5.7-181.6C358.2,85.8,353.6,78.3,354.6,81.9z M329.4,194.2\n                                    c-30.6,42.4-63.6,80-84.9,96.8c-13.1,10.3-34,19-49.9,20.6l-6.4,0.7l-0.7-7.7c-1.4-14.8,2.6-33.4,9.7-45.3\n                                    c5-8.5,14.6-17.5,23.6-22.1c8.9-4.7,17.5-7.3,43.7-13.7c10.5-2.6,23.5-6.4,29.1-8.6c10.9-4.2,24.4-12.7,33.4-20.8\n                                    c3-2.8,5.7-5.1,5.8-5.1C333,189,331.5,191.4,329.4,194.2z\"/>\n                            <path class=\"swirl-right\" d=\"M67.5,108c-17.8,3.8-37.3,16-48,30.2C8.7,152.5,3.6,167,2,187.1C-0.1,215,7.8,248,24.4,280.3\n                                    c34.1,66.3,95.1,104.5,174.1,109.1l9,0.5l-6.5-1.4c-56.1-12.9-106.1-51.7-136.8-106.2c-14.5-25.7-20.6-47.5-20.7-73.8\n                                    c0-23.4,4.2-40,14.8-57.7c4.2-6.9,12.6-17.3,13.4-16.5c0.2,0.3-1.6,4.5-4,9.3C58.6,161.8,55,177.6,55,199c0,37.8,14.2,78,39.4,111.7\n                                    c14.5,19.5,39,42.1,58.8,54.2c14.9,9,31.2,16.2,46.5,20.5c14.6,4,15.2,3.9,5.5-1.4c-45.2-24.2-65.1-62.5-55.7-107.3\n                                    c0.9-4.3,3.9-15.1,6.6-24c9.7-31.5,12.1-43.7,12-63c0-9.1-0.5-14.3-2.1-20.2C154.6,125.4,111.9,98.7,67.5,108z\"/>\n                        </g></svg>\n                        </div>\n                        <div *ngIf=\"!griddedLoading\" class=\"legend-swatch\" [ngStyle]=\"{'background-color': griddedData.legendData?.color}\">&nbsp;</div>\n                        <div class=\"point-formatted\">{{griddedLoading ? 'Loading...' : griddedData.formatted}}</div>\n                    </div>\n                </agm-info-window>\n                <agm-marker *ngFor=\"let m of markers\"\n                    [latitude]=\"m.latitude\" [longitude]=\"m.longitude\"\n                    [iconUrl]=\"m.icon\"\n                    [title]=\"m.title\" (markerClick)=\"selectedMarker = m\"></agm-marker>\n                <agm-info-window\n                    [isOpen]=\"!!selectedMarker\" (infoWindowClose)=\"selectedMarker = null\"\n                    [latitude]=\"selectedMarker?.latitude\" [longitude]=\"selectedMarker?.longitude\">\n                    <map-visualization-marker-iw [marker]=\"selectedMarker\" [selection]=\"selection\"></map-visualization-marker-iw>\n                </agm-info-window>\n            </agm-map>\n            <map-layer-legend *ngIf=\"!thumbnail && selection.legend\" [legend]=\"selection.legend\"></map-layer-legend>\n        </div>\n    </div>\n    ",
+            template: "\n    <div class=\"vis-container\">\n        <div class=\"map-wrapper\">\n            <npn-logo class=\"working\" *ngIf=\"selection.working\" spin=\"true\"></npn-logo>\n            <agm-map (mapReady)=\"mapReady($event)\" \n                [streetViewControl]=\"false\"  [styles]=\"mapStyles\" [scrollwheel]=\"false\"\n                (mapClick)=\"mapClick($event)\">\n                <agm-info-window *ngIf=\"griddedData || griddedLoading\"\n                    [isOpen]=\"griddedOpen\"\n                    (infoWindowClose)=\"griddedOpen = false\"\n                    [latitude]=\"griddedLat\" [longitude]=\"griddedLng\">\n                    <div *ngIf=\"griddedData || griddedLoading\" class=\"gridded-info\">\n                        <div *ngIf=\"griddedLoading\" class=\"spinner-logo\">\n                        <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 391 391\"><g>\n                            <path class=\"swirl-top\" d=\"M182,1c-36.3,2.4-68.6,13.4-95.3,32.5c-5.6,4-11.8,8.7-13.7,10.4l-3.5,3L73,46c5.8-1.6,15.6-1.2,22.2,1.1\n                                    c9.4,3.1,19.3,10.1,30.3,21.3C137.1,80.2,145.6,91,168,122c17.1,23.8,26.5,34.3,39.5,44.2c16.2,12.4,28.9,16.3,49.5,15.5\n                                    c21.7-0.9,38.4-7.7,53.2-21.6c17.4-16.3,25.7-36.1,25.8-61c0-10.3,0-10.3-2.2-9.6c-21.5,6.6-48.9,3.2-72.9-9.1\n                                    c-27.3-14.1-51.2-45.7-48.4-64.1c0.7-5.1,6-11,10.6-12c5.3-1,3-2.1-5.8-2.7C199.9,0.4,193.3,0.3,182,1z\"/>\n                            <path class=\"swirl-top\" d=\"M256.5,5.9c-8.8,0.9-11.6,1.9-13.9,5.3c-2.2,3.1-2,6.5,0.8,12.5c6.1,13.1,19.8,28.5,30.3,34\n                                    c11,5.9,28.3,8.6,41.2,6.4l6.5-1.1l8.2,4.5c4.5,2.5,8.7,4.5,9.3,4.5c2.5,0,0.8-4.1-3.6-9l-4.6-5.2l-0.1-10.2\n                                    c-0.1-9.3-0.4-10.7-3.3-16.7c-5.4-10.8-16-19.1-30-23.2C291.1,5.8,267.9,4.8,256.5,5.9z M315.8,40.2c2.7,2.7,0.7,7.8-2.9,7.8\n                                    c-2.1,0-4.9-2.6-4.9-4.5C308,40,313.3,37.7,315.8,40.2z\"/>\n                            <path class=\"swirl-top\" d=\"M72.5,50.6c-9.9,2.3-10.4,2.6-18.8,11.3c-4.5,4.7-11.1,12.2-14.6,16.6c-9.7,12.3-26,37.8-23,35.9\n                                    c0.8-0.5,4.6-3,8.6-5.7c9.7-6.4,23.9-13.1,34.8-16.3c8-2.5,10.6-2.7,24-2.7s15.9,0.2,23.8,2.6c4.8,1.5,12.4,4.5,16.9,6.8l8.1,4.1\n                                    l-3.8-6.9c-11.6-20.8-25.7-37.2-36.6-42.2C85.7,51.2,76.8,49.6,72.5,50.6z\"/>\n                            <path class=\"swirl-left\" d=\"M354.6,81.9c1.3,5,0.7,31.5-1,40.5c-4.6,24.2-16.5,43.5-35.4,57.4c-14.1,10.4-23.8,14.3-55.1,22.2\n                                    c-23.8,6-32.9,8.9-44.6,14.5c-22.7,10.9-35.8,23.3-45,42.6c-5.4,11.5-7.5,21.2-7.5,35.1c0,15.5,1.9,23.6,8.5,37.4\n                                    c10.3,21.3,27.7,35.9,51.2,43c7.6,2.4,10.6,2.7,22.3,2.8c15.3,0,23.2-1.5,34.5-6.7c19-8.6,31.2-17.5,48-34.8\n                                    c17.5-18,28.4-33.6,39.6-56.3c28.1-57.2,26.1-119.5-5.7-181.6C358.2,85.8,353.6,78.3,354.6,81.9z M329.4,194.2\n                                    c-30.6,42.4-63.6,80-84.9,96.8c-13.1,10.3-34,19-49.9,20.6l-6.4,0.7l-0.7-7.7c-1.4-14.8,2.6-33.4,9.7-45.3\n                                    c5-8.5,14.6-17.5,23.6-22.1c8.9-4.7,17.5-7.3,43.7-13.7c10.5-2.6,23.5-6.4,29.1-8.6c10.9-4.2,24.4-12.7,33.4-20.8\n                                    c3-2.8,5.7-5.1,5.8-5.1C333,189,331.5,191.4,329.4,194.2z\"/>\n                            <path class=\"swirl-right\" d=\"M67.5,108c-17.8,3.8-37.3,16-48,30.2C8.7,152.5,3.6,167,2,187.1C-0.1,215,7.8,248,24.4,280.3\n                                    c34.1,66.3,95.1,104.5,174.1,109.1l9,0.5l-6.5-1.4c-56.1-12.9-106.1-51.7-136.8-106.2c-14.5-25.7-20.6-47.5-20.7-73.8\n                                    c0-23.4,4.2-40,14.8-57.7c4.2-6.9,12.6-17.3,13.4-16.5c0.2,0.3-1.6,4.5-4,9.3C58.6,161.8,55,177.6,55,199c0,37.8,14.2,78,39.4,111.7\n                                    c14.5,19.5,39,42.1,58.8,54.2c14.9,9,31.2,16.2,46.5,20.5c14.6,4,15.2,3.9,5.5-1.4c-45.2-24.2-65.1-62.5-55.7-107.3\n                                    c0.9-4.3,3.9-15.1,6.6-24c9.7-31.5,12.1-43.7,12-63c0-9.1-0.5-14.3-2.1-20.2C154.6,125.4,111.9,98.7,67.5,108z\"/>\n                        </g></svg>\n                        </div>\n                        <div *ngIf=\"!griddedLoading\" class=\"legend-swatch\" [ngStyle]=\"{'background-color': griddedData.legendData?.color}\">&nbsp;</div>\n                        <div class=\"point-formatted\">{{griddedLoading ? 'Loading...' : griddedData.formatted}}</div>\n                    </div>\n                </agm-info-window>\n                <agm-marker *ngFor=\"let m of markers\"\n                    [latitude]=\"m.latitude\" [longitude]=\"m.longitude\"\n                    [iconUrl]=\"m.icon\"\n                    [title]=\"m.title\" (markerClick)=\"selectedMarker = m\"></agm-marker>\n                <agm-info-window\n                    [isOpen]=\"!!selectedMarker\" (infoWindowClose)=\"selectedMarker = null\"\n                    [latitude]=\"selectedMarker?.latitude\" [longitude]=\"selectedMarker?.longitude\">\n                    <map-visualization-marker-iw [marker]=\"selectedMarker\" [selection]=\"selection\"></map-visualization-marker-iw>\n                </agm-info-window>\n            </agm-map>\n            <map-layer-legend *ngIf=\"!thumbnail && selection.legend\" [legend]=\"selection.legend\"></map-layer-legend>\n            <img src = 'assets/USA-NPN-logo-RGB2019.png' class='npnlogo'/>\n            <img src = 'assets/usgs-logo.png' class='usgslogo'/>\n        </div>\n    </div>\n    ",
             styles: [__webpack_require__(/*! ./map-visualization.component.scss */ "../npn/common/src/lib/visualizations/map/map-visualization.component.scss")]
         }),
         __metadata("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"], _angular_flex_layout__WEBPACK_IMPORTED_MODULE_1__["ObservableMedia"]])
@@ -13509,7 +13524,7 @@ var ScatterPlotSelection = /** @class */ (function (_super) {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.$supportsPop = true;
         _this.$class = 'ScatterPlotSelection';
-        _this.start = 2010;
+        _this.start = 2011;
         _this.end = (new Date()).getFullYear();
         _this.regressionLines = false;
         _this._axis = AXIS[0];
@@ -13575,7 +13590,7 @@ var ScatterPlotSelection = /** @class */ (function (_super) {
         return this.start &&
             this.end &&
             this.axis &&
-            (this.start < this.end) &&
+            (this.start <= this.end) &&
             this.validPlots.length > 0;
     };
     ScatterPlotSelection.prototype.toURLSearchParams = function (params) {
@@ -15332,7 +15347,13 @@ var VisualizationDownloadComponent = /** @class */ (function () {
         var svg = document.querySelector("#" + this.svgWrapperId + " >svg"), wrappedSvg = d3__WEBPACK_IMPORTED_MODULE_2__["select"](svg);
         wrappedSvg.attr('version', 1.1)
             .attr('xmlns', 'http://www.w3.org/2000/svg');
-        var parent = svg.parentNode, html = parent.innerHTML, imgsrc = 'data:image/svg+xml;base64,' + window.btoa(html), canvas = document.querySelector("#dlcanvas-" + this.svgWrapperId), link = document.querySelector("#dllink-" + this.svgWrapperId);
+        var parent = svg.parentNode, html = parent.innerHTML;
+        // see here (the unicode problem)
+        // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
+        var htmlForBase64 = encodeURIComponent(html).replace(/%([0-9A-F]{2})/g, function toSolidBytes(match, p1) {
+            return String.fromCharCode('0x' + p1);
+        });
+        var imgsrc = 'data:image/svg+xml;base64,' + window.btoa(htmlForBase64), canvas = document.querySelector("#dlcanvas-" + this.svgWrapperId), link = document.querySelector("#dllink-" + this.svgWrapperId);
         canvas.width = +wrappedSvg.attr('width');
         canvas.height = +wrappedSvg.attr('height');
         var context = canvas.getContext('2d'), image = new Image();
