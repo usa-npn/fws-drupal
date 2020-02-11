@@ -375,7 +375,7 @@ function _fws_dashboard_refuge_s11n($refuge) {
          $return['selections'] = $selections ? drupal_json_decode($selections) : array();
 
          $resources = $refuge->field_resources_for_observers->value();
-         $return['resources'] = $resources ? $resources['value'] : NULL;
+         $return['resources'] = ($resources && isset($resources['value'])) ? $resources['value'] : NULL;
      }
      return $return;
 }
