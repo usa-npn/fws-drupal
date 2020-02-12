@@ -1183,18 +1183,17 @@ var SpeciesService = /** @class */ (function () {
         }
         return this.higherSpeciesCache[cacheKey].then(function (results) { return JSON.parse(JSON.stringify(results)); });
     };
-    SpeciesService.prototype._allSpeciesPromises = function (params, years, networkId, personId) {
+    /**
+     * Creates Promises/requests to get species data for a set of years.  The resulting data will almost
+     * certainly contain duplicates.
+     *
+     * @param params The base HttpParams to use when retrieving species (via /npn_portal/species/getSpeciesFilter.json)
+     * @param years The years to request species for.
+     */
+    SpeciesService.prototype._allSpeciesPromises = function (params, years) {
         var _this = this;
         if (params === void 0) { params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"](); }
         if (years === void 0) { years = []; }
-        if (networkId === void 0) { networkId = null; }
-        if (personId === void 0) { personId = null; }
-        if (networkId != null) {
-            params = params.set('network_id', networkId);
-        }
-        if (personId != null) {
-            params = params.set('person_id', personId);
-        }
         years = years || []; // in case null is actually passed in
         // if we aren't doing any filtering then use the getSpecies service because
         // it's much faster for that use case, it just doesn't return numbers of observations
@@ -1224,12 +1223,16 @@ var SpeciesService = /** @class */ (function () {
                 //.map(range => [`${range[0]}-01-01`,`${range[1]}-12-31`])
                 .map(function (range) { return _this._filterSpecies(params.set('start_date', range[0] + "-01-01").set('end_date', range[1] + "-12-31")); });
     };
-    SpeciesService.prototype.getAllSpeciesConsolidated = function (params, years, networkId, personId) {
+    /**
+     * Requests species data for a set of years and consolidates the results into a single array of `TaxonomicSpecies`.
+     *
+     * @param params The base HttpParams to use when retrieving species (via /npn_portal/species/getSpeciesFilter.json)
+     * @param years The years to request species for.
+     */
+    SpeciesService.prototype.getAllSpeciesConsolidated = function (params, years) {
         if (params === void 0) { params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"](); }
         if (years === void 0) { years = null; }
-        if (networkId === void 0) { networkId = null; }
-        if (personId === void 0) { personId = null; }
-        return Promise.all(this._allSpeciesPromises(params, years, networkId, personId))
+        return Promise.all(this._allSpeciesPromises(params, years))
             .then(function (results) {
             console.log('getAllSpeciesConsolidated.results', results.map(function (r) { return r.length; }).join(', '));
             var consolidated;
@@ -1261,12 +1264,16 @@ var SpeciesService = /** @class */ (function () {
             return consolidated;
         });
     };
-    SpeciesService.prototype.getAllSpeciesHigher = function (params, years, networkId, personId) {
+    /**
+     * Requests species data for a set of years and organizes the results into an instance of `SpeciesTaxonomicInfo`.
+     *
+     * @param params The base HttpParams to use when retrieving species (via /npn_portal/species/getSpeciesFilter.json)
+     * @param years The years to request species for.
+     */
+    SpeciesService.prototype.getAllSpeciesHigher = function (params, years) {
         if (params === void 0) { params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"](); }
         if (years === void 0) { years = null; }
-        if (networkId === void 0) { networkId = null; }
-        if (personId === void 0) { personId = null; }
-        return this.getAllSpeciesConsolidated(params, years, networkId, personId)
+        return this.getAllSpeciesConsolidated(params, years)
             .then(function (species) {
             var gatherById = function (key) { return mapByNumericId(species, key); };
             var classIds = gatherById('class_id');
@@ -9473,7 +9480,27 @@ var HigherSpeciesPhenophaseInputComponent = /** @class */ (function (_super) {
             var params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_6__["HttpParams"]();
             (stationIds || []).forEach(function (id, idx) { return params = params.set("station_ids[" + idx + "]", "" + id); });
             return params;
-        })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["switchMap"])(function (params) { return _this.speciesService.getAllSpeciesHigher(params, criteria.years, _this.selection.groupId, _this.selection.personId); })); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function () { return _this.fetchingSpeciesList = false; }));
+        })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["switchMap"])(function (params) {
+            /*
+            IMPORTANT: the network_id/person_id parameters are being added here to cover a special case when the
+            vis tool is opened restricted to a network (groupId) or individual (personId).  The application very
+            intentionally does not typically use these request parameters but translates results to lists of stations
+            instead to support geographic boundaries.  Doing this creates a situation where a visitor _could_ more
+            easily create a selection that results in no data on a visualization if they are using boundaries that do
+            not intersect with the location of their stations.  This is assumed acceptable since they will either not
+            use boundaries or know where their sites are located and draw boundaries accordingly...
+             */
+            if (_this.selection instanceof _vis_selection__WEBPACK_IMPORTED_MODULE_2__["StationAwareVisSelection"]) {
+                var _a = _this.selection, groupId = _a.groupId, personId = _a.personId;
+                if (!!groupId) {
+                    params = params.set('network_id', groupId);
+                }
+                if (!!personId) {
+                    params = params.set('person_id', personId);
+                }
+            }
+            return _this.speciesService.getAllSpeciesHigher(params, criteria.years);
+        })); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function () { return _this.fetchingSpeciesList = false; }));
         Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["combineLatest"])(this.speciesRank.valueChanges, $speciesTaxonomicInfo).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["filter"])(function (input) { return !!input[0] && !!input[1]; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (input) {
             var rank = input[0], info = input[1];
             _this.speciesTaxInfo = info;
