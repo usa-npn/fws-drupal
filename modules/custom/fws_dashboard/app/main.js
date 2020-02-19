@@ -17280,12 +17280,19 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+/**
+    Radius Dropdown Options for "Compare refuge data to sites within a radius".
+    text is what you want the user to see and value is the real value in the form.
+*/
+var RADIUS_OPTIONS = [{ value: 10, text: "10" }, { value: 25, text: "25" }, { value: 50, text: "50" }];
+var RADIUS_DEFAULT = 0; //The index of the default radius selected when page first loads
 var RefugeVisualizationScopeSelectionComponent = /** @class */ (function () {
     function RefugeVisualizationScopeSelectionComponent(networkService) {
         this.networkService = networkService;
+        this.radiusDropdownOptions = RADIUS_OPTIONS;
+        this.radius = RADIUS_OPTIONS[RADIUS_DEFAULT].value;
         this.visScope = 'refuge';
         this.stationFetch = false;
-        this.radius = 10;
     }
     RefugeVisualizationScopeSelectionComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -17307,10 +17314,18 @@ var RefugeVisualizationScopeSelectionComponent = /** @class */ (function () {
                 if (_this.visScope === 'station') {
                     s.selected = selection.stationIds.indexOf(s.station_id) !== -1;
                 }
+                else if (_this.visScope === 'outsideGroup') {
+                    s.selected = selection.groups[0].excludeIds.indexOf(s.station_id) !== -1;
+                }
                 else {
                     s.selected = !!selection.groups.reduce(function (found, g) { return (found || (g.id === s.station_id ? s : undefined)); }, undefined);
                 }
             }); });
+            if (this.visScope === 'outsideGroup') {
+                this.radius = this.selection.groups[1].outsideRadiusMiles
+                    ? this.selection.groups[1].outsideRadiusMiles
+                    : RADIUS_OPTIONS[RADIUS_DEFAULT].value;
+            }
         }
     };
     RefugeVisualizationScopeSelectionComponent.prototype.loadStations = function () {
@@ -17401,7 +17416,7 @@ var RefugeVisualizationScopeSelectionComponent = /** @class */ (function () {
     RefugeVisualizationScopeSelectionComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'refuge-visualization-scope-selection',
-            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'refuge'\">Show data for all sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'station'\">Show data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'stationGroup'\">Compare data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'outsideGroup'\">Compare refuge data to sites within a radius</mat-radio-button>\n    </mat-radio-group>\n    <hr *ngIf=\"visScope !== 'refuge'\" />\n    <mat-form-field *ngIf=\"visScope === 'outsideGroup'\" class=\"radius-form-field\">\n        <mat-label>Radius (in miles)</mat-label>\n        <mat-select class=\"vis-scope-input\" class=\"radius-input\" [(ngModel)]=\"radius\" (selectionChange)=\"outsideGroupChange()\">\n            <mat-option [value]=\"10\">10</mat-option>\n            <mat-option [value]=\"25\">25</mat-option>\n            <mat-option [value]=\"50\">50</mat-option>\n        </mat-select>\n    </mat-form-field>   \n    <mat-progress-spinner *ngIf=\"stationFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"(visScope === 'station' || visScope === 'stationGroup' || visScope === 'outsideGroup')\">\n    <h3 *ngIf=\"(visScope === 'outsideGroup')\">Select Sites to Exclude</h3>\n        <mat-checkbox *ngFor=\"let s of stations\" class=\"station-input\" [(ngModel)]=\"s.selected\" (change)=\"stationChange()\"\n            [disabled]=\"visScope === 'station' && s.selected && selection.stationIds?.length === 1\">{{s.station_name}}</mat-checkbox>\n    </div>\n    <!--<pre *ngIf=\"selection\">{{selection.external | json}}</pre>-->\n    ",
+            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'refuge'\">Show data for all sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'station'\">Show data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'stationGroup'\">Compare data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'outsideGroup'\">Compare refuge data to sites within a radius</mat-radio-button>\n    </mat-radio-group>\n    <hr *ngIf=\"visScope !== 'refuge'\" />\n    <mat-form-field *ngIf=\"visScope === 'outsideGroup'\" class=\"radius-form-field\">\n        <mat-label>Radius (in miles)</mat-label>\n        <mat-select class=\"vis-scope-input\" class=\"radius-input\" [(ngModel)]=\"radius\" (selectionChange)=\"outsideGroupChange()\">\n            <mat-option *ngFor=\"let opt of radiusDropdownOptions\" [value]=\"opt.value\">{{opt.text}}</mat-option>\n        </mat-select>\n    </mat-form-field>   \n    <mat-progress-spinner *ngIf=\"stationFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"(visScope === 'station' || visScope === 'stationGroup' || visScope === 'outsideGroup')\">\n    <h3 *ngIf=\"(visScope === 'outsideGroup')\">Select Sites to Exclude</h3>\n        <mat-checkbox *ngFor=\"let s of stations\" class=\"station-input\" [(ngModel)]=\"s.selected\" (change)=\"stationChange()\"\n            [disabled]=\"visScope === 'station' && s.selected && selection.stationIds?.length === 1\">{{s.station_name}}</mat-checkbox>\n    </div>\n    <!--<pre *ngIf=\"selection\">{{selection.external | json}}</pre>-->\n    ",
             styles: ["\n        .vis-scope-input {\n          display: inline-flex;\n          flex-direction: column;\n        }\n        .vis-scope-radio {\n          margin: 5px;\n        }\n        .station-input {\n            display: block;\n            padding-left: 34px;\n        },\n        .radius-form-field {\n            margin:20px 0 20px 0;\n        }\n        .radius-input {\n            width:200px;\n        }\n    "]
         }),
         __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_2__["NetworkService"]])
