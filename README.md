@@ -1,3 +1,2 @@
 # fws-drupal
-# Hello world
 
