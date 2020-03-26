@@ -459,9 +459,9 @@ img {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  height: auto;
+  /*height: auto;*/
   max-width: 100%;
-  width: auto;
+  /*width: auto;*/
 }
 img.lazyloader-icon {
   width: auto !important;
