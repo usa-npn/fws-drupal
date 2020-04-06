@@ -17432,14 +17432,16 @@ var RefugeVisualizationScopeSelectionComponent = /** @class */ (function () {
 /*!****************************************!*\
   !*** ./src/app/resources.component.ts ***!
   \****************************************/
-/*! exports provided: ResourcesComponent */
+/*! exports provided: SafeHtmlPipe, ResourcesComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SafeHtmlPipe", function() { return SafeHtmlPipe; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResourcesComponent", function() { return ResourcesComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
+/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/platform-browser */ "../../node_modules/@angular/platform-browser/fesm5/platform-browser.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -17450,6 +17452,21 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
+var SafeHtmlPipe = /** @class */ (function () {
+    function SafeHtmlPipe(sanitized) {
+        this.sanitized = sanitized;
+    }
+    SafeHtmlPipe.prototype.transform = function (value) {
+        return this.sanitized.bypassSecurityTrustHtml(value);
+    };
+    SafeHtmlPipe = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Pipe"])({ name: 'safeHtml' }),
+        __metadata("design:paramtypes", [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["DomSanitizer"]])
+    ], SafeHtmlPipe);
+    return SafeHtmlPipe;
+}());
 
 var ResourcesComponent = /** @class */ (function () {
     function ResourcesComponent() {
@@ -17466,7 +17483,7 @@ var ResourcesComponent = /** @class */ (function () {
     ResourcesComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'fws-dashboard-resources',
-            template: "\n    <div [innerHtml]=\"entity && entity.resources ? entity.resources : ''\"></div>\n    <a mat-raised-button *ngIf=\"!userIsLoggedIn\" [href]=\"'//www.usanpn.org/user/register?default_group_id='+entity.network_id\">Register</a>\n    <a mat-raised-button *ngIf=\"!userIsLoggedIn\" href=\"/user/login\">Login</a>\n    <a mat-raised-button *ngIf=\"userIsLoggedIn\" href=\"//mynpn.usanpn.org/npnapps/\" target=\"_blank\">My Observation Deck</a>\n    ",
+            template: "\n    <div [innerHtml]=\"entity && entity.resources ? entity.resources : ''\" | safeHtml></div>\n    <a mat-raised-button *ngIf=\"!userIsLoggedIn\" [href]=\"'//www.usanpn.org/user/register?default_group_id='+entity.network_id\">Register</a>\n    <a mat-raised-button *ngIf=\"!userIsLoggedIn\" href=\"/user/login\">Login</a>\n    <a mat-raised-button *ngIf=\"userIsLoggedIn\" href=\"//mynpn.usanpn.org/npnapps/\" target=\"_blank\">My Observation Deck</a>\n    ",
             styles: ["\n        a[mat-raised-button] {\n            margin-right: 5px;\n        }\n    "]
         })
     ], ResourcesComponent);
@@ -17541,7 +17558,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /opt/TeamCity/buildAgent/work/9ee94da692babf5b/npn-viz-apps/projects/fws-dashboard/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /opt/TeamCity/buildAgent/work/d4924b5e8f54b001/npn-viz-apps/projects/fws-dashboard/src/main.ts */"./src/main.ts");
 
 
 /***/ })
