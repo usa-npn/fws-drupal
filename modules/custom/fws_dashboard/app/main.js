@@ -15899,7 +15899,8 @@ var AppModule = /** @class */ (function () {
                 _pheno_trail_visualization_scope_groups_component__WEBPACK_IMPORTED_MODULE_12__["PhenoTrailVisualizationScopeGroupsComponent"],
                 _pheno_trail_visualization_scope_group_component__WEBPACK_IMPORTED_MODULE_13__["PhenoTrailVisualizationScopeGroupComponent"],
                 _pheno_trail_visualization_scope_station_groups_component__WEBPACK_IMPORTED_MODULE_14__["PhenoTrailVisualizationScopeStationGroupsComponent"],
-                _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__["NewVisualizationDialogComponent"]
+                _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__["NewVisualizationDialogComponent"],
+                _resources_component__WEBPACK_IMPORTED_MODULE_6__["SafeHtmlPipe"]
             ],
             entryComponents: [
                 _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__["NewVisualizationDialogComponent"]
@@ -17483,7 +17484,7 @@ var ResourcesComponent = /** @class */ (function () {
     ResourcesComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'fws-dashboard-resources',
-            template: "\n    <div [innerHtml]=\"entity && entity.resources ? entity.resources : ''\" | safeHtml></div>\n    <a mat-raised-button *ngIf=\"!userIsLoggedIn\" [href]=\"'//www.usanpn.org/user/register?default_group_id='+entity.network_id\">Register</a>\n    <a mat-raised-button *ngIf=\"!userIsLoggedIn\" href=\"/user/login\">Login</a>\n    <a mat-raised-button *ngIf=\"userIsLoggedIn\" href=\"//mynpn.usanpn.org/npnapps/\" target=\"_blank\">My Observation Deck</a>\n    ",
+            template: "\n    <div [innerHtml]=\"entity && entity.resources ? (entity.resources | safeHtml) : ''\"></div>\n    <a mat-raised-button *ngIf=\"!userIsLoggedIn\" [href]=\"'//www.usanpn.org/user/register?default_group_id='+entity.network_id\">Register</a>\n    <a mat-raised-button *ngIf=\"!userIsLoggedIn\" href=\"/user/login\">Login</a>\n    <a mat-raised-button *ngIf=\"userIsLoggedIn\" href=\"//mynpn.usanpn.org/npnapps/\" target=\"_blank\">My Observation Deck</a>\n    ",
             styles: ["\n        a[mat-raised-button] {\n            margin-right: 5px;\n        }\n    "]
         })
     ], ResourcesComponent);
@@ -17558,7 +17559,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /opt/TeamCity/buildAgent/work/9ee94da692babf5b/npn-viz-apps/projects/fws-dashboard/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /opt/TeamCity/buildAgent/work/15854e59c085ebfa/npn-viz-apps/projects/fws-dashboard/src/main.ts */"./src/main.ts");
 
 
 /***/ })
