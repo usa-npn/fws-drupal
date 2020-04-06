@@ -1,5 +1,222 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["main"],{
 
+/***/ "../fws-dashboard/src/app/entity.service.ts":
+/*!**************************************************!*\
+  !*** ../fws-dashboard/src/app/entity.service.ts ***!
+  \**************************************************/
+/*! exports provided: EntityBase, Refuge, PhenologyTrail, DashboardMode, DashboardModeState, EntityService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EntityBase", function() { return EntityBase; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Refuge", function() { return Refuge; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhenologyTrail", function() { return PhenologyTrail; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DashboardMode", function() { return DashboardMode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DashboardModeState", function() { return DashboardModeState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EntityService", function() { return EntityService; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (undefined && undefined.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+// using class instead of interface so can use instanceof
+var EntityBase = /** @class */ (function () {
+    function EntityBase() {
+    }
+    return EntityBase;
+}());
+
+var Refuge = /** @class */ (function (_super) {
+    __extends(Refuge, _super);
+    function Refuge() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return Refuge;
+}(EntityBase));
+
+var PhenologyTrail = /** @class */ (function (_super) {
+    __extends(PhenologyTrail, _super);
+    function PhenologyTrail() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return PhenologyTrail;
+}(EntityBase));
+
+// this means that the app can no longer function outside of the context of Drupal, period.
+var API_ROOT = '/api';
+var DashboardMode;
+(function (DashboardMode) {
+    DashboardMode["REFUGE"] = "refuge";
+    DashboardMode["PHENO_TRAIL"] = "phenology_trail";
+})(DashboardMode || (DashboardMode = {}));
+;
+var DashboardModeState = (function () {
+    var mode = DashboardMode.REFUGE;
+    return {
+        get: function () { return mode; },
+        set: function (m) { return mode = m; },
+    };
+})();
+var EntityService = /** @class */ (function () {
+    function EntityService(http, cacheService, selectionFactory) {
+        this.http = http;
+        this.cacheService = cacheService;
+        this.selectionFactory = selectionFactory;
+    }
+    EntityService.prototype.parseSelections = function (json) {
+        var selections = this.selectionFactory.newSelections(JSON.parse(json));
+        /*
+        console.log('JSON',json);
+        console.log('SELECTIONS',selections);
+        */
+        return selections;
+    };
+    EntityService.prototype.apiUrl = function (entity_id) {
+        return API_ROOT + "/" + DashboardModeState.get() + "/" + entity_id;
+    };
+    EntityService.prototype.castEntity = function (entityId, apiResult) {
+        // actually constructing an instance so that other classes can use instanceof
+        var entity;
+        switch (DashboardModeState.get()) {
+            case DashboardMode.REFUGE:
+                entity = new Refuge();
+                break;
+            case DashboardMode.PHENO_TRAIL:
+                entity = new PhenologyTrail();
+                break;
+            default:
+                throw new Error("Unsupported DASHBOARD_MODE \"" + DashboardModeState.get() + "\"");
+        }
+        Object.assign(entity, apiResult);
+        entity.id = entityId;
+        var selections = (entity.selections || []).map(function (s) { return JSON.parse(s); });
+        entity.selections = this.selectionFactory.newSelections(selections);
+        return entity;
+    };
+    EntityService.prototype.get = function (entity_id) {
+        var _this = this;
+        return this.http.get(this.apiUrl(entity_id))
+            .toPromise()
+            .then(function (response) { return _this.castEntity(entity_id, response); });
+    };
+    EntityService.prototype.save = function (entity) {
+        var _this = this;
+        var r = __assign({}, entity);
+        r.selections = (r.selections || []).map(function (s) { return JSON.stringify(s.external); });
+        var json = JSON.stringify(r);
+        console.log("JSON " + json);
+        return this.http.put(this.apiUrl(entity.id), json, { headers: { 'Content-Type': 'application/json' } })
+            .toPromise()
+            .then(function (response) { return _this.castEntity(entity.id, response); });
+    };
+    EntityService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"],
+            _npn_common__WEBPACK_IMPORTED_MODULE_2__["CacheService"],
+            _npn_common__WEBPACK_IMPORTED_MODULE_2__["VisualizationSelectionFactory"]])
+    ], EntityService);
+    return EntityService;
+}());
+
+
+
+/***/ }),
+
+/***/ "../fws-dashboard/src/app/resources.component.ts":
+/*!*******************************************************!*\
+  !*** ../fws-dashboard/src/app/resources.component.ts ***!
+  \*******************************************************/
+/*! exports provided: SafeHtmlPipe, ResourcesComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SafeHtmlPipe", function() { return SafeHtmlPipe; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResourcesComponent", function() { return ResourcesComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./entity.service */ "../fws-dashboard/src/app/entity.service.ts");
+/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/platform-browser */ "../../node_modules/@angular/platform-browser/fesm5/platform-browser.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var SafeHtmlPipe = /** @class */ (function () {
+    function SafeHtmlPipe(sanitized) {
+        this.sanitized = sanitized;
+    }
+    SafeHtmlPipe.prototype.transform = function (value) {
+        return this.sanitized.bypassSecurityTrustHtml(value);
+    };
+    SafeHtmlPipe = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Pipe"])({ name: 'safeHtml' }),
+        __metadata("design:paramtypes", [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["DomSanitizer"]])
+    ], SafeHtmlPipe);
+    return SafeHtmlPipe;
+}());
+
+var ResourcesComponent = /** @class */ (function () {
+    function ResourcesComponent() {
+        this.userIsLoggedIn = false;
+    }
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", _entity_service__WEBPACK_IMPORTED_MODULE_1__["EntityBase"])
+    ], ResourcesComponent.prototype, "entity", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Boolean)
+    ], ResourcesComponent.prototype, "userIsLoggedIn", void 0);
+    ResourcesComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'fws-dashboard-resources',
+            template: "\n    <div [innerHtml]=\"entity && entity.resources ? (entity.resources | safeHtml) : ''\"></div>\n    <a mat-raised-button *ngIf=\"!userIsLoggedIn\" [href]=\"'//www.usanpn.org/user/register?default_group_id='+entity.network_id\">Register</a>\n    <a mat-raised-button *ngIf=\"!userIsLoggedIn\" href=\"/user/login\">Login</a>\n    <a mat-raised-button *ngIf=\"userIsLoggedIn\" href=\"//mynpn.usanpn.org/npnapps/\" target=\"_blank\">My Observation Deck</a>\n    ",
+            styles: ["\n        a[mat-raised-button] {\n            margin-right: 5px;\n        }\n    "]
+        })
+    ], ResourcesComponent);
+    return ResourcesComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "../npn/common/src/lib/common/application-settings.ts":
 /*!************************************************************!*\
   !*** ../npn/common/src/lib/common/application-settings.ts ***!
@@ -15839,12 +16056,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../environments/environment */ "./src/environments/environment.ts");
 /* harmony import */ var _agm_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @agm/core */ "../../node_modules/@agm/core/index.js");
 /* harmony import */ var _start_of_spring_dialog_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./start-of-spring-dialog.component */ "./src/app/start-of-spring-dialog.component.ts");
+/* harmony import */ var projects_fws_dashboard_src_app_resources_component__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! projects/fws-dashboard/src/app/resources.component */ "../fws-dashboard/src/app/resources.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -15897,7 +16116,8 @@ var AppModule = /** @class */ (function () {
                 _status_of_spring_component__WEBPACK_IMPORTED_MODULE_8__["StatusOfSpringComponent"],
                 _start_of_spring_component__WEBPACK_IMPORTED_MODULE_9__["StartOfSpringComponent"],
                 _start_of_spring_dialog_component__WEBPACK_IMPORTED_MODULE_16__["StartOfSpringDialog"],
-                _start_of_spring_dialog_component__WEBPACK_IMPORTED_MODULE_16__["SosDoyTransform"]
+                _start_of_spring_dialog_component__WEBPACK_IMPORTED_MODULE_16__["SosDoyTransform"],
+                projects_fws_dashboard_src_app_resources_component__WEBPACK_IMPORTED_MODULE_17__["SafeHtmlPipe"]
             ],
             providers: [
                 _refuge_service__WEBPACK_IMPORTED_MODULE_7__["RefugeService"],
