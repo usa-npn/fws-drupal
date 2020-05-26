@@ -14768,7 +14768,7 @@ var VisSelection = /** @class */ (function (_super) {
         // only the first will get through
         // but selection.update() setTimeout(() => selection.update(),600);
         // both will get through
-        if (this.lastEmit.value !== thisEmit.value || this.lastEmit.ext !== thisEmit.ext || this.lastEmit.when < (thisEmit.when - 500)) {
+        if (this.lastEmit.value !== thisEmit.value || this.lastEmit.ext !== thisEmit.ext || this.lastEmit.when < (thisEmit.when - 500) || this.$class === "ActivityCurvesSelection") {
             this.lastEmit = thisEmit;
             console.log('letting event through', thisEmit /*, new Error(`${thisEmit.value}: stack trace`)*/);
             this.firstSubscriber.then(function () {
