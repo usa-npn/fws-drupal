@@ -1909,7 +1909,7 @@ var MapLayerExtentType;
     MapLayerExtentType["YEAR"] = "year";
     MapLayerExtentType["DOY"] = "doy";
 })(MapLayerExtentType || (MapLayerExtentType = {}));
-var CATEGORY_PEST = 'Phenoforecasts';
+var CATEGORY_PEST = 'Pheno Forecasts';
 var CATEGORY_TEMP_ACCUM_30_YR_AVG = 'Temperature Accumulations, Daily 30-year Average';
 var CATEGORY_TEMP_ACCUM_CURRENT = 'Temperature Accumulations, Current Day';
 var CATEGORY_TEMP_ACCUM_CURRENT_AK = 'Temperature Accumulations, Current Day, Alaska';
@@ -1975,6 +1975,10 @@ var MAP_LAYERS = {
                     meta: {
                         agddDefaultThreshold: 450
                     }
+                }, {
+                    name: 'precipitation:buffelgrass_prism',
+                    title: 'Buffelgrass',
+                    abstract: 'Winter moth is a non-native insect pest that causes damage to deciduous trees, particularly maples and oaks. <a href="https://www.usanpn.org/data/forecasts/Winter_moth" target="_blank">Learn more</a>'
                 }, {
                     name: 'eastern_tent_caterpillar',
                     title: 'Eastern Tent Caterpillar',
@@ -2360,7 +2364,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ":host {\n  display: block; }\n  :host.standard {\n    height: 125px; }\n  :host.pest {\n    height: 200px;\n    width: 460px !important; }\n  :host.pest.emerald_ash_borer {\n      height: 245px; }\n  :host.pest.hemlock_woolly_adelgid {\n      height: 175px; }\n  :host.no-layer {\n    height: 95px; }\n  .gridded-legend {\n  width: 100%;\n  height: 100%; }\n"
+module.exports = ":host {\n  display: block; }\n  :host.standard {\n    height: 125px; }\n  :host.pest {\n    height: 200px;\n    width: 460px !important; }\n  :host.pest.emerald_ash_borer {\n      height: 245px; }\n  :host.pest.hemlock_woolly_adelgid {\n      height: 175px; }\n  :host.pest.precipitation_buffelgrass_prism {\n      height: 100px; }\n  :host.no-layer {\n    height: 95px; }\n  .gridded-legend {\n  width: 100%;\n  height: 100%; }\n"
 
 /***/ }),
 
@@ -2511,7 +2515,14 @@ var MapLayerLegend = /** @class */ (function () {
             };
         };
         this.lformat = ldef.legend_label_filter ? get_filter(ldef.legend_label_filter) : IDENTITY;
-        this.gformat = ldef.gridded_label_filter ? get_filter(ldef.gridded_label_filter) : undefined;
+        if (ldef.name == 'precipitation:buffelgrass_prism') {
+            var gridded_label_filter_clone = Object.assign({}, ldef.gridded_label_filter);
+            gridded_label_filter_clone.name = 'legendBuffelgrassUnits';
+            this.gformat = ldef.gridded_label_filter ? get_filter(gridded_label_filter_clone) : undefined;
+        }
+        else {
+            this.gformat = ldef.gridded_label_filter ? get_filter(ldef.gridded_label_filter) : undefined;
+        }
         var data;
         if (Array.isArray(color_map)) {
             data = color_map;
@@ -2666,6 +2677,8 @@ var MapLayer = /** @class */ (function () {
     });
     Object.defineProperty(MapLayer.prototype, "layerBasis", {
         get: function () {
+            if (this.layerName == "precipitation:buffelgrass_prism")
+                return this.layerName;
             return this.layer_def && this.layer_def.layerBasis
                 ? this.layer_def.layerBasis
                 : this.layerName;
@@ -2840,7 +2853,7 @@ var NpnGriddedModule = /** @class */ (function () {
             declarations: [
                 _map_layer_legend_component__WEBPACK_IMPORTED_MODULE_6__["MapLayerLegendComponent"],
                 _supports_opacity_control_component__WEBPACK_IMPORTED_MODULE_7__["SupportsOpacityControl"],
-                _pipes__WEBPACK_IMPORTED_MODULE_11__["LegendGddUnitsPipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["AgddDefaultTodayElevationPipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["LegendAgddAnomalyPipe"],
+                _pipes__WEBPACK_IMPORTED_MODULE_11__["LegendBuffelgrassUnitsPipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["LegendGddUnitsPipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["AgddDefaultTodayElevationPipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["LegendAgddAnomalyPipe"],
                 _pipes__WEBPACK_IMPORTED_MODULE_11__["AgddDefaultTodayTimePipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["LegendSixAnomalyPipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["LegendDoyPipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["ExtentDatesPipe"],
                 _pipes__WEBPACK_IMPORTED_MODULE_11__["ThirtyYearAvgDayOfYearPipe"],
             ],
@@ -2850,7 +2863,7 @@ var NpnGriddedModule = /** @class */ (function () {
             ],
             providers: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_1__["DatePipe"], _angular_common__WEBPACK_IMPORTED_MODULE_1__["DecimalPipe"],
-                _pipes__WEBPACK_IMPORTED_MODULE_11__["LegendGddUnitsPipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["AgddDefaultTodayElevationPipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["LegendAgddAnomalyPipe"],
+                _pipes__WEBPACK_IMPORTED_MODULE_11__["LegendBuffelgrassUnitsPipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["LegendGddUnitsPipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["AgddDefaultTodayElevationPipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["LegendAgddAnomalyPipe"],
                 _pipes__WEBPACK_IMPORTED_MODULE_11__["AgddDefaultTodayTimePipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["LegendSixAnomalyPipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["LegendDoyPipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["ExtentDatesPipe"],
                 _pipes__WEBPACK_IMPORTED_MODULE_11__["ThirtyYearAvgDayOfYearPipe"], _pipes__WEBPACK_IMPORTED_MODULE_11__["GriddedPipeProvider"],
                 _npn_map_layer_service__WEBPACK_IMPORTED_MODULE_4__["NpnMapLayerService"],
@@ -2944,7 +2957,12 @@ var NpnMapLayerService = /** @class */ (function () {
                     case _gridded_common__WEBPACK_IMPORTED_MODULE_3__["MapLayerType"].STANDARD:
                         return new _wms_map_layer__WEBPACK_IMPORTED_MODULE_5__["WmsMapLayer"](map, layerDef, _this);
                     case _gridded_common__WEBPACK_IMPORTED_MODULE_3__["MapLayerType"].PEST:
-                        return new _pest_map_layer__WEBPACK_IMPORTED_MODULE_4__["PestMapLayer"](map, layerDef, _this);
+                        {
+                            if (layerDef.name == 'precipitation:buffelgrass_prism')
+                                return new _wms_map_layer__WEBPACK_IMPORTED_MODULE_5__["WmsMapLayer"](map, layerDef, _this);
+                            else
+                                return new _pest_map_layer__WEBPACK_IMPORTED_MODULE_4__["PestMapLayer"](map, layerDef, _this);
+                        }
                 }
             }
         }); });
@@ -2968,6 +2986,9 @@ var NpnMapLayerService = /** @class */ (function () {
         return definition.then(function (layerDef) {
             var layerBasis = layerDef.layerBasis;
             var layerName = layerDef.name;
+            if (layerName == 'precipitation:buffelgrass_prism') {
+                layerBasis = layerName;
+            }
             if (_this.legends[layerName]) {
                 return Promise.resolve(_this.legends[layerName]);
             }
@@ -2992,7 +3013,7 @@ var NpnMapLayerService = /** @class */ (function () {
                             return found;
                         }
                         var styleName = findChildren('Name', $jq(e)).first().text();
-                        return styleName === layerName ? e : null;
+                        return styleName === layerName || styleName == 'buffelgrass_inches' ? e : null;
                     }, null)
                     : userStyles.toArray()[0];
                 var color_map = findChildren('ColorMap', $jq(userStyleElm));
@@ -3284,6 +3305,8 @@ var PestMapLayerLegend = /** @class */ (function (_super) {
     }
     PestMapLayerLegend.prototype.getGriddedPointData = function (latLng) {
         var _this = this;
+        if (this.layerName == 'precipitation:buffelgrass_prism')
+            return _super.prototype.getGriddedPointData.call(this, latLng);
         var layer = this.getLayer();
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["from"])(layer.getPestDescription())
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function (pest) {
@@ -3566,12 +3589,13 @@ var PestMapLayer = /** @class */ (function (_super) {
 /*!**********************************************!*\
   !*** ../npn/common/src/lib/gridded/pipes.ts ***!
   \**********************************************/
-/*! exports provided: LegendGddUnitsPipe, AgddDefaultTodayElevationPipe, LegendAgddAnomalyPipe, AgddDefaultTodayTimePipe, LegendSixAnomalyPipe, LegendDoyPipe, ExtentDatesPipe, DoyTxType, ThirtyYearAvgDayOfYearPipe, GriddedPipeProvider */
+/*! exports provided: LegendGddUnitsPipe, LegendBuffelgrassUnitsPipe, AgddDefaultTodayElevationPipe, LegendAgddAnomalyPipe, AgddDefaultTodayTimePipe, LegendSixAnomalyPipe, LegendDoyPipe, ExtentDatesPipe, DoyTxType, ThirtyYearAvgDayOfYearPipe, GriddedPipeProvider */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LegendGddUnitsPipe", function() { return LegendGddUnitsPipe; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LegendBuffelgrassUnitsPipe", function() { return LegendBuffelgrassUnitsPipe; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AgddDefaultTodayElevationPipe", function() { return AgddDefaultTodayElevationPipe; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LegendAgddAnomalyPipe", function() { return LegendAgddAnomalyPipe; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AgddDefaultTodayTimePipe", function() { return AgddDefaultTodayTimePipe; });
@@ -3613,6 +3637,20 @@ var LegendGddUnitsPipe = /** @class */ (function () {
         __metadata("design:paramtypes", [_angular_common__WEBPACK_IMPORTED_MODULE_1__["DecimalPipe"]])
     ], LegendGddUnitsPipe);
     return LegendGddUnitsPipe;
+}());
+
+var LegendBuffelgrassUnitsPipe = /** @class */ (function () {
+    function LegendBuffelgrassUnitsPipe(decimalPipe) {
+        this.decimalPipe = decimalPipe;
+    }
+    LegendBuffelgrassUnitsPipe.prototype.transform = function (n, includeUnits) {
+        return this.decimalPipe.transform(n, '1.0-2') + (includeUnits ? ' INCHES' : '');
+    };
+    LegendBuffelgrassUnitsPipe = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Pipe"])({ name: 'legendBuffelgrassUnits' }),
+        __metadata("design:paramtypes", [_angular_common__WEBPACK_IMPORTED_MODULE_1__["DecimalPipe"]])
+    ], LegendBuffelgrassUnitsPipe);
+    return LegendBuffelgrassUnitsPipe;
 }());
 
 var AgddDefaultTodayElevationPipe = /** @class */ (function () {
@@ -3787,7 +3825,7 @@ var ThirtyYearAvgDayOfYearPipe = /** @class */ (function () {
 }());
 
 var GriddedPipeProvider = /** @class */ (function () {
-    function GriddedPipeProvider(extentDates, legendDoy, legendSixAnomaly, agddDefaultTodayTime, legendAgddAnomaly, agddDefaultTodayElevation, legendGddUnits, thirtyYearAvgDayOfYear, date) {
+    function GriddedPipeProvider(extentDates, legendDoy, legendSixAnomaly, agddDefaultTodayTime, legendAgddAnomaly, agddDefaultTodayElevation, legendGddUnits, legendBuffelgrassUnits, thirtyYearAvgDayOfYear, date) {
         this.extentDates = extentDates;
         this.legendDoy = legendDoy;
         this.legendSixAnomaly = legendSixAnomaly;
@@ -3795,6 +3833,7 @@ var GriddedPipeProvider = /** @class */ (function () {
         this.legendAgddAnomaly = legendAgddAnomaly;
         this.agddDefaultTodayElevation = agddDefaultTodayElevation;
         this.legendGddUnits = legendGddUnits;
+        this.legendBuffelgrassUnits = legendBuffelgrassUnits;
         this.thirtyYearAvgDayOfYear = thirtyYearAvgDayOfYear;
         this.date = date;
         this.pipes = {};
@@ -3805,6 +3844,7 @@ var GriddedPipeProvider = /** @class */ (function () {
         this.pipes.legendAgddAnomaly = legendAgddAnomaly;
         this.pipes.agddDefaultTodayElevation = agddDefaultTodayElevation;
         this.pipes.legendGddUnits = legendGddUnits;
+        this.pipes.legendBuffelgrassUnits = legendBuffelgrassUnits;
         this.pipes.thirtyYearAvgDayOfYear = thirtyYearAvgDayOfYear;
         this.pipes.date = date;
     }
@@ -3820,6 +3860,7 @@ var GriddedPipeProvider = /** @class */ (function () {
             LegendAgddAnomalyPipe,
             AgddDefaultTodayElevationPipe,
             LegendGddUnitsPipe,
+            LegendBuffelgrassUnitsPipe,
             ThirtyYearAvgDayOfYearPipe,
             _angular_common__WEBPACK_IMPORTED_MODULE_1__["DatePipe"]])
     ], GriddedPipeProvider);
@@ -11390,7 +11431,7 @@ var MapVisualizationMarkerIw = /** @class */ (function () {
         this.svgs = _map_visualization_component__WEBPACK_IMPORTED_MODULE_1__["MAP_VIS_SVG_PATHS"];
     }
     MapVisualizationMarkerIw.prototype.dataText = function (data) {
-        if (this.selection.layerCategory == 'Phenoforecasts'
+        if (this.selection.layerCategory == 'Pheno Forecasts'
             || (this.selection.layerName && this.selection.layerName.includes('gdd'))) {
             return "" + data.formatted; // for gdd layers, data.point and data.formatted are same, formatted is just rounded
         }
@@ -11399,7 +11440,7 @@ var MapVisualizationMarkerIw = /** @class */ (function () {
         }
     };
     MapVisualizationMarkerIw.prototype.dateMarkerText = function (r) {
-        if (this.selection.layerCategory == 'Phenoforecasts'
+        if (this.selection.layerCategory == 'Pheno Forecasts'
             || (this.selection.layerName && this.selection.layerName.includes('gdd'))) {
             return '';
         }
@@ -11408,7 +11449,7 @@ var MapVisualizationMarkerIw = /** @class */ (function () {
         }
     };
     MapVisualizationMarkerIw.prototype.gddMarkerText = function (r) {
-        if (this.selection.layerCategory == 'Phenoforecasts'
+        if (this.selection.layerCategory == 'Pheno Forecasts'
             || (this.selection.layerName && this.selection.layerName.includes('gdd'))) {
             return r.mean_gddf != -9999 ? r.mean_gddf + " (Daymet, start date Jan 1, base 32" + String.fromCharCode(176) + ")" : 'not available';
         }
@@ -11417,7 +11458,7 @@ var MapVisualizationMarkerIw = /** @class */ (function () {
         }
     };
     MapVisualizationMarkerIw.prototype.showGddInPopup = function () {
-        return (this.selection.layerCategory == 'Phenoforecasts'
+        return (this.selection.layerCategory == 'Pheno Forecasts'
             || (this.selection.layerName && this.selection.layerName.includes('gdd')));
     };
     MapVisualizationMarkerIw.prototype.ngOnChanges = function (changes) {
@@ -11461,7 +11502,7 @@ var MapVisualizationMarkerIw = /** @class */ (function () {
     MapVisualizationMarkerIw = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'map-visualization-marker-iw',
-            template: "\n    <npn-logo spin=\"true\" *ngIf=\"!station; else stationInfo\"></npn-logo>\n    <ng-template #stationInfo>\n        <div class=\"station-info\">\n            <h3>{{station.site_name}}</h3>\n            <ul>\n            <li *ngIf=\"station.group_name\"><label>Group:</label> {{station.group_name}}</li>\n            <li><label>Latitude:</label> {{station.latitude}} <label>Longitude:</label> {{station.longitude}}</li>\n            <li *ngIf=\"data && data.legendData\" class=\"gridded-data\"><label>Gridded Layer Value:</label> <div class=\"legend-cell\"\n                [ngStyle]=\"{'background-color': data.legendData.color}\">&nbsp;</div> {{dataText(data)}}</li>\n            </ul>\n        </div>\n        <div class=\"record-info\" *ngFor=\"let r of marker.records\">\n            <h4>{{r | taxonomicSpeciesTitle:r.plot.speciesRank}}, {{r.phenophase_name||r.pheno_class_name||r.phenophase_description}}, {{r.mean_first_yes_year}}\n                <svg class=\"icon\" viewBox=\"0 0 22 22\">\n                    <path [attr.fill]=\"iconFill(r)\" [attr.d]=\"svgs[r.plotIndex]\" stroke='#000'></path>\n                </svg></h4>\n            <ul>\n            <!--<li><label>Observed Day of Onset:</label> {{r.mean_first_yes_doy | number:'1.0-0'}} ({{selection.legend.formatPointData((selection.layerName?.includes('gdd') || selection.layerCategory == 'Phenoforecasts') ? r.mean_gddf : r.mean_first_yes_doy)}})<span *ngIf=\"r.sd_first_yes_in_days > 0\"> [Standard Deviation: {{r.sd_first_yes_in_days | number:'1.1-1'}}]</span></li> -->\n            <li><label>Observed Day of Onset:</label> {{r.mean_first_yes_doy | number:'1.0-0'}} {{dateMarkerText(r)}} <span *ngIf=\"r.sd_first_yes_in_days > 0\">[Standard Deviation: {{r.sd_first_yes_in_days | number:'1.1-1'}}]</span></li>\n            <li *ngIf=\"showGddInPopup()\"><label>AGDD on Day of Onset:</label> {{gddMarkerText(r)}} </li>\n            </ul>\n        </div>\n    </ng-template>\n    ",
+            template: "\n    <npn-logo spin=\"true\" *ngIf=\"!station; else stationInfo\"></npn-logo>\n    <ng-template #stationInfo>\n        <div class=\"station-info\">\n            <h3>{{station.site_name}}</h3>\n            <ul>\n            <li *ngIf=\"station.group_name\"><label>Group:</label> {{station.group_name}}</li>\n            <li><label>Latitude:</label> {{station.latitude}} <label>Longitude:</label> {{station.longitude}}</li>\n            <li *ngIf=\"data && data.legendData\" class=\"gridded-data\"><label>Gridded Layer Value:</label> <div class=\"legend-cell\"\n                [ngStyle]=\"{'background-color': data.legendData.color}\">&nbsp;</div> {{dataText(data)}}</li>\n            </ul>\n        </div>\n        <div class=\"record-info\" *ngFor=\"let r of marker.records\">\n            <h4>{{r | taxonomicSpeciesTitle:r.plot.speciesRank}}, {{r.phenophase_name||r.pheno_class_name||r.phenophase_description}}, {{r.mean_first_yes_year}}\n                <svg class=\"icon\" viewBox=\"0 0 22 22\">\n                    <path [attr.fill]=\"iconFill(r)\" [attr.d]=\"svgs[r.plotIndex]\" stroke='#000'></path>\n                </svg></h4>\n            <ul>\n            <!--<li><label>Observed Day of Onset:</label> {{r.mean_first_yes_doy | number:'1.0-0'}} ({{selection.legend.formatPointData((selection.layerName?.includes('gdd') || selection.layerCategory == 'Pheno Forecasts') ? r.mean_gddf : r.mean_first_yes_doy)}})<span *ngIf=\"r.sd_first_yes_in_days > 0\"> [Standard Deviation: {{r.sd_first_yes_in_days | number:'1.1-1'}}]</span></li> -->\n            <li><label>Observed Day of Onset:</label> {{r.mean_first_yes_doy | number:'1.0-0'}} {{dateMarkerText(r)}} <span *ngIf=\"r.sd_first_yes_in_days > 0\">[Standard Deviation: {{r.sd_first_yes_in_days | number:'1.1-1'}}]</span></li>\n            <li *ngIf=\"showGddInPopup()\"><label>AGDD on Day of Onset:</label> {{gddMarkerText(r)}} </li>\n            </ul>\n        </div>\n    </ng-template>\n    ",
             styles: ["\n    npn-logo {\n        width: 25px;\n        height: 25px;\n    }\n    svg {\n        border: none;\n        width: 16px;\n        height: 16px;\n    }\n    .legend-cell {\n        width: 15px;\n        height: 15px;\n        border: 1px solid black;\n        display: inline-block;\n        margin: 0 5px;\n    }\n    ul {\n        margin: 0px;\n        padding: 0px 0px 0px 5px;\n    }\n    ul > li {\n        list-style: none;\n        padding: 2px 0px;\n    }\n    label {\n        font-weight: bold;\n    }\n    h3,\n    h4 {\n        text-transform: none !important;\n    }\n    h3 {\n        margin: 0 0 8px !important;\n    }\n    h4 {\n        margin: 5px 0px !important;\n    }\n    li.gridded-data {\n        display:flex;\n        align-items: center;\n    }\n    "]
         }),
         __metadata("design:paramtypes", [_npn_common_common_station_service__WEBPACK_IMPORTED_MODULE_3__["StationService"]])
