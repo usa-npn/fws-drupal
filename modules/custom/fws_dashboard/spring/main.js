@@ -5971,7 +5971,7 @@ var ACTIVITY_CURVE_KINGDOM_METRICS = {
         },
         {
             id: 'mean_numanimals_in-phase',
-            sampleSize: 'in-phase_per_hr_sites_sample_size',
+            sampleSize: 'in-phase_site_visits_sample_size',
             label: 'Animals In Phase',
             valueFormat: DECIMAL
         }, {
@@ -17469,7 +17469,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /opt/TeamCity/buildAgent/work/15854e59c085ebfa/npn-viz-apps/projects/fws-spring/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /opt/TeamCity/buildAgent/work/d4924b5e8f54b001/npn-viz-apps/projects/fws-spring/src/main.ts */"./src/main.ts");
 
 
 /***/ })

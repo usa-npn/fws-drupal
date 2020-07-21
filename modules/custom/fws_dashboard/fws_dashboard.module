@@ -213,10 +213,9 @@ function fws_dashboard_refuge_load($refuge_id) {
 }
 
 /**
- * Fetches the list of administrator UIDS for $refuge
+ * Fetches the list of administrator UIDS for $network_id
  */
-function _fws_dashboard_refuge_admin_uids($refuge) {
-    $network_id = $refuge->field_network_id->value();
+function _fws_dashboard_refuge_admin_uids($network_id) {
     $cache_key = 'fws_dashboard_admins_'.$network_id;
     // look in Drupal's cache first to avoid a webservice call if possible.
     if($cache_data = cache_get($cache_key)) {
@@ -265,10 +264,27 @@ function _fws_dashboard_refuge_admin_uids($refuge) {
     return $uids;
 }
 
+function _fws_dashboard_refuge_is_admin_refuge($refuge) {
+    global $user;
+    $admin_uids = _fws_dashboard_refuge_admin_uids($refuge->field_network_id->value());
+    return in_array($user->uid,$admin_uids);
+}
+
+function _fws_dashboard_refuge_is_admin_pheno_trail($trail) {
+    global $user;
+    foreach($trail->field_network_ids as $id) {
+        $admin_uids = _fws_dashboard_refuge_admin_uids($id->value());
+        if(in_array($user->uid,$admin_uids)) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 /**
  * Tests whether the current user is a refuge admin
  */
-function fws_dashboard_user_is_admin($refuge) {
+function fws_dashboard_user_is_admin($node) {
     global $user;
     if(!$user->uid) {
         return FALSE; // anonymous, just avoid any other logic
@@ -277,9 +293,15 @@ function fws_dashboard_user_is_admin($refuge) {
         return TRUE; // site admin avoid any other logic
     }
     // some other logged in, non site admin user
-    // test if that user is an administrator for this refuge
-    $admin_uids = _fws_dashboard_refuge_admin_uids($refuge);
-    return in_array($user->uid,$admin_uids);
+    // test if that user is an administrator for this refuge/phenology trail
+    $type = $node->getBundle();
+    // watchdog('fws_dashboard','fws_dashboard_user_is_admin for type %TYPE',array('%TYPE' => $type),WATCHDOG_INFO);
+    if($type === 'refuge') {
+        return _fws_dashboard_refuge_is_admin_refuge($node);
+    } else if ($type === 'phenology_trail') {
+        return _fws_dashboard_refuge_is_admin_pheno_trail($node);
+    }
+    return FALSE;
 }
 
 /**
