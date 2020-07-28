@@ -1,5 +1,222 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["main"],{
 
+/***/ "../fws-dashboard/src/app/entity.service.ts":
+/*!**************************************************!*\
+  !*** ../fws-dashboard/src/app/entity.service.ts ***!
+  \**************************************************/
+/*! exports provided: EntityBase, Refuge, PhenologyTrail, DashboardMode, DashboardModeState, EntityService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EntityBase", function() { return EntityBase; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Refuge", function() { return Refuge; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhenologyTrail", function() { return PhenologyTrail; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DashboardMode", function() { return DashboardMode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DashboardModeState", function() { return DashboardModeState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EntityService", function() { return EntityService; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (undefined && undefined.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+// using class instead of interface so can use instanceof
+var EntityBase = /** @class */ (function () {
+    function EntityBase() {
+    }
+    return EntityBase;
+}());
+
+var Refuge = /** @class */ (function (_super) {
+    __extends(Refuge, _super);
+    function Refuge() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return Refuge;
+}(EntityBase));
+
+var PhenologyTrail = /** @class */ (function (_super) {
+    __extends(PhenologyTrail, _super);
+    function PhenologyTrail() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return PhenologyTrail;
+}(EntityBase));
+
+// this means that the app can no longer function outside of the context of Drupal, period.
+var API_ROOT = '/api';
+var DashboardMode;
+(function (DashboardMode) {
+    DashboardMode["REFUGE"] = "refuge";
+    DashboardMode["PHENO_TRAIL"] = "phenology_trail";
+})(DashboardMode || (DashboardMode = {}));
+;
+var DashboardModeState = (function () {
+    var mode = DashboardMode.REFUGE;
+    return {
+        get: function () { return mode; },
+        set: function (m) { return mode = m; },
+    };
+})();
+var EntityService = /** @class */ (function () {
+    function EntityService(http, cacheService, selectionFactory) {
+        this.http = http;
+        this.cacheService = cacheService;
+        this.selectionFactory = selectionFactory;
+    }
+    EntityService.prototype.parseSelections = function (json) {
+        var selections = this.selectionFactory.newSelections(JSON.parse(json));
+        /*
+        console.log('JSON',json);
+        console.log('SELECTIONS',selections);
+        */
+        return selections;
+    };
+    EntityService.prototype.apiUrl = function (entity_id) {
+        return API_ROOT + "/" + DashboardModeState.get() + "/" + entity_id;
+    };
+    EntityService.prototype.castEntity = function (entityId, apiResult) {
+        // actually constructing an instance so that other classes can use instanceof
+        var entity;
+        switch (DashboardModeState.get()) {
+            case DashboardMode.REFUGE:
+                entity = new Refuge();
+                break;
+            case DashboardMode.PHENO_TRAIL:
+                entity = new PhenologyTrail();
+                break;
+            default:
+                throw new Error("Unsupported DASHBOARD_MODE \"" + DashboardModeState.get() + "\"");
+        }
+        Object.assign(entity, apiResult);
+        entity.id = entityId;
+        var selections = (entity.selections || []).map(function (s) { return JSON.parse(s); });
+        entity.selections = this.selectionFactory.newSelections(selections);
+        return entity;
+    };
+    EntityService.prototype.get = function (entity_id) {
+        var _this = this;
+        return this.http.get(this.apiUrl(entity_id))
+            .toPromise()
+            .then(function (response) { return _this.castEntity(entity_id, response); });
+    };
+    EntityService.prototype.save = function (entity) {
+        var _this = this;
+        var r = __assign({}, entity);
+        r.selections = (r.selections || []).map(function (s) { return JSON.stringify(s.external); });
+        var json = JSON.stringify(r);
+        console.log("JSON " + json);
+        return this.http.put(this.apiUrl(entity.id), json, { headers: { 'Content-Type': 'application/json' } })
+            .toPromise()
+            .then(function (response) { return _this.castEntity(entity.id, response); });
+    };
+    EntityService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"],
+            _npn_common__WEBPACK_IMPORTED_MODULE_2__["CacheService"],
+            _npn_common__WEBPACK_IMPORTED_MODULE_2__["VisualizationSelectionFactory"]])
+    ], EntityService);
+    return EntityService;
+}());
+
+
+
+/***/ }),
+
+/***/ "../fws-dashboard/src/app/resources.component.ts":
+/*!*******************************************************!*\
+  !*** ../fws-dashboard/src/app/resources.component.ts ***!
+  \*******************************************************/
+/*! exports provided: SafeHtmlPipe, ResourcesComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SafeHtmlPipe", function() { return SafeHtmlPipe; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResourcesComponent", function() { return ResourcesComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./entity.service */ "../fws-dashboard/src/app/entity.service.ts");
+/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/platform-browser */ "../../node_modules/@angular/platform-browser/fesm5/platform-browser.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var SafeHtmlPipe = /** @class */ (function () {
+    function SafeHtmlPipe(sanitized) {
+        this.sanitized = sanitized;
+    }
+    SafeHtmlPipe.prototype.transform = function (value) {
+        return this.sanitized.bypassSecurityTrustHtml(value);
+    };
+    SafeHtmlPipe = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Pipe"])({ name: 'safeHtml' }),
+        __metadata("design:paramtypes", [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["DomSanitizer"]])
+    ], SafeHtmlPipe);
+    return SafeHtmlPipe;
+}());
+
+var ResourcesComponent = /** @class */ (function () {
+    function ResourcesComponent() {
+        this.userIsLoggedIn = false;
+    }
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", _entity_service__WEBPACK_IMPORTED_MODULE_1__["EntityBase"])
+    ], ResourcesComponent.prototype, "entity", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Boolean)
+    ], ResourcesComponent.prototype, "userIsLoggedIn", void 0);
+    ResourcesComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'fws-dashboard-resources',
+            template: "\n    <div [innerHtml]=\"entity && entity.resources ? (entity.resources | safeHtml) : ''\"></div>\n    <a mat-raised-button *ngIf=\"!userIsLoggedIn\" [href]=\"'//www.usanpn.org/user/register?default_group_id='+entity.network_id\">Register</a>\n    <a mat-raised-button *ngIf=\"!userIsLoggedIn\" href=\"/user/login\">Login</a>\n    <a mat-raised-button *ngIf=\"userIsLoggedIn\" href=\"//mynpn.usanpn.org/npnapps/\" target=\"_blank\">My Observation Deck</a>\n    ",
+            styles: ["\n        a[mat-raised-button] {\n            margin-right: 5px;\n        }\n    "]
+        })
+    ], ResourcesComponent);
+    return ResourcesComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "../npn/common/src/lib/common/application-settings.ts":
 /*!************************************************************!*\
   !*** ../npn/common/src/lib/common/application-settings.ts ***!
@@ -4578,7 +4795,7 @@ function xmlToString(xmlData) {
 /*!**************************************!*\
   !*** ../npn/common/src/lib/index.ts ***!
   \**************************************/
-/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivityVisMode, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4780,6 +4997,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CurveControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["CurveControlComponent"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityVisMode", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivityVisMode"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelection"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelectionFactory", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelectionFactory"]; });
@@ -4906,7 +5125,7 @@ var NpnLibModule = /** @class */ (function () {
 /*!*******************************************!*\
   !*** ../npn/common/src/lib/public_api.ts ***!
   \*******************************************/
-/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivityVisMode, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5107,6 +5326,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesControlComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ActivityCurvesControlComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CurveControlComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["CurveControlComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityVisMode", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ObserverActivityVisMode"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ObserverActivitySelection"]; });
 
@@ -5754,7 +5975,7 @@ var ACTIVITY_CURVE_KINGDOM_METRICS = {
         },
         {
             id: 'mean_numanimals_in-phase',
-            sampleSize: 'in-phase_per_hr_sites_sample_size',
+            sampleSize: 'in-phase_site_visits_sample_size',
             label: 'Animals In Phase',
             valueFormat: DECIMAL
         }, {
@@ -10072,7 +10293,7 @@ var YearRangeInputComponent = /** @class */ (function () {
 /*!*****************************************************!*\
   !*** ../npn/common/src/lib/visualizations/index.ts ***!
   \*****************************************************/
-/*! exports provided: VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivityVisMode, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10145,6 +10366,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesControlComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CurveControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["CurveControlComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityVisMode", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivityVisMode"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelection"]; });
 
@@ -12587,12 +12810,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!***********************************************************************!*\
   !*** ../npn/common/src/lib/visualizations/observer-activity/index.ts ***!
   \***********************************************************************/
-/*! exports provided: ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl */
+/*! exports provided: ObserverActivityVisMode, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _public_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./public_api */ "../npn/common/src/lib/visualizations/observer-activity/public_api.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityVisMode", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivityVisMode"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelection"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelectionFactory", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelectionFactory"]; });
@@ -12708,11 +12933,12 @@ var ObserverActivitySelectionFactory = /** @class */ (function () {
 /*!*********************************************************************************************!*\
   !*** ../npn/common/src/lib/visualizations/observer-activity/observer-activity-selection.ts ***!
   \*********************************************************************************************/
-/*! exports provided: ObserverActivitySelection */
+/*! exports provided: ObserverActivityVisMode, ObserverActivitySelection */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityVisMode", function() { return ObserverActivityVisMode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return ObserverActivitySelection; });
 /* harmony import */ var _vis_selection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
@@ -12737,6 +12963,12 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+var ObserverActivityVisMode;
+(function (ObserverActivityVisMode) {
+    ObserverActivityVisMode["NEW_OBSERVERS"] = "New Observers";
+    ObserverActivityVisMode["ACTIVE_OBSERVERS"] = "Active Observers";
+})(ObserverActivityVisMode || (ObserverActivityVisMode = {}));
+;
 var ObserverActivitySelection = /** @class */ (function (_super) {
     __extends(ObserverActivitySelection, _super);
     function ObserverActivitySelection(serviceUtils, networkService) {
@@ -12744,6 +12976,7 @@ var ObserverActivitySelection = /** @class */ (function (_super) {
         _this.serviceUtils = serviceUtils;
         _this.networkService = networkService;
         _this.$class = 'ObserverActivitySelection';
+        _this.mode = ObserverActivityVisMode.ACTIVE_OBSERVERS;
         return _this;
     }
     ObserverActivitySelection.prototype.isValid = function () {
@@ -12823,6 +13056,10 @@ var ObserverActivitySelection = /** @class */ (function (_super) {
         Object(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["selectionProperty"])(),
         __metadata("design:type", Number)
     ], ObserverActivitySelection.prototype, "year", void 0);
+    __decorate([
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["selectionProperty"])(),
+        __metadata("design:type", String)
+    ], ObserverActivitySelection.prototype, "mode", void 0);
     return ObserverActivitySelection;
 }(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["StationAwareVisSelection"]));
 
@@ -12837,7 +13074,7 @@ var ObserverActivitySelection = /** @class */ (function (_super) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"vis-container\">\n    <div class=\"vis-working\" *ngIf=\"selection.working\">\n        <npn-logo spin=\"false\"></npn-logo>\n    </div>\n    <div class=\"chart-container\">\n        <visualization-download *ngIf=\"!thumbnail && !mobileMode\" svgWrapperId=\"{{id}}\" filename=\"{{filename}}\"></visualization-download>\n        <div [class]=\"clazz\" id=\"{{id}}\"><svg class=\"svg-visualization\"></svg></div>\n    </div>\n    <mat-radio-group style=\"display:block; margin-top: 10px;\" *ngIf=\"!thumbnail\"\n        [(ngModel)]=\"mode\"\n        (change)=\"redraw()\">\n        <mat-radio-button [value]=\"modes.ACTIVE_OBSERVERS\" style=\"margin-right: 5px;\">{{modes.ACTIVE_OBSERVERS}}</mat-radio-button>\n        <mat-radio-button [value]=\"modes.NEW_OBSERVERS\">{{modes.NEW_OBSERVERS}}</mat-radio-button>\n    </mat-radio-group>\n</div>\n"
+module.exports = "<div class=\"vis-container\">\n    <div class=\"vis-working\" *ngIf=\"selection.working\">\n        <npn-logo spin=\"false\"></npn-logo>\n    </div>\n    <div class=\"chart-container\">\n        <visualization-download *ngIf=\"!thumbnail && !mobileMode\" svgWrapperId=\"{{id}}\" filename=\"{{filename}}\"></visualization-download>\n        <div [class]=\"clazz\" id=\"{{id}}\"><svg class=\"svg-visualization\"></svg></div>\n    </div>\n    <mat-radio-group style=\"display:block; margin-top: 10px;\" *ngIf=\"!thumbnail\"\n        [(ngModel)]=\"selection.mode\"\n        (change)=\"redraw()\">\n        <mat-radio-button [value]=\"modes.ACTIVE_OBSERVERS\" style=\"margin-right: 5px;\">{{modes.ACTIVE_OBSERVERS}}</mat-radio-button>\n        <mat-radio-button [value]=\"modes.NEW_OBSERVERS\">{{modes.NEW_OBSERVERS}}</mat-radio-button>\n    </mat-radio-group>\n</div>\n"
 
 /***/ }),
 
@@ -12900,20 +13137,13 @@ var MARGIN_VPAD = 5;
 var TITLE_FONT_SIZE = 18;
 var SWATCH_SIZE = 20;
 var BAR_OPACITY = '0.75';
-var ObserverActivityVisMode;
-(function (ObserverActivityVisMode) {
-    ObserverActivityVisMode["NEW_OBSERVERS"] = "New Observers";
-    ObserverActivityVisMode["ACTIVE_OBSERVERS"] = "Active Observers";
-})(ObserverActivityVisMode || (ObserverActivityVisMode = {}));
-;
 var ObserverActivityComponent = /** @class */ (function (_super) {
     __extends(ObserverActivityComponent, _super);
     function ObserverActivityComponent(rootElement, media) {
         var _this = _super.call(this, rootElement, media) || this;
         _this.rootElement = rootElement;
         _this.media = media;
-        _this.modes = ObserverActivityVisMode;
-        _this.mode = ObserverActivityVisMode.ACTIVE_OBSERVERS;
+        _this.modes = _observer_activity_selection__WEBPACK_IMPORTED_MODULE_3__["ObserverActivityVisMode"];
         _this.z = Object(d3_scale__WEBPACK_IMPORTED_MODULE_5__["scaleOrdinal"])();
         _this.filename = 'observer-activity.png';
         _this.margins = __assign({}, _svg_visualization_base_component__WEBPACK_IMPORTED_MODULE_2__["DEFAULT_MARGINS"], { top: DEFAULT_TOP_MARGIN, left: 80 });
@@ -13037,9 +13267,9 @@ var ObserverActivityComponent = /** @class */ (function (_super) {
         }
         console.debug('ObserverActivityComponent:data', this.data);
         this.title.text("" + this.selection.year);
-        this.yAxisLabel.text(this.mode);
+        this.yAxisLabel.text(this.selection.mode);
         this.updateLegend();
-        var dataKey = this.mode === ObserverActivityVisMode.ACTIVE_OBSERVERS ? 'activeObservers' : 'newObservers';
+        var dataKey = this.selection.mode === _observer_activity_selection__WEBPACK_IMPORTED_MODULE_3__["ObserverActivityVisMode"].ACTIVE_OBSERVERS ? 'activeObservers' : 'newObservers';
         var visData = d3__WEBPACK_IMPORTED_MODULE_6__["range"](0, 12)
             .map(function (month) { return _this.data.reduce(function (map, d, index) {
             map["" + index] = d.months[month][dataKey];
@@ -13105,12 +13335,14 @@ var ObserverActivityComponent = /** @class */ (function (_super) {
 /*!****************************************************************************!*\
   !*** ../npn/common/src/lib/visualizations/observer-activity/public_api.ts ***!
   \****************************************************************************/
-/*! exports provided: ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl */
+/*! exports provided: ObserverActivityVisMode, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _observer_activity_selection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./observer-activity-selection */ "../npn/common/src/lib/visualizations/observer-activity/observer-activity-selection.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityVisMode", function() { return _observer_activity_selection__WEBPACK_IMPORTED_MODULE_0__["ObserverActivityVisMode"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _observer_activity_selection__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelection"]; });
 
 /* harmony import */ var _observer_activity_selection_factory_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./observer-activity-selection-factory.service */ "../npn/common/src/lib/visualizations/observer-activity/observer-activity-selection-factory.service.ts");
@@ -13134,7 +13366,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!**********************************************************!*\
   !*** ../npn/common/src/lib/visualizations/public_api.ts ***!
   \**********************************************************/
-/*! exports provided: VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivityVisMode, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13215,6 +13447,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClippedStatValuePipe", function() { return _clipped_wms_map_public_api__WEBPACK_IMPORTED_MODULE_6__["ClippedStatValuePipe"]; });
 
 /* harmony import */ var _observer_activity_public_api__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./observer-activity/public_api */ "../npn/common/src/lib/visualizations/observer-activity/public_api.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityVisMode", function() { return _observer_activity_public_api__WEBPACK_IMPORTED_MODULE_7__["ObserverActivityVisMode"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _observer_activity_public_api__WEBPACK_IMPORTED_MODULE_7__["ObserverActivitySelection"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelectionFactory", function() { return _observer_activity_public_api__WEBPACK_IMPORTED_MODULE_7__["ObserverActivitySelectionFactory"]; });
@@ -15864,41 +16098,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "npnConfigurationFactory", function() { return npnConfigurationFactory; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppModule", function() { return AppModule; });
 /* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/platform-browser */ "../../node_modules/@angular/platform-browser/fesm5/platform-browser.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
-/* harmony import */ var _focal_species_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./focal-species.component */ "./src/app/focal-species.component.ts");
-/* harmony import */ var _findings_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./findings.component */ "./src/app/findings.component.ts");
-/* harmony import */ var _resources_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./resources.component */ "./src/app/resources.component.ts");
-/* harmony import */ var _fws_dashboard_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./fws-dashboard.component */ "./src/app/fws-dashboard.component.ts");
-/* harmony import */ var _phenology_trail_partners_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./phenology-trail-partners.component */ "./src/app/phenology-trail-partners.component.ts");
-/* harmony import */ var _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./new-visualization-dialog.component */ "./src/app/new-visualization-dialog.component.ts");
-/* harmony import */ var _refuge_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./refuge-visualization-scope-selection.component */ "./src/app/refuge-visualization-scope-selection.component.ts");
-/* harmony import */ var _pheno_trail_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./pheno-trail-visualization-scope-selection.component */ "./src/app/pheno-trail-visualization-scope-selection.component.ts");
-/* harmony import */ var _pheno_trail_visualization_scope_groups_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./pheno-trail-visualization-scope-groups.component */ "./src/app/pheno-trail-visualization-scope-groups.component.ts");
-/* harmony import */ var _pheno_trail_visualization_scope_group_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./pheno-trail-visualization-scope-group.component */ "./src/app/pheno-trail-visualization-scope-group.component.ts");
-/* harmony import */ var _pheno_trail_visualization_scope_station_groups_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./pheno-trail-visualization-scope-station-groups.component */ "./src/app/pheno-trail-visualization-scope-station-groups.component.ts");
-/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/forms */ "../../node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @angular/platform-browser/animations */ "../../node_modules/@angular/platform-browser/fesm5/animations.js");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @angular/material */ "../../node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var _angular_flex_layout__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @angular/flex-layout */ "../../node_modules/@angular/flex-layout/esm5/flex-layout.es5.js");
-/* harmony import */ var _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @fortawesome/angular-fontawesome */ "../../node_modules/@fortawesome/angular-fontawesome/fesm5/angular-fontawesome.js");
-/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../environments/environment */ "./src/environments/environment.ts");
-/* harmony import */ var _agm_core__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @agm/core */ "../../node_modules/@agm/core/index.js");
-/* harmony import */ var ng2_dnd__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ng2-dnd */ "../../node_modules/ng2-dnd/index.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common */ "../../node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
+/* harmony import */ var _refuge_control_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./refuge-control.component */ "./src/app/refuge-control.component.ts");
+/* harmony import */ var _spring_dashboard_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./spring-dashboard.component */ "./src/app/spring-dashboard.component.ts");
+/* harmony import */ var _refuge_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./refuge.service */ "./src/app/refuge.service.ts");
+/* harmony import */ var _status_of_spring_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./status-of-spring.component */ "./src/app/status-of-spring.component.ts");
+/* harmony import */ var _start_of_spring_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./start-of-spring.component */ "./src/app/start-of-spring.component.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/forms */ "../../node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/platform-browser/animations */ "../../node_modules/@angular/platform-browser/fesm5/animations.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/material */ "../../node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _angular_flex_layout__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/flex-layout */ "../../node_modules/@angular/flex-layout/esm5/flex-layout.es5.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var _agm_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @agm/core */ "../../node_modules/@agm/core/index.js");
+/* harmony import */ var _start_of_spring_dialog_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./start-of-spring-dialog.component */ "./src/app/start-of-spring-dialog.component.ts");
+/* harmony import */ var projects_fws_dashboard_src_app_resources_component__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! projects/fws-dashboard/src/app/resources.component */ "../fws-dashboard/src/app/resources.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-
-
-
-
-
-
 
 
 
@@ -15927,53 +16149,43 @@ var AppModule = /** @class */ (function () {
     function AppModule() {
     }
     AppModule = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["NgModule"])({
+            imports: [
+                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_11__["BrowserAnimationsModule"],
+                _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
+                _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_10__["FormsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__["ReactiveFormsModule"],
+                _npn_common__WEBPACK_IMPORTED_MODULE_4__["NpnLibModule"],
+                _npn_common__WEBPACK_IMPORTED_MODULE_4__["NpnGriddedModule"],
+                _npn_common__WEBPACK_IMPORTED_MODULE_4__["VisualizationsModule"],
+                _npn_common__WEBPACK_IMPORTED_MODULE_4__["NpnCommonModule"],
+                _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatTabsModule"], _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatDialogModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatProgressSpinnerModule"], _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatIconModule"], _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatButtonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatTooltipModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatFormFieldModule"], _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatSelectModule"], _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatInputModule"], _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatAutocompleteModule"],
+                _angular_flex_layout__WEBPACK_IMPORTED_MODULE_13__["FlexLayoutModule"],
+                _agm_core__WEBPACK_IMPORTED_MODULE_15__["AgmCoreModule"].forRoot({
+                    apiKey: _environments_environment__WEBPACK_IMPORTED_MODULE_14__["environment"].googleMapsApiKey
+                })
+            ],
             declarations: [
-                _fws_dashboard_component__WEBPACK_IMPORTED_MODULE_7__["FwsDashboardComponent"],
-                _phenology_trail_partners_component__WEBPACK_IMPORTED_MODULE_8__["PhenologyTrailPartnersComponent"],
-                _focal_species_component__WEBPACK_IMPORTED_MODULE_4__["FocalSpeciesComponent"],
-                _findings_component__WEBPACK_IMPORTED_MODULE_5__["FindingsComponent"],
-                _resources_component__WEBPACK_IMPORTED_MODULE_6__["ResourcesComponent"],
-                _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__["NewVisualizationBuilderComponent"],
-                _refuge_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_10__["RefugeVisualizationScopeSelectionComponent"],
-                _pheno_trail_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_11__["PhenoTrailVisualizationScopeSelectionComponent"],
-                _pheno_trail_visualization_scope_groups_component__WEBPACK_IMPORTED_MODULE_12__["PhenoTrailVisualizationScopeGroupsComponent"],
-                _pheno_trail_visualization_scope_group_component__WEBPACK_IMPORTED_MODULE_13__["PhenoTrailVisualizationScopeGroupComponent"],
-                _pheno_trail_visualization_scope_station_groups_component__WEBPACK_IMPORTED_MODULE_14__["PhenoTrailVisualizationScopeStationGroupsComponent"],
-                _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__["NewVisualizationDialogComponent"],
-                _resources_component__WEBPACK_IMPORTED_MODULE_6__["SafeHtmlPipe"]
+                _refuge_control_component__WEBPACK_IMPORTED_MODULE_5__["RefugeControl"],
+                _spring_dashboard_component__WEBPACK_IMPORTED_MODULE_6__["SpringDashboardComponent"],
+                _status_of_spring_component__WEBPACK_IMPORTED_MODULE_8__["StatusOfSpringComponent"],
+                _start_of_spring_component__WEBPACK_IMPORTED_MODULE_9__["StartOfSpringComponent"],
+                _start_of_spring_dialog_component__WEBPACK_IMPORTED_MODULE_16__["StartOfSpringDialog"],
+                _start_of_spring_dialog_component__WEBPACK_IMPORTED_MODULE_16__["SosDoyTransform"],
+                projects_fws_dashboard_src_app_resources_component__WEBPACK_IMPORTED_MODULE_17__["SafeHtmlPipe"]
+            ],
+            providers: [
+                _refuge_service__WEBPACK_IMPORTED_MODULE_7__["RefugeService"],
+                { provide: _npn_common__WEBPACK_IMPORTED_MODULE_4__["NPN_BASE_HREF"], useFactory: baseHrefFactory },
+                { provide: _npn_common__WEBPACK_IMPORTED_MODULE_4__["NPN_CONFIGURATION"], useFactory: npnConfigurationFactory }
             ],
             entryComponents: [
-                _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_9__["NewVisualizationDialogComponent"]
+                _start_of_spring_dialog_component__WEBPACK_IMPORTED_MODULE_16__["StartOfSpringDialog"]
             ],
-            imports: [
-                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_17__["BrowserAnimationsModule"],
-                _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
-                _npn_common__WEBPACK_IMPORTED_MODULE_3__["NpnLibModule"],
-                _npn_common__WEBPACK_IMPORTED_MODULE_3__["VisualizationsModule"],
-                _npn_common__WEBPACK_IMPORTED_MODULE_3__["NpnCommonModule"],
-                _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClientModule"],
-                _angular_forms__WEBPACK_IMPORTED_MODULE_16__["FormsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_16__["ReactiveFormsModule"],
-                _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_20__["FontAwesomeModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatIconModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatCheckboxModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatGridListModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatCardModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatListModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatTooltipModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatSnackBarModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatDialogModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatStepperModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatButtonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatRadioModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatProgressSpinnerModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatSelectModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatInputModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatFormFieldModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatTabsModule"], _angular_material__WEBPACK_IMPORTED_MODULE_18__["MatButtonToggleModule"],
-                _angular_flex_layout__WEBPACK_IMPORTED_MODULE_19__["FlexLayoutModule"],
-                _agm_core__WEBPACK_IMPORTED_MODULE_22__["AgmCoreModule"].forRoot({
-                    apiKey: _environments_environment__WEBPACK_IMPORTED_MODULE_21__["environment"].googleMapsApiKey
-                }),
-                ng2_dnd__WEBPACK_IMPORTED_MODULE_23__["DndModule"].forRoot()
-            ],
-            bootstrap: [_fws_dashboard_component__WEBPACK_IMPORTED_MODULE_7__["FwsDashboardComponent"]],
-            providers: [
-                _entity_service__WEBPACK_IMPORTED_MODULE_15__["EntityService"],
-                { provide: _npn_common__WEBPACK_IMPORTED_MODULE_3__["NPN_BASE_HREF"], useFactory: baseHrefFactory },
-                { provide: _npn_common__WEBPACK_IMPORTED_MODULE_3__["NPN_CONFIGURATION"], useFactory: npnConfigurationFactory }
-            ]
+            bootstrap: [_spring_dashboard_component__WEBPACK_IMPORTED_MODULE_6__["SpringDashboardComponent"]],
         })
     ], AppModule);
     return AppModule;
@@ -15983,24 +16195,721 @@ var AppModule = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/entity.service.ts":
-/*!***********************************!*\
-  !*** ./src/app/entity.service.ts ***!
-  \***********************************/
-/*! exports provided: EntityBase, Refuge, PhenologyTrail, DashboardMode, DashboardModeState, EntityService */
+/***/ "./src/app/fli-pcnt.ts":
+/*!*****************************!*\
+  !*** ./src/app/fli-pcnt.ts ***!
+  \*****************************/
+/*! exports provided: MARKER_COLORS, MARKER_ICONS, FLI_DESCRIPTIONS, FLI_PCNT_BUCKET_INDEX */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EntityBase", function() { return EntityBase; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Refuge", function() { return Refuge; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhenologyTrail", function() { return PhenologyTrail; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DashboardMode", function() { return DashboardMode; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DashboardModeState", function() { return DashboardModeState; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EntityService", function() { return EntityService; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MARKER_COLORS", function() { return MARKER_COLORS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MARKER_ICONS", function() { return MARKER_ICONS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FLI_DESCRIPTIONS", function() { return FLI_DESCRIPTIONS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FLI_PCNT_BUCKET_INDEX", function() { return FLI_PCNT_BUCKET_INDEX; });
+var BUCKETS = [
+    [0.0, 5.0],
+    [5.0, 25.0],
+    [25.0, 75.0],
+    [75.0, 95.0],
+    [95.0, 101.0] // just so < test is inclusive of 100.0
+];
+var MARKER_COLORS = [
+    '#ed3d3d',
+    '#f5a27a',
+    '#828282',
+    '#5cb3f2',
+    '#3b3bf0' // > 95%
+];
+var MARKER_ICONS = [
+    'mean-5.png',
+    'mean-5-25.png',
+    'mean-25-75.png',
+    'mean-75-95.png',
+    'mean-95.png',
+    'no-data.png'
+];
+var FLI_DESCRIPTIONS = [
+    'extremely early',
+    'early',
+    'average',
+    'late',
+    'extremely late'
+];
+var FLI_PCNT_BUCKET_INDEX = function (pcnt) {
+    if (isNaN(pcnt)) {
+        return -1;
+    }
+    return BUCKETS.reduce(function (index, range, bucketIndex) {
+        if (index === -1) {
+            if (pcnt >= range[0] && pcnt < range[1]) {
+                index = bucketIndex;
+            }
+        }
+        return index;
+    }, -1);
+};
+
+
+/***/ }),
+
+/***/ "./src/app/flyways.ts":
+/*!****************************!*\
+  !*** ./src/app/flyways.ts ***!
+  \****************************/
+/*! exports provided: FLYWAY_COLORS, FLYWAY_NAMES, FLYWAY_TEXTS */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FLYWAY_COLORS", function() { return FLYWAY_COLORS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FLYWAY_NAMES", function() { return FLYWAY_NAMES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FLYWAY_TEXTS", function() { return FLYWAY_TEXTS; });
+var FLYWAY_COLORS = {
+    'waterfowl_flyways.1': '#ff7f7f',
+    'waterfowl_flyways.2': '#a3ff73',
+    'waterfowl_flyways.3': '#73dfff',
+    'waterfowl_flyways.4': '#df73ff' // atlantic
+};
+var FLYWAY_NAMES = {
+    'waterfowl_flyways.1': 'Pacific',
+    'waterfowl_flyways.2': 'Central',
+    'waterfowl_flyways.3': 'Mississippi',
+    'waterfowl_flyways.4': 'Atlantic'
+};
+var FLYWAY_TEXTS = {
+    'waterfowl_flyways.1': 'This Refuge lies within the Pacific flyway, which exhibited a significant trend toward earlier onset of spring leaf out and bloom (0.4 and 0.4 days per decade, respectively). There was no difference in the advance of spring between northern and southern latitudes.',
+    'waterfowl_flyways.2': 'This Refuge lies within the Central flyway, which exhibited a significant trend toward an earlier onset of spring leaf out and bloom (0.3 and 0.4 days per decade, respectively). The advance of spring was slightly greater at northern latitudes than at southern latitudes.',
+    'waterfowl_flyways.3': 'This Refuge lies within the Mississippi flyway, which exhibited a significant trend toward an earlier onset of spring leaf out and bloom (0.4 and 0.4 days per decade, respectively). The advance of spring was greater at northern latitudes than at southern latitudes.',
+    'waterfowl_flyways.4': 'This Refuge lies within the Atlantic flyway, which exhibited a significant trend toward an earlier onset of spring leaf out and bloom (0.5 and 0.6 days per decade, respectively). The advance of spring was greater at northern latitudes than at southern latitudes.'
+};
+
+
+/***/ }),
+
+/***/ "./src/app/map-base.ts":
+/*!*****************************!*\
+  !*** ./src/app/map-base.ts ***!
+  \*****************************/
+/*! exports provided: MapBase */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MapBase", function() { return MapBase; });
+var MapBase = /** @class */ (function () {
+    function MapBase() {
+        var _this = this;
+        this.getMap = new Promise(function (resolve) { return _this.mapResolver = resolve; });
+        this.latitude = 41.135760;
+        this.longitude = -99.157679;
+        this.zoom = 4;
+        this.mapStyles = [{
+                featureType: 'poi',
+                elementType: 'labels',
+                stylers: [{ visibility: 'off' }]
+            }, {
+                featureType: 'transit.station',
+                elementType: 'labels',
+                stylers: [{ visibility: 'off' }]
+            },
+            {
+                featureType: 'poi.park',
+                stylers: [{ visibility: 'off' }]
+            },
+            {
+                featureType: 'landscape',
+                stylers: [{ visibility: 'off' }]
+            }];
+    }
+    MapBase.prototype.configureMap = function (map) {
+    };
+    MapBase.prototype.mapReady = function (map) {
+        this.configureMap(map);
+        this.mapResolver(map);
+    };
+    return MapBase;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/refuge-control.component.scss":
+/*!***********************************************!*\
+  !*** ./src/app/refuge-control.component.scss ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ":host {\n  flex-grow: 1; }\n  :host mat-form-field {\n    width: 100%; }\n  @media (min-width: 992px) {\n    :host {\n      max-width: 60%; } }\n"
+
+/***/ }),
+
+/***/ "./src/app/refuge-control.component.ts":
+/*!*********************************************!*\
+  !*** ./src/app/refuge-control.component.ts ***!
+  \*********************************************/
+/*! exports provided: RefugeControl */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RefugeControl", function() { return RefugeControl; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _refuge_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./refuge.service */ "./src/app/refuge.service.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "../../node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "../../node_modules/rxjs/_esm5/operators/index.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var RefugeControl = /** @class */ (function () {
+    function RefugeControl(refugeService) {
+        this.refugeService = refugeService;
+        this.control = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]();
+        this.onSelect = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+        this.onList = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+    }
+    RefugeControl.prototype.ngOnInit = function () {
+        var _this = this;
+        this.refugeService.refugeList().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (list) { return list.filter(function (refuge) { return !!refuge.location; }); }) // just in case any don't have location set
+        ).subscribe(function (list) { return _this.onList.emit(_this.refuges = list); });
+        // TODO takeUntil
+        this.control.valueChanges.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["filter"])(function (r) { return !r || typeof (r) === 'object'; }), // includes null
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["filter"])(function (r) { return !(_this.selected && r === _this.selected); }), // don't re-deliver
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (r) { return (r && typeof (r) === 'object') ? r : null; })).subscribe(function (refuge) { return _this.onSelect.emit(_this.selected = refuge); });
+        // TODO takeUntil
+        this.filteredRefuges = this.control.valueChanges.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["filter"])(function (r) { return typeof (r) === 'string'; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (s) { return s ? _this._filterRefuges(s) : (_this.refuges ? _this.refuges.slice() : []); }));
+    };
+    RefugeControl.prototype.refugeTitle = function (refuge) {
+        return refuge ? refuge.title : '';
+    };
+    RefugeControl.prototype._filterRefuges = function (val) {
+        if (!this.refuges) {
+            return [];
+        }
+        val = val.toLowerCase();
+        return this.refuges.filter(function (r) { return r.title.toLowerCase().indexOf(val) !== -1; });
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
+    ], RefugeControl.prototype, "onSelect", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
+    ], RefugeControl.prototype, "onList", void 0);
+    RefugeControl = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'refuge-control',
+            template: "\n    <mat-form-field *ngIf=\"refuges\" class=\"refuges-input\">\n        <input matInput [placeholder]=\"selected ? 'Refuge' : 'Find a refuge'\" [formControl]=\"control\" [matAutocomplete]=\"auto\" />\n        <mat-autocomplete #auto=\"matAutocomplete\" [displayWith]=\"refugeTitle\">\n            <mat-option *ngFor=\"let refuge of filteredRefuges | async\" [value]=\"refuge\">{{ refuge.title }}</mat-option>\n        </mat-autocomplete>\n    </mat-form-field>\n    ",
+            styles: [__webpack_require__(/*! ./refuge-control.component.scss */ "./src/app/refuge-control.component.scss")]
+        }),
+        __metadata("design:paramtypes", [_refuge_service__WEBPACK_IMPORTED_MODULE_1__["RefugeService"]])
+    ], RefugeControl);
+    return RefugeControl;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/refuge.service.ts":
+/*!***********************************!*\
+  !*** ./src/app/refuge.service.ts ***!
+  \***********************************/
+/*! exports provided: RefugeService, Location, Refuge */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RefugeService", function() { return RefugeService; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Location", function() { return Location; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Refuge", function() { return Refuge; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ "../../node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "../../node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
+var __assign = (undefined && undefined.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+// this means that the app can no longer function outside of the context of Drupal, period.
+var API_ROOT = '/api/refuge';
+var RefugeService = /** @class */ (function () {
+    function RefugeService(http, cacheService, selectionFactory) {
+        var _this = this;
+        this.http = http;
+        this.cacheService = cacheService;
+        this.selectionFactory = selectionFactory;
+        this.refugeListPromise = new Promise(function (resolve, reject) {
+            _this.refugePromiseResolver = resolve;
+            _this.refugePromiseRejector = reject;
+        });
+        this.http.get("" + API_ROOT, {
+            params: {
+                terse: 'true'
+            }
+        }).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["map"])(function (map) { return Object.keys(map).map(function (key) { return map[key]; }); }))
+            .subscribe(function (refuges) { return _this.refugePromiseResolver(refuges); }, function (err) { return _this.refugePromiseRejector(err); });
+    }
+    RefugeService.prototype.parseSelections = function (json) {
+        var selections = this.selectionFactory.newSelections(JSON.parse(json));
+        /*
+        console.log('JSON',json);
+        console.log('SELECTIONS',selections);
+        */
+        return selections;
+    };
+    RefugeService.prototype.refugeUrl = function (refuge_id) {
+        return API_ROOT + "/" + refuge_id;
+    };
+    RefugeService.prototype.castRefuge = function (refuge_id, refuge) {
+        refuge.id = refuge_id;
+        var selections = (refuge.selections || []).map(function (s) { return JSON.parse(s); });
+        refuge.selections = this.selectionFactory.newSelections(selections);
+        return refuge;
+    };
+    RefugeService.prototype.refugeList = function () {
+        return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["from"])(this.refugeListPromise);
+    };
+    RefugeService.prototype.getRefuge = function (refuge_id) {
+        var _this = this;
+        return this.http.get(this.refugeUrl(refuge_id))
+            .toPromise()
+            .then(function (response) { return _this.castRefuge(refuge_id, response); });
+    };
+    RefugeService.prototype.saveRefuge = function (refuge) {
+        var _this = this;
+        var r = __assign({}, refuge);
+        r.selections = (r.selections || []).map(function (s) { return JSON.stringify(s.external); });
+        var json = JSON.stringify(r);
+        console.log("JSON " + json);
+        return this.http.put(this.refugeUrl(refuge.id), json, { headers: { 'Content-Type': 'application/json' } })
+            .toPromise()
+            .then(function (response) { return _this.castRefuge(refuge.id, response); });
+    };
+    RefugeService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"],
+            _npn_common__WEBPACK_IMPORTED_MODULE_4__["CacheService"],
+            _npn_common__WEBPACK_IMPORTED_MODULE_4__["VisualizationSelectionFactory"]])
+    ], RefugeService);
+    return RefugeService;
+}());
+
+var Location = /** @class */ (function () {
+    function Location() {
+    }
+    return Location;
+}());
+
+var Refuge = /** @class */ (function () {
+    function Refuge() {
+    }
+    return Refuge;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/spring-dashboard.component.scss":
+/*!*************************************************!*\
+  !*** ./src/app/spring-dashboard.component.scss ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ":host {\n  display: block; }\n\n.mat-tab-header {\n  border-bottom: none; }\n\n.mat-tab-header .mat-ink-bar {\n    display: none; }\n\n.mat-tab-header .mat-tab-labels {\n    flex-flow: row nowrap; }\n\n.mat-tab-header .mat-tab-labels > .mat-tab-label {\n    width: 100%;\n    white-space: normal;\n    display: block;\n    font-size: 0.9em;\n    height: 48px;\n    opacity: 1;\n    color: #fff;\n    padding: 0px;\n    background-color: transparent; }\n\n@media (min-width: 768px) {\n      .mat-tab-header .mat-tab-labels > .mat-tab-label {\n        display: flex; } }\n\n@media (min-width: 992px) {\n      .mat-tab-header .mat-tab-labels > .mat-tab-label {\n        font-size: 1em; } }\n\n.mat-tab-header .mat-tab-labels > .mat-tab-label > .mat-tab-label-content {\n      width: 100%; }\n\n.mat-tab-header .mat-tab-labels > .mat-tab-label > .mat-tab-label-content,\n    .mat-tab-header .mat-tab-labels > .mat-tab-label > .mat-tab-label-content > .spring-tab-label {\n      display: block;\n      padding: 0px;\n      height: 100%; }\n\n.mat-tab-header .mat-tab-labels > .mat-tab-label:focus {\n      background-color: transparent; }\n\n.mat-tab-header .mat-tab-labels > .mat-tab-label.mat-tab-label-active {\n      color: orange; }\n\n.mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(1) > .mat-tab-label-content > .spring-tab-label {\n      background-color: #271614; }\n\n@media (min-width: 768px) {\n        .mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(1) > .mat-tab-label-content > .spring-tab-label {\n          padding-left: 24px; } }\n\n.mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(1)::after {\n      content: '';\n      border-top: 24px solid #3f322b;\n      border-right: 24px solid #3f322b;\n      border-bottom: 24px solid #271614;\n      border-left: 24px solid #271614; }\n\n.mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(2) > .mat-tab-label-content > .spring-tab-label {\n      background-color: #3f322b; }\n\n.mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(2)::after {\n      content: '';\n      border-top: 24px solid transparent;\n      border-right: 24px solid transparent;\n      border-bottom: 24px solid #3f322b;\n      border-left: 24px solid #3f322b; }\n\n.spring-tab-label {\n  position: relative;\n  text-transform: uppercase; }\n\n.spring-tab-label > label {\n    color: inherit;\n    margin-top: 1em; }\n\n.spring-tab-content {\n  padding: 20px 5px;\n  color: #000;\n  border-left: 2px solid #ddd;\n  border-right: 2px solid #ddd;\n  border-bottom: 2px solid #ddd;\n  background-color: #fff; }\n\n@media (min-width: 992px) {\n    .spring-tab-content {\n      padding: 20px; } }\n"
+
+/***/ }),
+
+/***/ "./src/app/spring-dashboard.component.ts":
+/*!***********************************************!*\
+  !*** ./src/app/spring-dashboard.component.ts ***!
+  \***********************************************/
+/*! exports provided: SpringDashboardComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SpringDashboardComponent", function() { return SpringDashboardComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _refuge_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./refuge.service */ "./src/app/refuge.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var SpringDashboardComponent = /** @class */ (function () {
+    function SpringDashboardComponent(element, refugeService) {
+        this.element = element;
+        this.refugeService = refugeService;
+        this.userIsLoggedIn = false;
+        var e = element.nativeElement;
+        this.userIsLoggedIn = e.getAttribute('user_is_logged_in') !== null;
+    }
+    SpringDashboardComponent.prototype.ngOnInit = function () {
+    };
+    SpringDashboardComponent.prototype.selectedTabChange = function ($event) {
+        console.debug('selectedTabChange', $event);
+    };
+    SpringDashboardComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'spring-dashboard',
+            template: "\n  <mat-tab-group class=\"spring-dashboard-tabs\" (selectedTabChange)=\"selectedTabChange($event)\">\n    <mat-tab>\n        <ng-template mat-tab-label>\n            <div class=\"spring-tab-label current-spring\">\n                <label>Current Status of Spring</label>\n            </div>\n        </ng-template>\n        <div class=\"spring-tab-content\">\n            <status-of-spring></status-of-spring>\n        </div>\n    </mat-tab>\n    <mat-tab>\n        <ng-template mat-tab-label>\n            <div class=\"spring-tab-label current-spring\">\n                <label>Long-term changes in the Start of Spring</label>\n            </div>\n        </ng-template>\n        <div class=\"spring-tab-content\">\n            <start-of-spring></start-of-spring>\n        </div>\n    </mat-tab>\n  </mat-tab-group>\n  ",
+            styles: [__webpack_require__(/*! ./spring-dashboard.component.scss */ "./src/app/spring-dashboard.component.scss")],
+            encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None
+        }),
+        __metadata("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"],
+            _refuge_service__WEBPACK_IMPORTED_MODULE_1__["RefugeService"]])
+    ], SpringDashboardComponent);
+    return SpringDashboardComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/start-of-spring-dialog.component.ts":
+/*!*****************************************************!*\
+  !*** ./src/app/start-of-spring-dialog.component.ts ***!
+  \*****************************************************/
+/*! exports provided: SosDoyTransform, StartOfSpringDialog */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SosDoyTransform", function() { return SosDoyTransform; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StartOfSpringDialog", function() { return StartOfSpringDialog; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/material */ "../../node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _flyways__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./flyways */ "./src/app/flyways.ts");
+/* harmony import */ var _fli_pcnt__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./fli-pcnt */ "./src/app/fli-pcnt.ts");
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! d3 */ "../../node_modules/d3/index.js");
+/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (undefined && undefined.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
+
+
+
+
+
+var SosDoyTransform = /** @class */ (function () {
+    function SosDoyTransform() {
+        this.dateFormat = d3__WEBPACK_IMPORTED_MODULE_4__["timeFormat"]('%B %e');
+    }
+    SosDoyTransform.prototype.transform = function (value, stdev) {
+        var fixed = value.toFixed(2);
+        var fixedStdev = stdev.toFixed(2);
+        var fmt = this.dateFormat(this.getDate(value));
+        return fmt + " (" + fixed + " DOY \u00B1 " + fixedStdev + " days)";
+    };
+    SosDoyTransform.prototype.getDate = function (value) {
+        var rounded = Math.floor(value);
+        var d = new Date(2010, 0, 1); // 2010 not a leap year
+        d.setTime(d.getTime() + ((rounded - 1) * 24 * 60 * 60 * 1000));
+        return d;
+    };
+    SosDoyTransform = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Pipe"])({ name: 'SosDoy' })
+    ], SosDoyTransform);
+    return SosDoyTransform;
+}());
+
+var StartOfSpringDialog = /** @class */ (function () {
+    function StartOfSpringDialog(dialogData, dialogRef, zone, npnSvcUtils, rootElement, doyTrans) {
+        this.dialogData = dialogData;
+        this.dialogRef = dialogRef;
+        this.zone = zone;
+        this.npnSvcUtils = npnSvcUtils;
+        this.rootElement = rootElement;
+        this.doyTrans = doyTrans;
+        this.working = true;
+        this.FLYWAY_TEXTS = _flyways__WEBPACK_IMPORTED_MODULE_2__["FLYWAY_TEXTS"];
+        this.refuge = dialogData.refuge;
+        this.refugeData = dialogData.refugeData;
+        var bucketIndex = Object(_fli_pcnt__WEBPACK_IMPORTED_MODULE_3__["FLI_PCNT_BUCKET_INDEX"])(this.refugeData['FLI (%)']);
+        this.noData = bucketIndex === -1;
+        if (bucketIndex !== -1) {
+            this.fliCategory = _fli_pcnt__WEBPACK_IMPORTED_MODULE_3__["FLI_DESCRIPTIONS"][bucketIndex];
+        }
+    }
+    /*
+    this feels like a hack/workaround.  something about the code in this dialog
+    prevents the standard mat-dialog-close directive from working, clicks of the
+    close icon are being run outside of the angular zone even though (click) events
+    are being tied to the correct code.
+
+    the behavior is inconsistent.  everything works on a new window until a browser refresh
+    and then stops working.  once it stops working the dialog will close if you click the X
+    and then hover the mouse over the visualization (meaning the d3 mouse events ARE being
+    evaluated within the angular zone).
+
+    at any rate cannot deep end on the issue and forcing the close to run in the angular
+    zone seems to work.
+    */
+    StartOfSpringDialog.prototype.close = function () {
+        var _this = this;
+        this.zone.run(function () {
+            _this.dialogRef.close();
+        });
+    };
+    StartOfSpringDialog.prototype.ngAfterViewInit = function () {
+        var _this = this;
+        if (this.noData) {
+            return;
+        }
+        var svg = d3__WEBPACK_IMPORTED_MODULE_4__["select"]('#timeSeries');
+        var native = this.rootElement.nativeElement;
+        var wrapper = native.querySelector('#startOfSpringVisWrapper');
+        var style = getComputedStyle(wrapper, null);
+        var strToPx = function (s) { return parseInt(s.replace(/px$/, '')); };
+        var ratioMult = 0.5376; // based on 930/500
+        var minusLeft = strToPx(style.paddingLeft) + strToPx(style.borderLeftWidth), minusRight = strToPx(style.paddingRight) + strToPx(style.borderRightWidth), innerWidth = (wrapper.clientWidth * 0.6) - minusLeft - minusRight, cw = Math.floor(innerWidth);
+        var margin = { top: 35, right: 20, left: 55, bottom: 50 };
+        var ch = (cw * ratioMult), w = cw - margin.left - margin.right, h = ch - margin.top - margin.bottom;
+        var svgWidth = w + margin.left + margin.right, svgHeight = h + margin.top + margin.bottom;
+        svg.attr('width', svgWidth)
+            .attr('height', svgHeight)
+            .attr('viewBox', "0 0 " + svgWidth + " " + svgHeight)
+            .attr('preserveAspectRatio', 'xMidYMid meet');
+        svg.append('g')
+            .attr('class', 'vis-background')
+            .append('rect')
+            .attr('width', '100%')
+            .attr('height', '100%')
+            .attr('fill', '#fff');
+        var chart = svg.append('g')
+            .attr('transform', "translate(" + margin.left + "," + margin.top + ")")
+            .attr('class', 'vis-chart');
+        var hover = svg.append('g')
+            .attr('transform', "translate(" + margin.left + "," + margin.top + ")")
+            .style('display', 'none');
+        var hoverLine = hover.append('line')
+            .attr('class', 'focus')
+            .attr('fill', 'none')
+            .attr('stroke', 'green')
+            .attr('stroke-width', 1)
+            .attr('x1', 0)
+            .attr('y1', 0)
+            .attr('x2', 0)
+            .attr('y2', h);
+        var hoverDoy = hover.append('text')
+            .attr('class', 'focus-doy')
+            .style('white-space', 'pre')
+            .attr('y', 10)
+            .attr('x', 0)
+            .text(' ');
+        var startYear = 1981, endYear = 2012; // BEST data set only throu 2013 (new Date()).getFullYear() - 2;
+        svg.append('g')
+            .attr('transform', "translate(10,20)")
+            .append('text')
+            .attr('font-size', '18px')
+            .attr('font-style', 'bold')
+            .attr('text-anchor', 'left')
+            .text("Arrival of Spring First Leaf Index from " + startYear + "-" + endYear);
+        svg.append('g')
+            .attr('transform', "translate(10," + (h + margin.top + margin.bottom - 10) + ")")
+            .append('text')
+            .attr('font-size', '11px')
+            .attr('font-style', 'italic')
+            .attr('text-anchor', 'right').text('USA National Phenology Network, www.usanpn.org');
+        var x = d3__WEBPACK_IMPORTED_MODULE_4__["scaleTime"]().rangeRound([0, w]);
+        var y = d3__WEBPACK_IMPORTED_MODULE_4__["scaleLinear"]().rangeRound([h, 0]);
+        var parseDate = d3__WEBPACK_IMPORTED_MODULE_4__["timeParse"]('%Y-%m-%d');
+        var line = d3__WEBPACK_IMPORTED_MODULE_4__["line"]()
+            .x(function (d) { return x(d.date); })
+            .y(function (d) { return y(d.doy); });
+        this.npnSvcUtils.cachedGet(this.npnSvcUtils.dataApiUrl('/v0/si-x/area/statistics/timeseries'), {
+            layerName: 'si-x:average_leaf_best',
+            fwsBoundary: this.refuge.boundary_id,
+            yearStart: startYear,
+            yearEnd: endYear,
+            useBufferedBoundary: true,
+            useConvexHullBoundary: false,
+            useCache: false
+        }).then(function (response) {
+            _this.working = false;
+            var data = response.timeSeries;
+            (data || []).forEach(function (d) {
+                d.date = parseDate(d.date);
+                d.doy = Math.round(d.mean);
+            });
+            x.domain(d3__WEBPACK_IMPORTED_MODULE_4__["extent"](data, function (d) { return d.date; }));
+            y.domain(d3__WEBPACK_IMPORTED_MODULE_4__["extent"](data, function (d) { return d.doy; }));
+            chart.append("g")
+                .attr("transform", "translate(0," + h + ")")
+                .call(d3__WEBPACK_IMPORTED_MODULE_4__["axisBottom"](x))
+                .select(".domain")
+                .remove();
+            var abbrevDateFmt = d3__WEBPACK_IMPORTED_MODULE_4__["timeFormat"]('%b %e');
+            var yTickFmt = function (d) { return abbrevDateFmt(_this.doyTrans.getDate(d)); };
+            chart.append("g")
+                .call(d3__WEBPACK_IMPORTED_MODULE_4__["axisLeft"](y).tickFormat(yTickFmt))
+                .append("text")
+                .attr("fill", "#000")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", "0.71em")
+                .attr("text-anchor", "end")
+                .text("Date");
+            chart.append("path")
+                .datum(data)
+                .attr("fill", "none")
+                .attr("stroke", "steelblue")
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr("stroke-width", 1.5)
+                .attr("d", line);
+            chart.selectAll('.dot')
+                .data(data)
+                .enter().append('circle')
+                .attr('class', 'dot')
+                .attr('r', 3.5)
+                .attr('cx', function (d) { return x(d.date); })
+                .attr('cy', function (d) { return y(d.doy); })
+                .style('fill', '#000');
+            var dateFormat = d3__WEBPACK_IMPORTED_MODULE_4__["timeFormat"]('%Y');
+            function updateFocus() {
+                var coords = d3__WEBPACK_IMPORTED_MODULE_4__["mouse"](this), xCoord = coords[0];
+                var inverted = x.invert(xCoord);
+                var calcDiff = function (d) { return Math.abs(inverted.getTime() - d.getTime()); };
+                // find the nearest data point to inverted to "snap to"
+                var nearest = data.reduce(function (nearest, d, index) {
+                    var diff = calcDiff(d.date);
+                    if (!nearest || diff < nearest.diff) {
+                        return {
+                            diff: diff,
+                            date: d.date,
+                            doy: d.doy,
+                            index: index
+                        };
+                    }
+                    return nearest;
+                }, undefined);
+                var tx = x(nearest.date);
+                hoverLine.attr('transform', "translate(" + tx + ")");
+                var anchor = nearest.index < (data.length / 2) ? 'start' : 'end';
+                var doyDate = yTickFmt(nearest.doy);
+                hoverDoy
+                    .style('text-anchor', anchor)
+                    .attr('x', tx)
+                    .text("    " + dateFormat(nearest.date) + " (" + doyDate + ")     ");
+            }
+            svg.append('rect')
+                .attr('class', 'overlay')
+                .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+                .style('fill', 'none')
+                .style('pointer-events', 'all')
+                .attr('x', 0)
+                .attr('y', 0)
+                .attr('width', w)
+                .attr('height', h)
+                .on('mouseover', function () { return hover.style('display', null); })
+                .on('mouseout', function () { return hover.style('display', 'none'); })
+                .on('mousemove', updateFocus);
+        });
+    };
+    StartOfSpringDialog = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            template: "\n    <button mat-icon-button class=\"dialog-close\" (click)=\"close()\"><i class=\"fa fa-times\" aria-hidden=\"true\"></i></button>\n    <div class=\"mat-typography\" id=\"startOfSpringDialogWrapper\">\n        <span class=\"mat-title\">{{refuge.title}}</span>\n        <span *ngIf=\"!noData; else noDataDisclaimer\">\n            <ul class=\"refuge-info\">\n                <li>\n                    <label>Average spring leaf onset in recent decades (1983-2012):</label>\n                    {{refugeData['FLI (Day)'] | SosDoy:refugeData['FLI SD, AVG']}}\n                </li>\n                <li>\n                    <label>Recent change in timing relative to historical range of variation (1901-2012):</label>\n                    Spring first leaf arrival in recent decades is {{fliCategory}} ({{refugeData['FLI (%)'] | number:'1.2-2'}}%) compared to the historical range.\n                </li>\n                <li>\n                    <label>Change in timing over latitudinal exent of migratory flyway (1920-2012):</label>\n                    <p>\n                        <span *ngIf=\"FLYWAY_TEXTS[refuge.flywayId]; else noFlyway\">\n                        {{FLYWAY_TEXTS[refuge.flywayId]}}\n                        </span>\n                        <ng-template #noFlyway>\n                        This Refuge is outside of the four migratory flyways.\n                        </ng-template>\n                    </p>\n                </li>\n            </ul>\n            <div id=\"startOfSpringVisWrapper\">\n                <div class=\"vis-working\" *ngIf=\"working\">\n                    <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n                </div>\n                <svg id=\"timeSeries\"></svg>\n            </div>\n        </span>\n        <ng-template #noDataDisclaimer>\n            <p>Data are not available for this Refuge.</p>\n        </ng-template>\n    </div>\n    <!--pre>{{refugeData | json}}</pre-->\n    ",
+            styles: ["\n        button.dialog-close {\n            float: right;\n        }\n        #startOfSpringVisWrapper {\n            min-height: 1px;\n            position: relative;\n            padding-top: 10px;\n        }\n        svg {\n            display: block;\n            border: 1px solid #aaa;\n            margin: auto;\n        }\n        ul.refuge-info {\n            margin: 0 0 12px;\n        }\n        ul.refuge-info>li {\n            list-style: none;\n            padding: 10px 0px 0px 0px;\n        }\n        ul.refuge-info>li label {\n            font-weight: bold;\n        }\n        p {\n            margin: 0px;\n        }\n    "],
+            providers: [
+                SosDoyTransform
+            ]
+        }),
+        __param(0, Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_1__["MAT_DIALOG_DATA"])),
+        __metadata("design:paramtypes", [Object, _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatDialogRef"],
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgZone"],
+            _npn_common__WEBPACK_IMPORTED_MODULE_5__["NpnServiceUtils"],
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"],
+            SosDoyTransform])
+    ], StartOfSpringDialog);
+    return StartOfSpringDialog;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/start-of-spring.component.scss":
+/*!************************************************!*\
+  !*** ./src/app/start-of-spring.component.scss ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".map-wrapper {\n  position: relative; }\n  .map-wrapper ul.start-of-spring-legend {\n    list-style: none;\n    margin: 0px;\n    width: 185px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    padding: 8px;\n    border: 1px solid #aaa;\n    background-color: rgba(255, 255, 255, 0.85);\n    border-radius: 5px; }\n  .map-wrapper ul.start-of-spring-legend > li {\n      list-style: none;\n      padding: 0px; }\n  .map-wrapper ul.start-of-spring-legend > li:not(.title) {\n        position: relative;\n        padding: 0px 0px 4px 25px; }\n  .map-wrapper ul.start-of-spring-legend > li:not(.title):before {\n          display: inline-block;\n          content: ' ';\n          width: 20px;\n          height: 20px;\n          border: 1px solid #aaa;\n          margin-right: 5px;\n          position: absolute;\n          top: 0px;\n          left: 0px; }\n  .map-wrapper ul.start-of-spring-legend > li.mean-5:before {\n        background-color: #ed3d3d; }\n  .map-wrapper ul.start-of-spring-legend > li.mean-5-25:before {\n        background-color: #f5a27a; }\n  .map-wrapper ul.start-of-spring-legend > li.mean-25-75:before {\n        background-color: #828282; }\n  .map-wrapper ul.start-of-spring-legend > li.mean-75-95:before {\n        background-color: #5cb3f2; }\n  .map-wrapper ul.start-of-spring-legend > li.mean-95:before {\n        background-color: #3b3bf0; }\n  .map-wrapper ul.start-of-spring-legend > li.no-data:before {\n        background-color: #ffffff; }\n  .map-wrapper ul.start-of-spring-legend > li.title {\n        font-weight: bold; }\n"
+
+/***/ }),
+
+/***/ "./src/app/start-of-spring.component.ts":
+/*!**********************************************!*\
+  !*** ./src/app/start-of-spring.component.ts ***!
+  \**********************************************/
+/*! exports provided: StartOfSpringComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StartOfSpringComponent", function() { return StartOfSpringComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _map_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./map-base */ "./src/app/map-base.ts");
 /* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! d3 */ "../../node_modules/d3/index.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/material */ "../../node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _start_of_spring_dialog_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./start-of-spring-dialog.component */ "./src/app/start-of-spring-dialog.component.ts");
+/* harmony import */ var _flyways__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./flyways */ "./src/app/flyways.ts");
+/* harmony import */ var _fli_pcnt__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./fli-pcnt */ "./src/app/fli-pcnt.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -16031,138 +16940,307 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
-// using class instead of interface so can use instanceof
-var EntityBase = /** @class */ (function () {
-    function EntityBase() {
-    }
-    return EntityBase;
-}());
 
-var Refuge = /** @class */ (function (_super) {
-    __extends(Refuge, _super);
-    function Refuge() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return Refuge;
-}(EntityBase));
 
-var PhenologyTrail = /** @class */ (function (_super) {
-    __extends(PhenologyTrail, _super);
-    function PhenologyTrail() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return PhenologyTrail;
-}(EntityBase));
 
-// this means that the app can no longer function outside of the context of Drupal, period.
-var API_ROOT = '/api';
-var DashboardMode;
-(function (DashboardMode) {
-    DashboardMode["REFUGE"] = "refuge";
-    DashboardMode["PHENO_TRAIL"] = "phenology_trail";
-})(DashboardMode || (DashboardMode = {}));
-;
-var DashboardModeState = (function () {
-    var mode = DashboardMode.REFUGE;
-    return {
-        get: function () { return mode; },
-        set: function (m) { return mode = m; },
-    };
-})();
-var EntityService = /** @class */ (function () {
-    function EntityService(http, cacheService, selectionFactory) {
-        this.http = http;
-        this.cacheService = cacheService;
-        this.selectionFactory = selectionFactory;
-    }
-    EntityService.prototype.parseSelections = function (json) {
-        var selections = this.selectionFactory.newSelections(JSON.parse(json));
-        /*
-        console.log('JSON',json);
-        console.log('SELECTIONS',selections);
-        */
-        return selections;
-    };
-    EntityService.prototype.apiUrl = function (entity_id) {
-        return API_ROOT + "/" + DashboardModeState.get() + "/" + entity_id;
-    };
-    EntityService.prototype.castEntity = function (entityId, apiResult) {
-        // actually constructing an instance so that other classes can use instanceof
-        var entity;
-        switch (DashboardModeState.get()) {
-            case DashboardMode.REFUGE:
-                entity = new Refuge();
-                break;
-            case DashboardMode.PHENO_TRAIL:
-                entity = new PhenologyTrail();
-                break;
-            default:
-                throw new Error("Unsupported DASHBOARD_MODE \"" + DashboardModeState.get() + "\"");
+
+
+function polyContains(point, poly) {
+    return google.maps.geometry.poly.containsLocation(point, poly) || google.maps.geometry.poly.isLocationOnEdge(point, poly);
+}
+function geoContains(point, geo) {
+    var polyType = geo.getType();
+    var poly, arr, i;
+    if (polyType == 'Polygon') {
+        arr = geo.getArray();
+        var outerRing = new google.maps.Polygon({ paths: arr[0].getArray() });
+        if (polyContains(point, outerRing)) {
+            /* for the purposes of this application being anywhere inside the
+               outer ring means you're in the flyway
+               the polygons may have holes for things like the great lakes..
+            // inside the outer ring
+            for(i = 1; i < arr.length; i++) {
+                const innerRing = new google.maps.Polygon({paths: arr[i].getArray()});
+                if(polyContains(point,innerRing)) {
+                    // inside a hole in the outer ring so not in the polygon
+                    return false;
+                }
+            }*/
+            return true;
         }
-        Object.assign(entity, apiResult);
-        entity.id = entityId;
-        var selections = (entity.selections || []).map(function (s) { return JSON.parse(s); });
-        entity.selections = this.selectionFactory.newSelections(selections);
-        return entity;
-    };
-    EntityService.prototype.get = function (entity_id) {
+        return false;
+    }
+    else if (polyType === 'MultiPolygon' || polyType == 'GeometryCollection') {
+        arr = geo.getArray();
+        for (i = 0; i < arr.length; i++) {
+            if (geoContains(point, arr[i])) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+var DIALOG_CONFIG = {
+    width: '90vw',
+    maxWidth: '90vw'
+};
+var StartOfSpringComponent = /** @class */ (function (_super) {
+    __extends(StartOfSpringComponent, _super);
+    function StartOfSpringComponent(npnSvcUtils, dialog, zone) {
+        var _this = _super.call(this) || this;
+        _this.npnSvcUtils = npnSvcUtils;
+        _this.dialog = dialog;
+        _this.zone = zone;
+        _this.FLI_DESCRIPTIONS = _fli_pcnt__WEBPACK_IMPORTED_MODULE_7__["FLI_DESCRIPTIONS"];
+        _this.refuges = [];
+        _this.working = false;
+        _this.flywayTesters = [];
+        return _this;
+    }
+    StartOfSpringComponent.prototype.findFlywayId = function (refuge) {
         var _this = this;
-        return this.http.get(this.apiUrl(entity_id))
-            .toPromise()
-            .then(function (response) { return _this.castEntity(entity_id, response); });
+        var flywayId = this.flywayTesters.reduce(function (flywayId, tester) {
+            if (!flywayId) {
+                flywayId = tester(refuge.point);
+            }
+            return flywayId;
+        }, null); // using null so subsequent clicks don't re-test
+        if (!flywayId) {
+            // create a polygon
+            var distToCornersKmToTest = [
+                25,
+                50,
+                75
+            ];
+            var bearingsToTest_1 = [
+                270,
+                315,
+                0,
+                45,
+                90,
+                135,
+                180,
+                225,
+                270,
+            ];
+            flywayId = distToCornersKmToTest.reduce(function (flywayId, distToCornersKm) {
+                if (!flywayId) {
+                    flywayId = bearingsToTest_1.reduce(function (flywayId, bearing) {
+                        if (flywayId) {
+                            return flywayId;
+                        }
+                        var p = Object(_npn_common__WEBPACK_IMPORTED_MODULE_2__["DESTINATION_POINT"])(refuge.point, bearing, distToCornersKm);
+                        return _this.flywayTesters.reduce(function (fid, tester) {
+                            if (!fid) {
+                                fid = tester(p);
+                            }
+                            return fid;
+                        }, null);
+                    }, null);
+                    /* draw polygon on the map to show this miss
+                    if(!flywayId) {
+                        const intersects = new google.maps.Polygon({
+                            paths: bearingsToTest.map(bearing => DESTINATION_POINT(refuge.point,bearing,distToCornersKm)),
+                            strokeColor: 'red',
+                            fillColor: 'blue',
+                            strokeWeight: 1,
+                            fillOpacity: 0.0
+                        })
+                        this.getMap.then(map => intersects.setMap(map))
+                    }*/
+                }
+                return flywayId;
+            }, null);
+        }
+        return flywayId;
     };
-    EntityService.prototype.save = function (entity) {
+    StartOfSpringComponent.prototype.reset = function () {
         var _this = this;
-        var r = __assign({}, entity);
-        r.selections = (r.selections || []).map(function (s) { return JSON.stringify(s.external); });
-        var json = JSON.stringify(r);
-        console.log("JSON " + json);
-        return this.http.put(this.apiUrl(entity.id), json, { headers: { 'Content-Type': 'application/json' } })
-            .toPromise()
-            .then(function (response) { return _this.castEntity(entity.id, response); });
+        delete this.selected;
+        this.getMap.then(function (map) {
+            map.setCenter(new google.maps.LatLng(_this.latitude, _this.longitude));
+            map.setZoom(_this.zoom);
+        });
     };
-    EntityService = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
-        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"],
-            _npn_common__WEBPACK_IMPORTED_MODULE_2__["CacheService"],
-            _npn_common__WEBPACK_IMPORTED_MODULE_2__["VisualizationSelectionFactory"]])
-    ], EntityService);
-    return EntityService;
-}());
+    StartOfSpringComponent.prototype.refugesReady = function (refuges) {
+        var _this = this;
+        this.getMap.then(function (map) {
+            _this.npnSvcUtils.cachedGet(_this.npnSvcUtils.geoServerUrl('/gdd/ows'), {
+                service: 'WFS',
+                version: '1.0.0',
+                request: 'GetFeature',
+                typeName: 'gdd:waterfowl_flyways',
+                maxFeatures: 50,
+                outputFormat: 'application/json'
+            })
+                .then(function (geoJson) {
+                map.data.addGeoJson(geoJson);
+                map.data.setStyle(function (feature) {
+                    return {
+                        strokeOpacity: 0,
+                        strokeWeight: 0,
+                        strokeColor: 'transparent',
+                        fillOpacity: 0.10,
+                        fillColor: _flyways__WEBPACK_IMPORTED_MODULE_6__["FLYWAY_COLORS"][feature.getId()] || '#ff0000',
+                        clickable: false
+                    };
+                });
+                var self = _this;
+                map.data.forEach(function (feature) {
+                    var id = feature.getId();
+                    var flywayGeometry = feature.getGeometry();
+                    self.flywayTesters.push(function (point) {
+                        return geoContains(point, flywayGeometry) ? id : null;
+                    });
+                });
+                // go get the data
+                var nanData = null;
+                // the csv function is not part of the 4x d3 typings.    
+                d3__WEBPACK_IMPORTED_MODULE_3__["csv"]('/sites/fws/modules/custom/fws_dashboard/data/start_of_spring_across_moving_windows.csv', function (csvData) {
+                    var dataByRefuge = csvData.reduce(function (map, row) {
+                        Object.keys(row).forEach(function (key) {
+                            if (key && key !== 'NWR') {
+                                row[key] = parseFloat(row[key]);
+                            }
+                        });
+                        // the "NWR" column contains the refuge boundary id
+                        // in other CSV is '' column
+                        map[row['NWR'].trim()] = row;
+                        if (!nanData) {
+                            nanData = Object.keys(row).reduce(function (map, key) {
+                                map[key] = key === 'NWR' ? null : Number.NaN;
+                                return map;
+                            }, {});
+                        }
+                        return map;
+                    }, {});
+                    refuges = refuges.filter(function (refuge) {
+                        if (!refuge.location) {
+                            return false;
+                        }
+                        var refugeKey = refuge.title.toUpperCase();
+                        if (!dataByRefuge[refugeKey]) {
+                            console.warn("No data found for " + refugeKey);
+                            // insert a row containing NaN for all numbers
+                            dataByRefuge[refugeKey] = __assign({}, nanData, { NWR: refugeKey });
+                        }
+                        return true;
+                    });
+                    refuges.forEach(function (refuge) {
+                        refuge.data = dataByRefuge[refuge.title.toUpperCase()];
+                        refuge.point = new google.maps.LatLng(refuge.location.lat, refuge.location.lng);
+                        var markerColorIndex = Object(_fli_pcnt__WEBPACK_IMPORTED_MODULE_7__["FLI_PCNT_BUCKET_INDEX"])(refuge.data['FLI (%)']);
+                        /* temporary test code to see for refuges with data which aren't in a flyway boundary
+                            * doing this up front is too expensive only make test when the user clicks on a marker
+                        if(markerColorIndex !== -1) {
+                            // timeout just a hack to give the geometry library time to load
+                            setTimeout(() => {
+                                if(!this.findFlywayId(refuge)) {
+                                    console.log(`${refuge.title} NOT IN FLYWAY`)
+                                }
+                            },5000);
+                        }*/
+                        /* For this number of icons SVG icons cause a performance isue
+                         * presumably because Google maps must re-draw all the SVGs over
+                         * and over on zoom/pan
+                         * switching to static icons
+                        refuge.icon = {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            scale: 5,
+                            fillOpacity: 1.0,
+                            strokeWeight: 1,
+                            fillColor: markerColorIndex !== -1 ? MARKER_COLORS[markerColorIndex] : '#fff'
+                        };*/
+                        if (markerColorIndex === -1) {
+                            markerColorIndex = _fli_pcnt__WEBPACK_IMPORTED_MODULE_7__["MARKER_ICONS"].length - 1;
+                        }
+                        refuge.icon = "/sites/fws/modules/custom/fws_dashboard/markers/" + _fli_pcnt__WEBPACK_IMPORTED_MODULE_7__["MARKER_ICONS"][markerColorIndex];
+                    });
+                    _this.refuges = refuges;
+                });
+            });
+        });
+    };
+    StartOfSpringComponent.prototype.selectRefuge = function (refuge) {
+        var _this = this;
+        if (!refuge) {
+            return this.reset();
+        }
+        // show a progress spinner since finding the flyway can be expensive
+        // for a rare few refuges (like those in the caribean or florida keys)
+        this.working = true;
+        setTimeout(function () {
+            _this.selected = refuge;
+            _this.getMap.then(function (map) {
+                map.panTo(refuge.point);
+                map.setZoom(8);
+            });
+            if (refuge.flywayId === undefined) {
+                refuge.flywayId = _this.findFlywayId(refuge);
+            }
+            var config = __assign({}, DIALOG_CONFIG, { data: {
+                    refuge: refuge,
+                    refugeData: refuge.data
+                } });
+            _this.working = false;
+            _this.dialog.open(_start_of_spring_dialog_component__WEBPACK_IMPORTED_MODULE_5__["StartOfSpringDialog"], config);
+        });
+    };
+    StartOfSpringComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'start-of-spring',
+            template: "\n    <form class=\"control-form\">\n        <refuge-control (onList)=\"refugesReady($event)\" (onSelect)=\"selectRefuge($event)\"></refuge-control>\n        <button *ngIf=\"selected\" class=\"reset-button\"\n            mat-icon-button (click)=\"reset()\" matTooltip=\"Reset map\"><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i></button>\n    </form>\n    <div class=\"map-wrapper\">\n        <div class=\"vis-working\" *ngIf=\"working\">\n            <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n        </div>\n        <agm-map (mapReady)=\"mapReady($event)\"\n                [latitude]=\"latitude\" [longitude]=\"longitude\" [zoom]=\"zoom\"\n                [streetViewControl]=\"false\" [scrollwheel]=\"false\" [styles]=\"mapStyles\">\n            <agm-marker *ngFor=\"let refuge of refuges\"\n                (markerClick)=\"selectRefuge(refuge)\"\n                [iconUrl]=\"refuge.icon\"\n                [title]=\"refuge.title\"\n                [latitude]=\"refuge.location.lat\" [longitude]=\"refuge.location.lng\"></agm-marker>\n        </agm-map>\n        <ul class=\"start-of-spring-legend\">\n            <li class=\"title\">How does the timing of recent spring compare to the last 100 years?</li>\n            <li class=\"mean-5\">&lt; 5% ({{FLI_DESCRIPTIONS[0]}})</li>\n            <li class=\"mean-5-25\">5 - 25% ({{FLI_DESCRIPTIONS[1]}})</li>\n            <li class=\"mean-25-75\">25 - 75% ({{FLI_DESCRIPTIONS[2]}})</li>\n            <li class=\"mean-75-95\">75 - 95% ({{FLI_DESCRIPTIONS[3]}})</li>\n            <li class=\"mean-95\">&gt; 95% ({{FLI_DESCRIPTIONS[4]}})</li>\n            <li class=\"no-data\">No data</li>\n        </ul>\n    </div>\n    ",
+            styles: [__webpack_require__(/*! ./start-of-spring.component.scss */ "./src/app/start-of-spring.component.scss")]
+        }),
+        __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_2__["NpnServiceUtils"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatDialog"],
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgZone"]])
+    ], StartOfSpringComponent);
+    return StartOfSpringComponent;
+}(_map_base__WEBPACK_IMPORTED_MODULE_1__["MapBase"]));
 
 
 
 /***/ }),
 
-/***/ "./src/app/findings.component.scss":
-/*!*****************************************!*\
-  !*** ./src/app/findings.component.scss ***!
-  \*****************************************/
+/***/ "./src/app/status-of-spring.component.scss":
+/*!*************************************************!*\
+  !*** ./src/app/status-of-spring.component.scss ***!
+  \*************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ":host {\n  position: relative;\n  display: block; }\n  :host.adminMode {\n    /* if were not in another container would simply be $admin-width\n           but the page content has its own padding so for now just picking\n           a value that works */\n    padding-left: 275px; }\n  @media (min-width: 992px) {\n      :host.adminMode {\n        padding-left: 215px; } }\n  @media (min-width: 1200px) {\n      :host.adminMode {\n        padding-left: 200px; } }\n  .visualizations {\n  display: flex;\n  flex-flow: row wrap; }\n  .visualizations mat-card {\n    margin: 10px auto;\n    padding: 10px;\n    flex: 0 1 95%;\n    /* a non flex layout attempt\n        box-sizing: border-box;\n        width: 100%;\n        padding: 2px;\n        margin: 10px 0px;\n        display: block;\n        @media(min-width: $screen-sm-min) {\n            padding: 10px;\n        }\n        @media(min-width: $screen-md-min) {\n            padding: 20px;\n            display: inline-block;\n            width: 48%;\n            margin: 5px;\n        }\n        @media(min-width: $screen-lg-min) {\n            width: 30%;\n        }\n\n        &:first-of-type {\n            @media(min-width: $screen-md-min) {\n                margin: auto;\n                display: block;\n                width: 95%;\n            }\n        }*/\n    vertical-align: top;\n    position: relative;\n    overflow: hidden; }\n  @media (min-width: 992px) {\n      .visualizations mat-card {\n        padding: 15px; } }\n  @media (min-width: 1200px) {\n      .visualizations mat-card {\n        padding: 20px; } }\n  @media (min-width: 992px) {\n      .visualizations mat-card {\n        flex: 0 1 44%; } }\n  @media (min-width: 1200px) {\n      .visualizations mat-card {\n        flex: 0 1 28%; } }\n  .visualizations mat-card:first-of-type {\n      flex: 0 1 95%;\n      /* attempt to avoid jumpiness when switching the active visualization\n               numbers are rough based widths at different device screen sizes */\n      min-height: 200px; }\n  @media (min-width: 992px) {\n        .visualizations mat-card:first-of-type {\n          min-height: 400px; } }\n  @media (min-width: 1200px) {\n        .visualizations mat-card:first-of-type {\n          min-height: 500px; } }\n  .visualizations mat-card .visualization-title {\n      font-size: 2em;\n      margin-bottom: 10px;\n      text-align: center; }\n  .visualizations mat-card .visualization-description {\n      color: #aaa;\n      font-size: 0.8em;\n      text-align: center; }\n  .visualizations mat-card > .cover {\n      position: absolute;\n      top: 0;\n      left: 0;\n      width: 100%;\n      height: 100%;\n      z-index: 2;\n      text-align: center; }\n  .visualizations mat-card > .cover:hover {\n        cursor: pointer;\n        background-color: rgba(0, 0, 0, 0.25); }\n  .visualizations mat-card > .cover:hover .visualization-title {\n          display: inherit; }\n  .visualizations mat-card > .cover .visualization-title {\n        font-size: 1.25em;\n        color: #fff;\n        text-shadow: 1px 1px 2px #000;\n        display: none;\n        position: absolute;\n        top: 50%;\n        left: 50%;\n        -webkit-transform: translate(-50%, -50%);\n                transform: translate(-50%, -50%); }\n  .visualizations mat-card.new-vis-placeholder {\n      height: 200px;\n      background-color: #eee; }\n  .visualizations mat-card.new-vis-placeholder:before {\n        content: 'Drop New Visualization Here';\n        position: absolute;\n        top: 50%;\n        left: 50%;\n        -webkit-transform: translate(-50%, -50%);\n                transform: translate(-50%, -50%); }\n  .visualizations mat-card.new-vis-placeholder.look-at-me {\n        border: 2px solid yellow;\n        box-shadow: 0 0 10px yellow;\n        outline: none;\n        -webkit-animation-name: wiggle;\n        -ms-animation-name: wiggle;\n        -ms-animation-duration: 500ms;\n        -webkit-animation-duration: 500ms;\n        -webkit-animation-iteration-count: 1;\n        -ms-animation-iteration-count: 1;\n        -webkit-animation-timing-function: ease-in-out;\n        -ms-animation-timing-function: ease-in-out; }\n  mat-list.new-vis-list {\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  padding: 65px 0px 100px 0;\n  width: 320px;\n  /* if the scrollbar ever kicks in it won't go away\n    overflow-y:auto;\n    */\n  background-color: rgba(0, 0, 0, 0.25);\n  z-index: 5000;\n  height: 100vh;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: flex-start;\n  align-items: flex-start;\n  align-content: flex-start; }\n  @media (max-height: 600px) {\n    mat-list.new-vis-list {\n      width: 270px; } }\n  @media (max-height: 550px) {\n    mat-list.new-vis-list {\n      width: 220px; } }\n  mat-list.new-vis-list > div {\n    color: #fff; }\n  mat-list.new-vis-list > div:before, mat-list.new-vis-list > div:after {\n      content: \" \";\n      display: table; }\n  mat-list.new-vis-list > div:after {\n      clear: both; }\n  mat-list.new-vis-list > div button.toggle-admin-mode {\n      float: right; }\n  mat-list.new-vis-list > div > p {\n      background-color: rgba(0, 0, 0, 0.5);\n      padding: 5px;\n      clear: right;\n      line-height: 1.5em; }\n  @media (max-height: 600px) {\n        mat-list.new-vis-list > div > p {\n          font-size: 0.9em; } }\n  @media (max-height: 550px) {\n        mat-list.new-vis-list > div > p {\n          font-size: 0.8em; } }\n  mat-list.new-vis-list mat-list-item {\n    width: 150px;\n    margin-right: 5px; }\n  @media (max-height: 600px) {\n      mat-list.new-vis-list mat-list-item {\n        width: 125px; } }\n  @media (max-height: 550px) {\n      mat-list.new-vis-list mat-list-item {\n        width: 100px; } }\n  mat-list.new-vis-list mat-list-item:nth-of-type(odd) {\n      margin-left: 5px; }\n  mat-list.new-vis-list mat-list-item.vis-template {\n      border: 1px dotted black;\n      margin-bottom: 10px;\n      height: auto; }\n  mat-list.new-vis-list mat-list-item.vis-template .mat-list-item-content {\n        height: auto;\n        padding: 0px; }\n  mat-list.new-vis-list mat-list-item.vis-template .mat-list-item-content img {\n          width: 100%; }\n  mat-list.new-vis-list mat-list-item.trash, mat-list.new-vis-list mat-list-item.save {\n      position: relative;\n      margin-top: 20px; }\n  mat-list.new-vis-list mat-list-item.trash:before {\n      font-family: 'FontAwesome';\n      content: '\\f1f8';\n      font-size: 2em;\n      position: absolute;\n      top: 50%;\n      left: 50%;\n      -webkit-transform: translate(-50%, -50%);\n              transform: translate(-50%, -50%); }\n  mat-list.new-vis-list mat-list-item.save button {\n      font-size: 2em;\n      position: absolute;\n      top: 50%;\n      left: 50%;\n      -webkit-transform: translate(-50%, -50%);\n              transform: translate(-50%, -50%); }\n  .admin-toggle:before {\n  font-family: 'FontAwesome';\n  content: '\\f073';\n  margin-right: 5px; }\n  @-webkit-keyframes wiggle {\n  0% {\n    -webkit-transform: rotate(5deg); }\n  25% {\n    -webkit-transform: rotate(-5deg); }\n  50% {\n    -webkit-transform: rotate(10deg); }\n  75% {\n    -webkit-transform: rotate(-2.5deg); }\n  100% {\n    -webkit-transform: rotate(0deg); } }\n  @keyframes wiggle {\n  0% {\n    -webkit-transform: rotate(5deg);\n            transform: rotate(5deg); }\n  25% {\n    -webkit-transform: rotate(-5deg);\n            transform: rotate(-5deg); }\n  50% {\n    -webkit-transform: rotate(10deg);\n            transform: rotate(10deg); }\n  75% {\n    -webkit-transform: rotate(-2.5deg);\n            transform: rotate(-2.5deg); }\n  100% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg); } }\n"
+module.exports = ".map-wrapper {\n  position: relative; }\n  .map-wrapper map-layer-legend .gridded-legend {\n    margin-top: 10px;\n    border-bottom: 1px solid #aaa; }\n  @media (min-width: 992px) {\n    .map-wrapper map-layer-legend,\n    .map-wrapper clipped-wms-map-statistics {\n      position: absolute;\n      left: 10px;\n      padding: 8px;\n      border: 1px solid #aaa;\n      background-color: rgba(255, 255, 255, 0.85);\n      border-radius: 5px; }\n    .map-wrapper map-layer-legend {\n      bottom: 25px;\n      width: 60%; }\n      .map-wrapper map-layer-legend .gridded-legend {\n        margin-top: 0px;\n        border-bottom: none;\n        width: 100%;\n        height: 125px;\n        border: none; }\n    .map-wrapper clipped-wms-map-statistics {\n      top: 10px; } }\n"
 
 /***/ }),
 
-/***/ "./src/app/findings.component.ts":
-/*!***************************************!*\
-  !*** ./src/app/findings.component.ts ***!
-  \***************************************/
-/*! exports provided: FindingsComponent */
+/***/ "./src/app/status-of-spring.component.ts":
+/*!***********************************************!*\
+  !*** ./src/app/status-of-spring.component.ts ***!
+  \***********************************************/
+/*! exports provided: StatusOfSpringComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FindingsComponent", function() { return FindingsComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StatusOfSpringComponent", function() { return StatusOfSpringComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/material */ "../../node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var _angular_flex_layout__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/flex-layout */ "../../node_modules/@angular/flex-layout/esm5/flex-layout.es5.js");
-/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
-/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
-/* harmony import */ var _new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./new-visualization-dialog.component */ "./src/app/new-visualization-dialog.component.ts");
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! jquery */ "../../node_modules/jquery/dist/jquery.js");
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "../../node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "../../node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "../../node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _map_base__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./map-base */ "./src/app/map-base.ts");
+/* harmony import */ var _refuge_control_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./refuge-control.component */ "./src/app/refuge-control.component.ts");
+/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __assign = (undefined && undefined.__assign) || Object.assign || function(t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
         s = arguments[i];
@@ -16180,9 +17258,6 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (undefined && undefined.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 
 
 
@@ -16190,1347 +17265,157 @@ var __param = (undefined && undefined.__param) || function (paramIndex, decorato
 
 
 
-var VIS_TEMPLATES = [{
-        $class: 'ActivityCurvesSelection',
-        $thumbnail: 'assets/activity-curves.png',
-        $tooltip: 'Activity Curves'
-    }, {
-        $class: 'ScatterPlotSelection',
-        $thumbnail: 'assets/scatter-plot.png',
-        $tooltip: 'Scatter Plot'
-    }, {
-        $class: 'CalendarSelection',
-        $thumbnail: 'assets/calendar.png',
-        $tooltip: 'Calendar'
-    }, {
-        $class: 'ObserverActivitySelection',
-        $thumbnail: 'assets/observer-activity.png',
-        $tooltip: 'Observer Activity Metrics'
-    }, {
-        $class: 'ClippedWmsMapSelection',
-        $thumbnail: 'assets/clipped-wms-map.png',
-        $tooltip: 'Map'
-    }, {
-        $class: 'ObservationFrequencySelection',
-        $thumbnail: 'assets/observation-frequency.png',
-        $tooltip: 'Observation Frequency'
-    }];
-var FindingsComponent = /** @class */ (function () {
-    function FindingsComponent(entityService, selectionFactory, dialog, snackBar, media, baseHref) {
-        var _this = this;
-        this.entityService = entityService;
-        this.selectionFactory = selectionFactory;
-        this.dialog = dialog;
-        this.snackBar = snackBar;
-        this.media = media;
-        this.baseHref = baseHref;
-        this.userIsAdmin = false;
-        this.isTouchDevice = false;
-        this.trash = [];
-        this.adminMode = false;
-        this.maxVisualizations = 10;
-        this.lookAtVisDrop = false;
-        this.mobileMode = false;
-        this.DashboardMode = _entity_service__WEBPACK_IMPORTED_MODULE_3__["DashboardMode"];
-        this.media.subscribe(function (mediaChange) {
-            _this.mobileMode = mediaChange.mqAlias === 'xs' || mediaChange.mqAlias === 'sm';
-        });
-        // test if the device supports touch
-        var elm = document.createElement('div');
-        elm.setAttribute('ontouchstart', 'return;');
-        this.isTouchDevice = typeof (elm.ontouchstart) === 'function';
-        if (this.isTouchDevice) {
-            console.warn('Touch device detected any administrative functionality will be disabled.');
-        }
+var ONE_DAY_MILLIS = (24 * 60 * 60 * 1000);
+var StatusOfSpringComponent = /** @class */ (function (_super) {
+    __extends(StatusOfSpringComponent, _super);
+    function StatusOfSpringComponent(selectionFactory) {
+        var _this = _super.call(this) || this;
+        _this.selectionFactory = selectionFactory;
+        _this.componentDestroyed = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
+        _this.selectionFormControl = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"]();
+        return _this;
     }
-    FindingsComponent.prototype.ngOnInit = function () {
-        this.visTemplates = (_entity_service__WEBPACK_IMPORTED_MODULE_3__["DashboardModeState"].get() === _entity_service__WEBPACK_IMPORTED_MODULE_3__["DashboardMode"].PHENO_TRAIL)
-            ? VIS_TEMPLATES.filter(function (t) { return t.$class !== 'ClippedWmsMapSelection'; })
-            : VIS_TEMPLATES;
+    StatusOfSpringComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.allControls = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormGroup"]({
+            refuges: this.refugeControl.control,
+            selection: this.selectionFormControl
+        });
+        this.selectionFormControl.valueChanges.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["filter"])(function (s) { return typeof (s) === 'object'; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["filter"])(function (s) { return !(_this.selection && s === _this.selection); }), // don't re-deliver
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["takeUntil"])(this.componentDestroyed)).subscribe(function (selection) { return _this.setSelection(selection); });
     };
-    FindingsComponent.prototype.toggleAdminMode = function () {
-        this.adminMode = !this.adminMode;
-        this.resizeAllAfterDelay();
-        jquery__WEBPACK_IMPORTED_MODULE_6__('body').toggleClass('fws-customize-mode');
+    StatusOfSpringComponent.prototype.ngOnDestroy = function () {
+        this.componentDestroyed.next();
     };
-    Object.defineProperty(FindingsComponent.prototype, "entity", {
-        get: function () {
-            return this._entity;
-        },
-        set: function (entity) {
-            this._entity = entity;
-            entity.selections.forEach(function (s, i) {
-                //s.debug = (i === 0);
-                s.update();
+    StatusOfSpringComponent.prototype.newSelection = function (refuge, service, layerId) {
+        var selection = this.selectionFactory.newSelection();
+        selection.networkIds = [refuge.network_id];
+        selection.fwsBoundary = refuge.boundary_id;
+        selection.service = service;
+        selection.layer = selection.validLayers.reduce(function (found, l) {
+            return found || (l.id === layerId ? l : undefined);
+        }, undefined);
+        return selection;
+    };
+    StatusOfSpringComponent.prototype.refugeTitle = function (refuge) {
+        return refuge ? refuge.title : '';
+    };
+    StatusOfSpringComponent.prototype.refugeClick = function (refuge) {
+        this.refugeControl.control.setValue(refuge);
+    };
+    StatusOfSpringComponent.prototype.reset = function () {
+        this.refugeControl.control.setValue(null);
+    };
+    StatusOfSpringComponent.prototype.focusRefuge = function (refuge) {
+        var _this = this;
+        console.debug('focusRefuge', refuge);
+        this.focused = refuge;
+        if (!refuge) {
+            this.selections = null;
+            this.selectionFormControl.setValue(null);
+            this.getMap.then(function (map) {
+                map.setCenter(new google.maps.LatLng(_this.latitude, _this.longitude));
+                map.setZoom(_this.zoom);
             });
-            this.guidOrder = entity.selections.map(function (s) { return s.guid; });
-        },
-        enumerable: true,
-        configurable: true
-    });
-    FindingsComponent.prototype.resizeAll = function () {
-        this.entity.selections.forEach(function (s, i) {
-            //s.debug = i === 0;
-            s.resize();
+            return;
+        }
+        this.getMap.then(function (map) {
+            map.panTo(new google.maps.LatLng(refuge.location.lat, refuge.location.lng));
+            map.setZoom(8);
         });
-    };
-    FindingsComponent.prototype.resizeAllAfterDelay = function () {
-        var _this = this;
-        setTimeout(function () {
-            _this.resizeAll();
+        console.log('focusRefuge', refuge);
+        // build the new set of selections to put stuff on the map
+        var selections = [], 
+        // TODO writing in winter and no spring data, pretending
+        // today is another date for now.
+        //today = new Date(2017,4,2,0,0,0,0),//new Date(),
+        today = new Date(), yesterday = new Date(today.getTime() - ONE_DAY_MILLIS), selection;
+        // where has spring arrived
+        selection = this.newSelection(refuge, 'si-x', 'current');
+        selection.legendTitle = refuge.title + ", Spring First Leaf Index";
+        selection.explicitDate = yesterday;
+        selections.push({
+            label: 'Where has spring arrived?',
+            selection: selection
         });
-    };
-    FindingsComponent.prototype.makeCurrent = function (s) {
-        var selections = this.entity.selections, index = selections.indexOf(s);
-        if (index) {
-            console.log('MAKE CURRENT', index);
-            // swap the currently selected with the newly selected
-            selections[index] = selections[0];
-            selections[0] = s;
-            this.reorderVisualizations();
-        }
-    };
-    FindingsComponent.prototype.visDialog = function (s, edit) {
-        return this.dialog.open(_new_visualization_dialog_component__WEBPACK_IMPORTED_MODULE_5__["NewVisualizationDialogComponent"], {
-            height: '90vh',
-            width: '90vw',
-            disableClose: true,
-            data: {
-                entity: this.entity,
-                selection: s,
-                edit: edit
-            }
+        // spring forecast
+        selection = this.newSelection(refuge, 'si-x', 'forecast');
+        selection.forecastDays = 3;
+        selection.explicitDate = today;
+        selection.legendTitle = refuge.title + ", Spring First Leaf Index " + selection.forecastDays + "-day Forecast";
+        selections.push({
+            label: 'Spring forecast',
+            selection: selection
         });
-    };
-    FindingsComponent.prototype.addVisualization = function ($event) {
-        var _this = this;
-        console.log('add.$event', $event);
-        // most selections will simply ignore $entity but some like observer activity
-        // metrics, with the introduction of the pheno trail work, need the overall
-        // $entity to decide how to label legend items when not performing grouping
-        var $entity = this.entity instanceof _entity_service__WEBPACK_IMPORTED_MODULE_3__["Refuge"]
-            ? { title: this.entity.title, network_id: this.entity.network_id }
-            : { title: this.entity.title, network_ids: this.entity.network_ids };
-        var s = this.selectionFactory.newSelection(__assign({ $entity: $entity }, $event.dragData));
-        console.log('add.selection', s);
-        var dialogRef = this.visDialog(s);
-        dialogRef.afterClosed().subscribe(function (selection) {
-            if (selection) {
-                _this.entity.selections.push(selection);
-                _this.save();
-            }
+        // anomaly
+        selection = this.newSelection(refuge, 'si-x', 'anomaly');
+        selection.legendTitle = refuge.title + ", Spring First Leaf Index Anomaly";
+        selection.explicitDate = yesterday;
+        selections.push({
+            label: 'How does this year stack up?',
+            selection: selection
         });
+        this.selections = selections;
+        this.selectionFormControl.setValue(this.selections[0].selection);
     };
-    FindingsComponent.prototype.editVisualization = function (s, $event) {
+    StatusOfSpringComponent.prototype.setSelection = function (s) {
         var _this = this;
-        $event.stopPropagation();
-        var index = this.entity.selections.indexOf(s);
-        console.log("edit.selection[" + index + "]", s);
-        var copy = this.selectionFactory.cloneSelection(s), dialogRef = this.visDialog(copy, true);
-        dialogRef.afterClosed().subscribe(function (selection) {
-            if (selection) {
-                // replace
-                _this.entity.selections[index] = selection;
-                _this.save();
-            }
-        });
-    };
-    FindingsComponent.prototype.isReordered = function () {
-        var _this = this;
-        if (this.guidOrder && this.guidOrder.length === this.entity.selections.length) {
-            return this.entity.selections.reduce(function (reordered, s, i) {
-                return reordered || (s.guid !== _this.guidOrder[i] ? true : false);
-            }, false);
-        }
-        return false;
-    };
-    FindingsComponent.prototype.reorderVisualizations = function () {
-        var _this = this;
-        setTimeout(function () {
-            _this.resizeAll();
-        });
-    };
-    FindingsComponent.prototype.save = function (noSnackBar) {
-        var _this = this;
-        this.entityService.save(this.entity)
-            .then(function (entity) {
-            _this.entity = entity;
-            if (!noSnackBar) {
-                _this.snackBar.open('Visualizations saved', null, { duration: 2000 });
-            }
-        })
-            .catch(function (e) { return _this.handleError(e); });
-    };
-    // capture where a selection was at drag start so it can be restored to its position
-    // for undo trash
-    FindingsComponent.prototype.dragStart = function ($event) {
-        // this seems inconstent but it seems that $event in the onDragStart/End
-        // events is the dragData, unlike onDragSuccess
-        this.dragStartIndex = $event ? this.entity.selections.indexOf($event) : undefined;
-        console.log('dragStart.$event', $event, this.dragStartIndex);
-    };
-    FindingsComponent.prototype.trashVisualization = function ($event) {
-        var _this = this;
-        console.log('trash.$event', $event);
-        var selection = $event.dragData, index = this.entity.selections.indexOf(selection);
-        console.log("trashing selection " + index);
-        this.entity.selections.splice(index, 1);
-        this.entityService.save(this.entity)
-            .then(function (entity) {
-            _this.entity = entity;
-            _this.snackBar.open('Visualization Deleted', 'Undo', {
-                duration: 5000,
-            }).onAction().subscribe(function () {
-                // issue because of the drag re-order selections normally get put back
-                // at index #1, may need to keep track of index on selection object
-                // change on resize or some such
-                index = typeof (_this.dragStartIndex) !== 'undefined' ? _this.dragStartIndex : index;
-                console.log("restoring selection " + index);
-                _this.entity.selections.splice(index, 0, _this.selectionFactory.cloneSelection(selection));
-                _this.save(true);
-            });
-        })
-            .catch(function (e) { return _this.handleError(e); });
-    };
-    FindingsComponent.prototype.handleError = function (e) {
-        console.error(e);
-        this.snackBar.open('Something went wrong', null, { duration: 5000 });
-    };
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", Boolean)
-    ], FindingsComponent.prototype, "userIsAdmin", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["HostBinding"])('class.adminMode'),
-        __metadata("design:type", Boolean)
-    ], FindingsComponent.prototype, "adminMode", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _entity_service__WEBPACK_IMPORTED_MODULE_3__["EntityBase"]),
-        __metadata("design:paramtypes", [_entity_service__WEBPACK_IMPORTED_MODULE_3__["EntityBase"]])
-    ], FindingsComponent.prototype, "entity", null);
-    FindingsComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'fws-dashboard-findings',
-            template: "\n<mat-list *ngIf=\"adminMode\" class=\"new-vis-list\">\n  <div>\n    <button mat-icon-button (click)=\"toggleAdminMode()\" class=\"toggle-admin-mode\"><i class=\"fa fa-2x fa-times-circle\" aria-hidden=\"true\"></i></button>\n    <p>Click and drag the visualizations below onto your Dashboard. You can have up to 10 visualizations on your Dashboard at one time. You can have multiple versions of each visualization type.</p>\n  </div>\n  <mat-list-item class=\"vis-template\"\n                *ngFor=\"let template of visTemplates\"\n                (mouseenter)=\"lookAtVisDrop = true;\" (mouseleave)=\"lookAtVisDrop = false;\"\n                [matTooltip]=\"template.$tooltip\"\n                matTooltipPosition=\"right\"\n                dnd-draggable [dragData]=\"template\"\n                [dropZones]=\"['newvis-dropZone']\">\n    <img class=\"new-vis-thumbnail\" src=\"{{baseHref}}{{template.$thumbnail}}\" />\n  </mat-list-item>\n  <mat-list-item *ngIf=\"(visTemplates.length%2) === 1\">\n    <!-- empty item to just to keep the number even -->\n  </mat-list-item>\n  <mat-list-item class=\"trash\"\n                matTooltip=\"Drag and drop visualization here to remove\"\n                matTooltipPosition=\"right\"\n                dnd-droppable [dropZones]=\"['trash-dropZone']\"\n                (onDropSuccess)=\"trashVisualization($event)\"></mat-list-item>\n  <mat-list-item class=\"save\">\n    <button mat-icon-button aria-labelled=\"Save\" (click)=\"save()\" [disabled]=\"!isReordered()\" matTooltip=\"Save current visualization order\"><i class=\"fa fa-floppy-o\" aria-hidden=\"true\"></i><span *ngIf=\"isReordered()\">*</span></button>\n  </mat-list-item>\n</mat-list>\n\n<div class=\"visualizations\" *ngIf=\"entity\" dnd-sortable-container [sortableData]=\"entity.selections\" [dropZones]=\"['list-dropZone','trash-dropZone']\" >\n    <mat-card  *ngFor=\"let selection of entity.selections; first as isFirst; let i = index\"\n              dnd-sortable [sortableIndex]=\"i\"\n              [dragEnabled]=\"adminMode\"\n              [dragData]=\"selection\"\n              (onDragStart)=\"dragStart($event)\"\n              (onDropSuccess)=\"reorderVisualizations()\">\n        <div *ngIf=\"!isFirst && !mobileMode\" class=\"cover\" (click)=\"makeCurrent(selection)\">\n            <span class=\"visualization-title\">{{selection.meta.title}} <button *ngIf=\"adminMode\" mat-icon-button (click)=\"editVisualization(selection,$event)\" matTooltip=\"Edit\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></button></span>\n        </div>\n        <div *ngIf=\"isFirst || mobileMode\" class=\"visualization-details\">\n            <div class=\"visualization-title\">{{selection.meta.title}} <button *ngIf=\"adminMode\" mat-icon-button (click)=\"editVisualization(selection,$event)\" matTooltip=\"Edit\"><i class=\"fa fa-pencil fa-2x\" aria-hidden=\"true\"></i></button></div>\n            <p *ngIf=\"selection.meta.description\" class=\"visualization-description\">{{selection.meta.description}}</p>\n        </div>\n        <npn-visualization [selection]=\"selection\" [thumbnail]=\"!mobileMode && i > 0\"></npn-visualization>\n    </mat-card>\n    <mat-card *ngIf=\"adminMode && entity.selections.length < maxVisualizations\"\n        dnd-droppable [dropZones]=\"['newvis-dropZone']\"\n        (onDropSuccess)=\"addVisualization($event)\"\n        [ngClass]=\"{'new-vis-placeholder': true, 'look-at-me': lookAtVisDrop}\"></mat-card>\n</div>\n<button mat-raised-button *ngIf=\"userIsAdmin && !mobileMode && !adminMode && !isTouchDevice\" (click)=\"toggleAdminMode()\"><span class=\"admin-toggle\">Customize</span></button>\n  ",
-            styles: [__webpack_require__(/*! ./findings.component.scss */ "./src/app/findings.component.scss")],
-            encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None
-        }),
-        __param(5, Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Optional"])()), __param(5, Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Inject"])(_npn_common__WEBPACK_IMPORTED_MODULE_4__["NPN_BASE_HREF"])),
-        __metadata("design:paramtypes", [_entity_service__WEBPACK_IMPORTED_MODULE_3__["EntityService"],
-            _npn_common__WEBPACK_IMPORTED_MODULE_4__["VisualizationSelectionFactory"],
-            _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatDialog"],
-            _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatSnackBar"],
-            _angular_flex_layout__WEBPACK_IMPORTED_MODULE_2__["ObservableMedia"], String])
-    ], FindingsComponent);
-    return FindingsComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/focal-species.component.ts":
-/*!********************************************!*\
-  !*** ./src/app/focal-species.component.ts ***!
-  \********************************************/
-/*! exports provided: FocalSpeciesComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FocalSpeciesComponent", function() { return FocalSpeciesComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
-/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-var FocalSpeciesComponent = /** @class */ (function () {
-    function FocalSpeciesComponent(speciesService) {
-        this.speciesService = speciesService;
-    }
-    FocalSpeciesComponent.prototype.ngOnChanges = function (changes) {
-        var _this = this;
-        if (changes.entity && changes.entity.currentValue) {
-            var params_1 = {};
-            var entity = changes.entity.currentValue;
-            var networkIds = entity instanceof _entity_service__WEBPACK_IMPORTED_MODULE_2__["Refuge"]
-                ? [entity.network_id]
-                : entity instanceof _entity_service__WEBPACK_IMPORTED_MODULE_2__["PhenologyTrail"]
-                    ? entity.network_ids
-                    : [];
-            if (networkIds.length) { // else should never happen but...
-                networkIds.forEach(function (id, i) { return params_1["network_id[" + i + "]"] = id; });
-            }
-            this.speciesService.getAllSpecies(params_1)
-                .then(function (list) { return _this.speciesList = list; })
-                .catch(function (e) { return console.error(e); });
-        }
-    };
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _entity_service__WEBPACK_IMPORTED_MODULE_2__["EntityBase"])
-    ], FocalSpeciesComponent.prototype, "entity", void 0);
-    FocalSpeciesComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'focal-species',
-            template: "\n    <div *ngIf=\"entity\">\n        <h3>Focal Species for {{entity.title}}</h3>\n        <ul *ngIf=\"speciesList && speciesList.length\">\n            <li *ngFor=\"let s of speciesList\">\n            <a target=\"_blank\" [href]=\"'https://usanpn.org/nn/'+s.genus+'_'+s.species\">{{s | speciesTitle:'common-name'}} ({{s | speciesTitle:'scientific-name'}})</a>\n            </li>\n        </ul>\n    </div>\n    ",
-            styles: ["\n        h3 {\n            font-size: 28px;\n        }\n    "]
-        }),
-        __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_1__["SpeciesService"]])
-    ], FocalSpeciesComponent);
-    return FocalSpeciesComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/fws-dashboard.component.scss":
-/*!**********************************************!*\
-  !*** ./src/app/fws-dashboard.component.scss ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = ":host {\n  display: block;\n  background-color: transparent;\n  /* when content goes away for a flash avoid dashboard height shrinking and making the page jump around. */\n  min-height: 896px; }\n\n.entity-dashboard-tabs .mat-tab-header {\n  border-bottom: none; }\n\n.entity-dashboard-tabs .mat-tab-header .mat-ink-bar {\n    display: none; }\n\n.entity-dashboard-tabs .mat-tab-header .mat-tab-labels {\n    flex-flow: row nowrap; }\n\n.entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label {\n    width: 100%;\n    white-space: normal;\n    display: block;\n    font-size: 0.9em;\n    height: 96px;\n    opacity: 1;\n    color: #fff;\n    padding: 0px;\n    background-color: transparent; }\n\n@media (min-width: 768px) {\n      .entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label {\n        display: flex; } }\n\n@media (min-width: 992px) {\n      .entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label {\n        font-size: 1em; } }\n\n.entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label > .mat-tab-label-content {\n      width: 100%; }\n\n.entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label > .mat-tab-label-content,\n    .entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label > .mat-tab-label-content > .rd-tab-label {\n      display: block;\n      padding: 0px;\n      height: 100%; }\n\n.entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label:focus {\n      background-color: transparent; }\n\n.entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label.mat-tab-label-active {\n      color: orange; }\n\n.entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(1) > .mat-tab-label-content > .rd-tab-label {\n      background-color: #271614; }\n\n@media (min-width: 768px) {\n        .entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(1) > .mat-tab-label-content > .rd-tab-label {\n          padding-left: 24px; } }\n\n.entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(1)::after {\n      content: '';\n      border-top: 48px solid #3f322b;\n      border-right: 48px solid #3f322b;\n      border-bottom: 48px solid #271614;\n      border-left: 48px solid #271614; }\n\n.entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(2) > .mat-tab-label-content > .rd-tab-label {\n      background-color: #3f322b; }\n\n.entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(2)::after {\n      content: '';\n      border-top: 48px solid #574d3f;\n      border-right: 48px solid #574d3f;\n      border-bottom: 48px solid #3f322b;\n      border-left: 48px solid #3f322b; }\n\n.entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(3) > .mat-tab-label-content > .rd-tab-label {\n      background-color: #574d3f; }\n\n.entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(3)::after {\n      content: '';\n      border-top: 48px solid #6f5e53;\n      border-right: 48px solid #6f5e53;\n      border-bottom: 48px solid #574d3f;\n      border-left: 48px solid #574d3f; }\n\n.entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(4) > .mat-tab-label-content > .rd-tab-label {\n      background-color: #6f5e53; }\n\n.entity-dashboard-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(4)::after {\n      content: '';\n      border-top: 48px solid transparent;\n      border-right: 48px solid transparent;\n      border-bottom: 48px solid #6f5e53;\n      border-left: 48px solid #6f5e53; }\n\n.entity-dashboard-tabs.three-tabs .mat-tab-header .mat-tab-labels > .mat-tab-label:nth-of-type(3)::after {\n  content: '';\n  border-top: 48px solid transparent;\n  border-right: 48px solid transparent; }\n\n.entity-dashboard-tabs .rd-tab-icon {\n  position: absolute;\n  top: .75em;\n  right: 42%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  font-size: 2.2em; }\n\n.entity-dashboard-tabs .rd-tab-label {\n  position: relative;\n  text-transform: uppercase; }\n\n.entity-dashboard-tabs .rd-tab-label > label {\n    color: inherit;\n    margin-top: 4.25em; }\n\n.entity-dashboard-tabs .rd-tab-content {\n  min-height: 800px;\n  padding: 20px 5px;\n  color: #000;\n  border-left: 2px solid #ddd;\n  border-right: 2px solid #ddd;\n  background-color: #fff; }\n\n@media (min-width: 992px) {\n    .entity-dashboard-tabs .rd-tab-content {\n      padding: 20px; } }\n"
-
-/***/ }),
-
-/***/ "./src/app/fws-dashboard.component.ts":
-/*!********************************************!*\
-  !*** ./src/app/fws-dashboard.component.ts ***!
-  \********************************************/
-/*! exports provided: FwsDashboardComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FwsDashboardComponent", function() { return FwsDashboardComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _findings_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./findings.component */ "./src/app/findings.component.ts");
-/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
-/* harmony import */ var _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fortawesome/free-solid-svg-icons */ "../../node_modules/@fortawesome/free-solid-svg-icons/index.es.js");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-var WHAT_WERE_FINDING_TAB_IDX = 0;
-var FOCAL_SPECIES_TAB_IDX = 1;
-var RESOURCES_TAB_IDX = 2;
-var PARTNERS_TAB_IDX = 3;
-var FwsDashboardComponent = /** @class */ (function () {
-    function FwsDashboardComponent(element, entityService) {
-        this.element = element;
-        this.entityService = entityService;
-        this.userIsLoggedIn = false;
-        this.userIsAdmin = false;
-        this.dashboardMode = null;
-        this.renderVisualizations = true;
-        this.renderFocalSpecies = false;
-        this.renderResources = false;
-        this.supportsPartners = false;
-        this.renderPartners = false;
-        this.faHandshake = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_3__["faHandshake"];
-        this.faBook = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_3__["faBook"];
-        this.faPaw = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_3__["faPaw"];
-        this.faSearch = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_3__["faSearch"];
-        var e = element.nativeElement;
-        this.entity_id = e.getAttribute('entity_id');
-        this.userIsAdmin = e.getAttribute('user_is_admin') !== null;
-        this.userIsLoggedIn = e.getAttribute('user_is_logged_in') !== null;
-        _entity_service__WEBPACK_IMPORTED_MODULE_2__["DashboardModeState"].set(e.getAttribute('mode'));
-        this.supportsPartners = _entity_service__WEBPACK_IMPORTED_MODULE_2__["DashboardModeState"].get() === _entity_service__WEBPACK_IMPORTED_MODULE_2__["DashboardMode"].PHENO_TRAIL;
-    }
-    FwsDashboardComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.entityService.get(this.entity_id).then(function (entity) { return _this.entity = entity; });
-    };
-    FwsDashboardComponent.prototype.selectedTabChange = function ($event) {
-        var _this = this;
-        this.renderFocalSpecies = this.renderFocalSpecies || ($event.index === FOCAL_SPECIES_TAB_IDX);
-        // lazily render the visualizations, only once visiting their tab
-        this.renderVisualizations = this.renderVisualizations || ($event.index === WHAT_WERE_FINDING_TAB_IDX);
-        this.renderResources = this.renderResources || ($event.index === RESOURCES_TAB_IDX);
-        this.renderPartners = this.renderPartners || ($event.index === PARTNERS_TAB_IDX);
-        if ($event.index === WHAT_WERE_FINDING_TAB_IDX) {
-            // if the visualizations are selected makes ure that resizeAll() is called
-            // in case the browser was re-sized AFTER the visualizations were visited but
-            // while another tab was visible (the visualizations would have resized themselves down to nothing).
-            setTimeout(function () {
-                if (_this.findingsComponent) {
-                    _this.findingsComponent.resizeAll();
-                }
-            });
-        }
-    };
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])(_findings_component__WEBPACK_IMPORTED_MODULE_1__["FindingsComponent"]),
-        __metadata("design:type", _findings_component__WEBPACK_IMPORTED_MODULE_1__["FindingsComponent"])
-    ], FwsDashboardComponent.prototype, "findingsComponent", void 0);
-    FwsDashboardComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'fws-dashboard',
-            template: "\n  <mat-tab-group [ngClass]=\"{'entity-dashboard-tabs':true, 'three-tabs': !supportsPartners}\" (selectedTabChange)=\"selectedTabChange($event)\">\n    <mat-tab label=\"What we're finding\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label findings\">\n                <mat-icon class=\"rd-tab-icon\"><fa-icon [icon]=\"faSearch\"></fa-icon></mat-icon>\n                <label>What we're finding</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderVisualizations\">\n            <fws-dashboard-findings *ngIf=\"entity\" [entity]=\"entity\" [userIsAdmin]=\"userIsAdmin\"></fws-dashboard-findings>\n        </div>\n    </mat-tab>\n\n    <mat-tab label=\"Focal Species\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label focal-species\">\n                <mat-icon class=\"rd-tab-icon\"><fa-icon [icon]=\"faPaw\"></fa-icon></mat-icon>\n                <label>Focal Species</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderFocalSpecies\">\n            <focal-species [entity]=\"entity\"></focal-species>\n        </div>\n    </mat-tab>\n\n    <mat-tab label=\"Resources for observers\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label resources\">\n                <mat-icon class=\"rd-tab-icon\"><fa-icon [icon]=\"faBook\"></fa-icon></mat-icon>\n                <label>Resources for observers</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderResources\">\n            <fws-dashboard-resources [entity]=\"entity\" [userIsLoggedIn]=\"userIsLoggedIn\"></fws-dashboard-resources>\n        </div>\n    </mat-tab>\n\n    <mat-tab label=\"Partners\" *ngIf=\"supportsPartners\">\n        <ng-template mat-tab-label>\n            <div class=\"rd-tab-label partners\">\n                <mat-icon class=\"rd-tab-icon\"><fa-icon [icon]=\"faHandshake\"></fa-icon></mat-icon>\n                <label>Partners</label>\n            </div>\n        </ng-template>\n        <div class=\"rd-tab-content\" *ngIf=\"renderPartners\">\n        <phenology-trail-partners [entity]=\"entity\"></phenology-trail-partners>\n        </div>\n    </mat-tab>\n  </mat-tab-group>\n  ",
-            styles: [__webpack_require__(/*! ./fws-dashboard.component.scss */ "./src/app/fws-dashboard.component.scss")],
-            encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None
-        }),
-        __metadata("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"],
-            _entity_service__WEBPACK_IMPORTED_MODULE_2__["EntityService"]])
-    ], FwsDashboardComponent);
-    return FwsDashboardComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/new-visualization-dialog.component.ts":
-/*!*******************************************************!*\
-  !*** ./src/app/new-visualization-dialog.component.ts ***!
-  \*******************************************************/
-/*! exports provided: NewVisualizationDialogComponent, NewVisualizationBuilderComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NewVisualizationDialogComponent", function() { return NewVisualizationDialogComponent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NewVisualizationBuilderComponent", function() { return NewVisualizationBuilderComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/material */ "../../node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "../../node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
-/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (undefined && undefined.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-
-
-
-
-
-var NewVisualizationDialogComponent = /** @class */ (function () {
-    function NewVisualizationDialogComponent(formBuilder, dialogRef, data) {
-        this.formBuilder = formBuilder;
-        this.dialogRef = dialogRef;
-        this.data = data;
-        this.mode = _entity_service__WEBPACK_IMPORTED_MODULE_3__["DashboardModeState"].get();
-        this.step1FormGroup = this.formBuilder.group({
-            firstCtrl: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]
-        });
-        this.step2FormGroup = this.formBuilder.group({
-            secondCtrl: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]
-        });
-        this.step3FormGroup = this.formBuilder.group({
-            thirdCtrl: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]
-        });
-        this.selection = data.selection;
-        this.entity = data.entity;
-        this.edit = data.edit;
-    }
-    NewVisualizationDialogComponent.prototype.ngOnInit = function () {
-        var s = this.selection;
-        s.editMode = true;
-        //s.debug = true; // uncomment to show the selection for dev purposes
-        // NOTE: TS support for interfaces doesn't extend to actual runtime type
-        // introspection.  VisSelection has class extensions Network/StationAwareVisSelection
-        // that selections can extend, if use cases get more complex then may instead need
-        // to use the `'stationIds' in s` kind of logic instead.
-        this.stationAware = s instanceof _npn_common__WEBPACK_IMPORTED_MODULE_4__["StationAwareVisSelection"]; // || 'stationIds' in s;
-        this.showVis = !this.stationAware ? 1 : 0;
-        if (s instanceof _npn_common__WEBPACK_IMPORTED_MODULE_4__["NetworkAwareVisSelection"]) {
-            if (!s.networkIds || !s.networkIds.length) { // don't change on edit (not necessary but seems appropriate)
-                if (this.entity instanceof _entity_service__WEBPACK_IMPORTED_MODULE_3__["Refuge"]) {
-                    s.networkIds = [this.entity.network_id];
-                }
-                else if (this.entity instanceof _entity_service__WEBPACK_IMPORTED_MODULE_3__["PhenologyTrail"]) {
-                    s.networkIds = this.entity.network_ids.slice();
-                }
-            }
-        }
-        if (this.edit) {
-            this.showVis++;
-            this.selection.update();
-        }
-    };
-    NewVisualizationDialogComponent.prototype.stepChanged = function ($event) {
-        var _this = this;
-        var visIndex = !this.stationAware ? 0 : 1;
-        console.debug("NewVisualizationDialogComponent:stepChanged visIndex=" + visIndex, $event);
-        if ($event.selectedIndex === visIndex) {
-            this.showVis++;
-            setTimeout(function () {
-                if (_this.showVis === 1 || !_this.selection.isValid()) {
-                    _this.selection.resize();
-                }
-                else {
-                    _this.selection.update();
-                }
-            });
-        }
-        this.showDetails = $event.selectedIndex === (visIndex + 1);
-    };
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])('scopeSelection'),
-        __metadata("design:type", Object)
-    ], NewVisualizationDialogComponent.prototype, "scopeSelection", void 0);
-    NewVisualizationDialogComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'new-vis-dialog',
-            template: "\n    <!-- for \"station aware\" visualizations display a multi-step process -->\n    <mat-horizontal-stepper (selectionChange)=\"stepChanged($event)\">\n        <mat-step *ngIf=\"stationAware\" [stepControl]=\"step1FormGroup\" label=\"Select sites\">\n            <div class=\"step-wrapper\">\n                <div class=\"step-content\">\n                    <refuge-visualization-scope-selection *ngIf=\"mode === 'refuge'\" [selection]=\"selection\" [refuge]=\"entity\" #scopeSelection></refuge-visualization-scope-selection>\n                    <pheno-trail-visualization-scope-selection *ngIf=\"mode === 'phenology_trail'\" [selection]=\"selection\" [phenoTrail]=\"entity\" #scopeSelection></pheno-trail-visualization-scope-selection>\n                </div>\n                <div class=\"step-nav\">\n                    <button mat-raised-button (click)=\"dialogRef.close()\">Cancel</button>\n                    <button mat-raised-button matStepperNext [disabled]=\"!!scopeSelection && !scopeSelection.valid\">Next</button>\n                </div>\n            </div>\n        </mat-step>\n\n        <mat-step [stepControl]=\"step2FormGroup\" label=\"Build visualization\">\n            <div *ngIf=\"showVis\" class=\"step-wrapper\">\n                <div class=\"step-content\">\n                    <new-visualization-builder [selection]=\"selection\" [entity]=\"entity\"></new-visualization-builder>\n                </div>\n                <div class=\"step-nav\">\n                    <button mat-raised-button (click)=\"dialogRef.close()\">Cancel</button>\n                    <button mat-raised-button *ngIf=\"stationAware\" matStepperPrevious>Back</button>\n                    <button mat-raised-button matStepperNext [disabled]=\"!selection.isValid()\">Next</button>\n                </div>\n            </div>\n        </mat-step>\n\n        <mat-step [stepControl]=\"step3FormGroup\" label=\"Enter visualization details\">\n            <div *ngIf=\"showDetails\" class=\"step-wrapper\">\n                <div class=\"step-content\">\n                    <mat-form-field class=\"visualization-title\">\n                        <input matInput placeholder=\"Visualization title\" [(ngModel)]=\"selection.meta.title\" required />\n                    </mat-form-field>\n                    <mat-form-field class=\"visualization-description\">\n                        <textarea matInput placeholder=\"Visualization description\" [(ngModel)]=\"selection.meta.description\"></textarea>\n                    </mat-form-field>\n                    <p class=\"step-instructions\">Add a title and a description that will accompany this visualization on your Refuge Dashboard. The description can help explain the visualization to visitors to your Refuge Dashboard, and provide other background information that will assist with interpretation.</p>\n                </div>\n                <div class=\"step-nav\">\n                    <button mat-raised-button (click)=\"dialogRef.close()\">Cancel</button>\n                    <button mat-raised-button matStepperPrevious>Back</button>\n                    <button mat-raised-button (click)=\"dialogRef.close(selection)\" [disabled]=\"!selection.meta.title || !selection.isValid()\">{{edit ? 'Save' : 'Add'}}</button>\n                </div>\n            </div>\n        </mat-step>\n    </mat-horizontal-stepper>\n    ",
-            styles: ["\n        mat-horizontal-stepper {\n            height: 100%;\n        }\n        /* ViewEncapsulation.None\n           75px is slightly larger than the stepper header\n        */\n        .mat-horizontal-content-container {\n            height: calc(100% - 75px);\n        }\n        .mat-horizontal-content-container .mat-horizontal-stepper-content {\n            height: 100%;\n        }\n        .step-wrapper {\n            height: 100%;\n        }\n        .step-nav {\n            padding: 5px;\n            height: 46px;\n        }\n        .step-content {\n            height: calc(100% - 46px);\n            overflow-y: auto;\n        }\n\n        .step-nav >button {\n            margin-right: 5px;\n        }\n\n        .visualization-title,\n        .visualization-description {\n            display: block;\n            width: 100%;\n        }\n        .visualization-description textarea {\n            height: 5em;\n        }\n        .step-instructions {\n            color: #666;\n            font-size: 0.95em;\n            margin-top: 20px;\n        }\n    "],
-            encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None
-        }),
-        __param(2, Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_1__["MAT_DIALOG_DATA"])),
-        __metadata("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"],
-            _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatDialogRef"], Object])
-    ], NewVisualizationDialogComponent);
-    return NewVisualizationDialogComponent;
-}());
-
-var NewVisualizationBuilderComponent = /** @class */ (function () {
-    function NewVisualizationBuilderComponent() {
-    }
-    NewVisualizationBuilderComponent.prototype.ngOnInit = function () {
-        var s = this.selection;
-        //s.debug = true;
-        if (s instanceof _npn_common__WEBPACK_IMPORTED_MODULE_4__["ActivityCurvesSelection"]) {
-            this.activity = s;
-        }
-        else if (s instanceof _npn_common__WEBPACK_IMPORTED_MODULE_4__["ScatterPlotSelection"]) {
-            this.scatter = s;
-        }
-        else if (s instanceof _npn_common__WEBPACK_IMPORTED_MODULE_4__["CalendarSelection"]) {
-            this.calendar = s;
-        }
-        else if (s instanceof _npn_common__WEBPACK_IMPORTED_MODULE_4__["ObserverActivitySelection"]) {
-            this.observer = s;
-        }
-        else if (s instanceof _npn_common__WEBPACK_IMPORTED_MODULE_4__["ObservationFrequencySelection"]) {
-            this.observationFreq = s;
-        }
-        else if (s instanceof _npn_common__WEBPACK_IMPORTED_MODULE_4__["ClippedWmsMapSelection"]) {
-            // this visualization only supported for Refuge
-            this.clipped = s;
-            s.fwsBoundary = this.entity.boundary_id;
-        }
-        s.resize();
-    };
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _npn_common__WEBPACK_IMPORTED_MODULE_4__["VisSelection"])
-    ], NewVisualizationBuilderComponent.prototype, "selection", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _entity_service__WEBPACK_IMPORTED_MODULE_3__["EntityBase"])
-    ], NewVisualizationBuilderComponent.prototype, "entity", void 0);
-    NewVisualizationBuilderComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'new-visualization-builder',
-            template: "\n    <activity-curves-control  *ngIf=\"activity\" [selection]=\"activity\"></activity-curves-control>\n    <scatter-plot-control *ngIf=\"scatter\" [selection]=\"scatter\"></scatter-plot-control>\n    <calendar-control *ngIf=\"calendar\" [selection]=\"calendar\"></calendar-control>\n    <observer-activity-control *ngIf=\"observer\" [selection]=\"observer\"></observer-activity-control>\n    <observation-frequency-control *ngIf=\"observationFreq\" [selection]=\"observationFreq\"></observation-frequency-control>\n    <clipped-wms-map-control *ngIf=\"clipped\" [selection]=\"clipped\"></clipped-wms-map-control>\n\n    <npn-visualization *ngIf=\"selection\" [selection]=\"selection\"></npn-visualization>\n    <!--pre *ngIf=\"selection\">{{selection.external | json}}</pre-->\n    ",
-            styles: ["\n        npn-visualization {\n            margin-top: 20px;\n            width: 90%; // within stepper o/w horizontal scroll\n        }\n    "]
-        })
-    ], NewVisualizationBuilderComponent);
-    return NewVisualizationBuilderComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pheno-trail-visualization-scope-group.component.ts":
-/*!********************************************************************!*\
-  !*** ./src/app/pheno-trail-visualization-scope-group.component.ts ***!
-  \********************************************************************/
-/*! exports provided: PhenoTrailVisualizationScopeGroupComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhenoTrailVisualizationScopeGroupComponent", function() { return PhenoTrailVisualizationScopeGroupComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @fortawesome/pro-light-svg-icons */ "../../node_modules/@fortawesome/pro-light-svg-icons/index.es.js");
-/* harmony import */ var _pheno_trail_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pheno-trail-visualization-scope-selection.component */ "./src/app/pheno-trail-visualization-scope-selection.component.ts");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-var PhenoTrailVisualizationScopeGroupComponent = /** @class */ (function () {
-    function PhenoTrailVisualizationScopeGroupComponent() {
-        this.change = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
-        this.open = false;
-        this.chevronDownIcon = _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_1__["faChevronDown"];
-        this.chevronRightIcon = _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_1__["faChevronRight"];
-        this.loading = false;
-    }
-    PhenoTrailVisualizationScopeGroupComponent.prototype.ngOnInit = function () {
-        //Load any pre-existing selections
-        if (this.networkWrapper.selected) {
-            this.networkWrapper.getStations();
-        }
-    };
-    /**
-     * Toggles the view of the group's stations
-     */
-    PhenoTrailVisualizationScopeGroupComponent.prototype.toggleOpen = function () {
-        var _this = this;
-        this.loading = true;
-        this.networkWrapper.getStations().then(function (stations) {
-            _this.open = !_this.open;
-            _this.loading = false;
-        });
-    };
-    /**
-     * Toggle whether a station should be excluded for a selected group
-     */
-    PhenoTrailVisualizationScopeGroupComponent.prototype.stationChange = function () {
-        var _this = this;
-        this.networkWrapper.getStations().then(function (stations) {
-            _this.networkWrapper.selected = true;
-            _this.networkWrapper.group.excludeIds = stations.filter(function (station) { return station.selected; }).map(function (station) { return station.station_id; });
-            _this.change.emit();
-        });
-    };
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _pheno_trail_visualization_scope_selection_component__WEBPACK_IMPORTED_MODULE_2__["NetworkWrapper"])
-    ], PhenoTrailVisualizationScopeGroupComponent.prototype, "networkWrapper", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
-        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
-    ], PhenoTrailVisualizationScopeGroupComponent.prototype, "change", void 0);
-    PhenoTrailVisualizationScopeGroupComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'pheno-trail-visualization-scope-group',
-            template: "\n      <button mat-icon-button [attr.aria-label]=\"'Toggle ' + networkWrapper.network.name\" (click)=\"toggleOpen()\">\n        <mat-icon><fa-icon [icon]=\"open ? chevronDownIcon : chevronRightIcon\"></fa-icon></mat-icon>\n      </button>\n      <mat-checkbox [(ngModel)]=\"networkWrapper.selected\" (change)=\"change.emit()\" [indeterminate]=\"networkWrapper.group.excludeIds?.length > 0\">\n        {{networkWrapper.network.name}}\n      </mat-checkbox>\n      <div class=\"station-input\" *ngIf=\"open\">\n        <h3>Exclude Stations</h3>\n        <mat-progress-spinner *ngIf=\"loading\" mode=\"indeterminate\"></mat-progress-spinner>\n        <div *ngFor=\"let s of networkWrapper.stations | async as all\" class=\"station-input\">\n          <mat-checkbox [(ngModel)]=\"s.selected\" (change)=\"stationChange()\" [disabled]=\"!s.selected && networkWrapper.group.excludeIds?.length === (all.length-1)\">{{s.station_name}}</mat-checkbox>\n        </div>\n      </div>\n    ",
-            styles: ["\n      .station-input {\n        display: block;\n        padding-left: 34px;\n      }\n    "]
-        }),
-        __metadata("design:paramtypes", [])
-    ], PhenoTrailVisualizationScopeGroupComponent);
-    return PhenoTrailVisualizationScopeGroupComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pheno-trail-visualization-scope-groups.component.ts":
-/*!*********************************************************************!*\
-  !*** ./src/app/pheno-trail-visualization-scope-groups.component.ts ***!
-  \*********************************************************************/
-/*! exports provided: PhenoTrailVisualizationScopeGroupsComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhenoTrailVisualizationScopeGroupsComponent", function() { return PhenoTrailVisualizationScopeGroupsComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @npn/common/visualizations/vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-var PhenoTrailVisualizationScopeGroupsComponent = /** @class */ (function () {
-    function PhenoTrailVisualizationScopeGroupsComponent() {
-    }
-    PhenoTrailVisualizationScopeGroupsComponent.prototype.handleChange = function () {
-        this.selection.groups = this.networkWrappers.filter(function (w) { return w.selected; }).map(function (w) { return w.group; });
-    };
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_1__["StationAwareVisSelection"])
-    ], PhenoTrailVisualizationScopeGroupsComponent.prototype, "selection", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", Array)
-    ], PhenoTrailVisualizationScopeGroupsComponent.prototype, "networkWrappers", void 0);
-    PhenoTrailVisualizationScopeGroupsComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'pheno-trail-visualization-scope-groups',
-            template: "\n    <h3>Select Groups to Compare</h3>\n    <pheno-trail-visualization-scope-group *ngFor=\"let w of networkWrappers\" [networkWrapper]=\"w\" (change)=\"handleChange()\" class=\"group-input\"></pheno-trail-visualization-scope-group>\n    ",
-            styles: ["\n      .group-input {\n        display:block;\n      }\n    "]
-        })
-    ], PhenoTrailVisualizationScopeGroupsComponent);
-    return PhenoTrailVisualizationScopeGroupsComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pheno-trail-visualization-scope-selection.component.ts":
-/*!************************************************************************!*\
-  !*** ./src/app/pheno-trail-visualization-scope-selection.component.ts ***!
-  \************************************************************************/
-/*! exports provided: NetworkWrapper, PhenoTrailVisualizationScopeSelectionComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NetworkWrapper", function() { return NetworkWrapper; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhenoTrailVisualizationScopeSelectionComponent", function() { return PhenoTrailVisualizationScopeSelectionComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
-/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
-/* harmony import */ var _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @npn/common/visualizations/vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-var NetworkWrapper = /** @class */ (function () {
-    function NetworkWrapper(selection, network, networkService) {
-        this.selection = selection;
-        this.network = network;
-        this.networkService = networkService;
-        if (this.selection.groups) { // existing selection
-            var g0 = this.selection.groups[0];
-            if (g0.mode === _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].NETWORK) {
-                this.group = this.selection.groups.find(function (g) { return g.id === network.network_id; });
-                this.selected = !!this.group;
-            }
-            else if (g0.mode === _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].STATION) {
-                this.getStationsWithGroup();
-            }
-        }
-        else {
-            this.selected = this.selection.networkIds.indexOf(network.network_id) > -1;
-        }
-        if (!this.group) {
-            // create new group
-            this.group = {
-                label: network.name,
-                mode: _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].NETWORK,
-                id: network.network_id,
-                excludeIds: []
-            };
-        }
-        // set label unconditionally in case it changed
-        this.group.label = network.name;
-    }
-    NetworkWrapper.prototype.getStations = function () {
-        var _this = this;
-        if (!this.stations) {
-            this.stations = this.networkService.getStations(this.network.network_id).then(function (stations) {
-                stations.forEach(function (station) { return station.selected = (_this.group.excludeIds || []).indexOf(station.station_id) > -1; });
-                return stations;
-            });
-        }
-        return this.stations;
-    };
-    // component uses this Promise to render station list
-    NetworkWrapper.prototype.getStationsWithGroup = function () {
-        var _this = this;
-        this.stations = this.getStations().then(function (stations) {
-            stations.forEach(function (s) {
-                s.selected = !!_this.selection.groups ? !!_this.selection.groups.find(function (g) { return g.id === s.station_id; }) : false;
-                s.group = {
-                    label: _this.network.name + " - " + s.station_name,
-                    mode: _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].STATION,
-                    id: s.station_id
-                };
-            });
-            return stations;
-        });
-        return this.stations;
-    };
-    return NetworkWrapper;
-}());
-
-var PhenoTrailVisualizationScopeSelectionComponent = /** @class */ (function () {
-    function PhenoTrailVisualizationScopeSelectionComponent(networkService) {
-        this.networkService = networkService;
-        this.visScope = 'allGroups';
-        this.networkFetch = false;
-    }
-    PhenoTrailVisualizationScopeSelectionComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.networkFetch = true;
-        this.networks = this.networkService.getNetworks(this.phenoTrail.network_ids)
-            .then(function (networks) {
-            var wrappers = networks.map(function (n) { return new NetworkWrapper(_this.selection, n, _this.networkService); });
-            _this.networkFetch = false;
-            return wrappers;
-        });
-        var selection = this.selection;
-        if (selection.groups && selection.groups.length) {
-            var g0 = this.selection.groups[0];
-            if (g0.mode === _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].NETWORK) {
-                this.visScope = "compareGroups";
-            }
-            else if (g0.mode === _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].STATION) {
-                this.visScope = "compareSites";
-            }
-        }
-        else if (selection.networkIds && selection.networkIds.length && selection.networkIds.length != this.phenoTrail.network_ids.length) {
-            this.visScope = "selectGroups";
-        }
-        else {
-            this.visScope = "allGroups";
-        }
-    };
-    Object.defineProperty(PhenoTrailVisualizationScopeSelectionComponent.prototype, "valid", {
-        get: function () {
-            return this.visScope === 'allGroups' || !!(this.selection.networkIds && this.selection.networkIds.length)
-                || !!(this.selection.groups && this.selection.groups.length);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    PhenoTrailVisualizationScopeSelectionComponent.prototype.scopeChanged = function () {
-        var _this = this;
-        // reset to a clean slate
-        this.selection.stationIds = undefined;
-        this.selection.groups = undefined;
-        this.selection.networkIds = this.phenoTrail.network_ids.slice();
-        switch (this.visScope) {
-            case 'allGroups':
-                // it's always set and doesn't ever need to change
-                break;
-            case 'compareGroups':
-            case 'selectGroups':
-                this.networks.then(function (networks) {
-                    networks.forEach(function (n) { return n.selected = _this.visScope === 'selectGroups'; });
-                });
-                break;
-            case 'compareSites':
-                this.networks.then(function (networks) {
-                    networks.forEach(function (n) {
-                        n.selected = _this.visScope === 'selectGroups';
-                        n.getStationsWithGroup();
-                    });
-                });
-                break;
-        }
-    };
-    PhenoTrailVisualizationScopeSelectionComponent.prototype.selectGroupChange = function () {
-        var _this = this;
-        this.networks.then(function (networks) {
-            _this.selection.networkIds = networks.filter(function (n) { return n.selected; }).map(function (n) { return n.network.network_id; });
-        });
-    };
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _npn_common__WEBPACK_IMPORTED_MODULE_1__["StationAwareVisSelection"])
-    ], PhenoTrailVisualizationScopeSelectionComponent.prototype, "selection", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _entity_service__WEBPACK_IMPORTED_MODULE_2__["PhenologyTrail"])
-    ], PhenoTrailVisualizationScopeSelectionComponent.prototype, "phenoTrail", void 0);
-    PhenoTrailVisualizationScopeSelectionComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'pheno-trail-visualization-scope-selection',
-            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'allGroups'\">Show data for all groups within \"{{phenoTrail.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'selectGroups'\">Show data for select groups within \"{{phenoTrail.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'compareGroups'\">Compare data between groups within \"{{phenoTrail.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'compareSites'\">Compare data between sites within \"{{phenoTrail.title}}\"</mat-radio-button>\n      </mat-radio-group>\n    <mat-progress-spinner *ngIf=\"networkFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"visScope === 'selectGroups'\">\n      <hr>\n      <h3 class=\"group-select-header\">Select Groups</h3>\n      <mat-checkbox *ngFor=\"let n of networks | async\" class=\"group-input\" [(ngModel)]=\"n.selected\" (change)=\"selectGroupChange()\" [disabled]=\"n.selected && selection.networkIds.length === 1\">{{n.network.name}}</mat-checkbox>\n    </div>\n    <div *ngIf=\"visScope === 'compareGroups' && networks | async as networkWrappers\">\n      <hr>\n      <pheno-trail-visualization-scope-groups [selection]=\"selection\" [networkWrappers]=\"networkWrappers\"></pheno-trail-visualization-scope-groups>\n    </div>\n    <div *ngIf=\"visScope === 'compareSites' && networks | async as networkWrappers\">\n      <hr>\n      <pheno-trail-visualization-scope-station-groups [selection]=\"selection\" [networkWrappers]=\"networkWrappers\"></pheno-trail-visualization-scope-station-groups>\n    </div>\n    <!--pre *ngIf=\"selection\">{{selection.external | json}}</pre-->\n    ",
-            styles: ["\n        .vis-scope-input {\n          display: inline-flex;\n          flex-direction: column;\n        }\n        .vis-scope-radio {\n          margin: 5px;\n        }\n        .group-input {\n          display: block;\n          padding-left: 34px;\n        }\n        .group-select-header{\n          margin-bottom:20px;\n        }\n        \n    "]
-        }),
-        __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_1__["NetworkService"]])
-    ], PhenoTrailVisualizationScopeSelectionComponent);
-    return PhenoTrailVisualizationScopeSelectionComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pheno-trail-visualization-scope-station-groups.component.ts":
-/*!*****************************************************************************!*\
-  !*** ./src/app/pheno-trail-visualization-scope-station-groups.component.ts ***!
-  \*****************************************************************************/
-/*! exports provided: PhenoTrailVisualizationScopeStationGroupsComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhenoTrailVisualizationScopeStationGroupsComponent", function() { return PhenoTrailVisualizationScopeStationGroupsComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @npn/common/visualizations/vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-var PhenoTrailVisualizationScopeStationGroupsComponent = /** @class */ (function () {
-    function PhenoTrailVisualizationScopeStationGroupsComponent() {
-    }
-    /**
-     * Toggle whether a station should be excluded for a selected group
-     */
-    PhenoTrailVisualizationScopeStationGroupsComponent.prototype.stationChange = function () {
-        this.selection.groups = this.networkWrappers.reduce(function (groups, wrapper) {
-            wrapper.stations.then(function (stations) {
-                stations.filter(function (s) { return s.selected; }).forEach(function (s) { return groups.push(s.group); });
-            });
-            return groups;
-        }, []);
-    };
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_1__["StationAwareVisSelection"])
-    ], PhenoTrailVisualizationScopeStationGroupsComponent.prototype, "selection", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", Array)
-    ], PhenoTrailVisualizationScopeStationGroupsComponent.prototype, "networkWrappers", void 0);
-    PhenoTrailVisualizationScopeStationGroupsComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'pheno-trail-visualization-scope-station-groups',
-            template: "\n    <h3>Select Sites to Compare</h3>\n    <div *ngFor=\"let nw of networkWrappers\">\n      {{nw.network.name}}\n      <div *ngFor=\"let s of nw.stations | async\" class=\"station-input\">\n        <mat-checkbox [(ngModel)]=\"s.selected\" (change)=\"stationChange()\">{{s.station_name}}</mat-checkbox>\n      </div>\n    </div>\n    ",
-            styles: ["\n      .group-input {\n        display:block;\n      }\n      .station-input {\n        display: block;\n        padding-left: 34px;\n      }\n    "]
-        })
-    ], PhenoTrailVisualizationScopeStationGroupsComponent);
-    return PhenoTrailVisualizationScopeStationGroupsComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/phenology-trail-partners.component.scss":
-/*!*********************************************************!*\
-  !*** ./src/app/phenology-trail-partners.component.scss ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "agm-map {\n  height: 500px; }\n\n.in-info-window {\n  width: 60px;\n  height: 60px;\n  padding: 20px; }\n\n.info-window-card {\n  max-width: 400px; }\n\n.info-window-card h3 {\n    font-weight: 400;\n    font-size: 2em;\n    text-align: center;\n    margin-bottom: 0;\n    line-height: 1em; }\n\n.info-window-card h4 {\n    text-align: center;\n    font-size: 1.4em;\n    margin-top: 0;\n    margin-bottom: 12px;\n    line-height: 1.5em;\n    font-weight: 200; }\n\n.info-window-card ul {\n    margin-top: 0;\n    margin-bottom: 6px;\n    display: flex;\n    justify-content: space-between; }\n\n.info-window-card ul li {\n      width: 170px;\n      margin: 10px auto;\n      list-style: none;\n      text-align: center; }\n\n.info-window-card ul li h3 {\n        line-height: 1em; }\n\n.map-legend {\n  padding: 20px; }\n\n.map-legend h3 {\n    font-size: 2em;\n    line-height: 1em;\n    margin-bottom: 20px; }\n\n.map-legend ul li {\n    margin-bottom: 0;\n    line-height: .5em;\n    list-style: none; }\n\n.map-legend ul li div.legend-box {\n      width: 14px;\n      height: 14px;\n      display: inline-block;\n      margin-right: 10px; }\n"
-
-/***/ }),
-
-/***/ "./src/app/phenology-trail-partners.component.ts":
-/*!*******************************************************!*\
-  !*** ./src/app/phenology-trail-partners.component.ts ***!
-  \*******************************************************/
-/*! exports provided: PhenologyTrailPartnersComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhenologyTrailPartnersComponent", function() { return PhenologyTrailPartnersComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
-/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
-/* harmony import */ var _agm_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @agm/core */ "../../node_modules/@agm/core/index.js");
-/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! d3 */ "../../node_modules/d3/index.js");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-var PhenologyTrailPartnersComponent = /** @class */ (function () {
-    function PhenologyTrailPartnersComponent(networkService, stationService, mapsAPILoader) {
-        this.networkService = networkService;
-        this.stationService = stationService;
-        this.mapsAPILoader = mapsAPILoader;
-        this.itemPluralMapping = {
-            'record': {
-                '=0': 'Records',
-                '=1': 'Record',
-                'other': 'Records'
-            },
-            'individual': {
-                '=0': 'Individuals',
-                '=1': 'Individual',
-                'other': 'Individuals'
-            }
-        };
-        this.mapStyles = _npn_common__WEBPACK_IMPORTED_MODULE_2__["MAP_STYLES"];
-    }
-    PhenologyTrailPartnersComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        // map of network_id to a color
-        var colorMap = this.entity.network_ids.reduce(function (map, id, i) {
-            var color = Object(_npn_common__WEBPACK_IMPORTED_MODULE_2__["getStaticColor"])(i);
-            var outline = d3__WEBPACK_IMPORTED_MODULE_4__["color"](color).darker().toString();
-            map["" + id] = { color: color, outline: outline };
-            return map;
-        }, {});
-        var mapColors = function (list) { return list.map(function (o) {
-            o.colors = colorMap["" + o.network_id];
-            return o;
-        }); };
-        this.networks = this.networkService.getNetworks(this.entity.network_ids).then(mapColors);
-        this.stations = this.networkService.getStations(this.entity.network_ids).then(mapColors).then(function (stations) {
-            return _this.mapsAPILoader.load().then(function () {
-                stations.forEach(function (station) {
-                    station.icon = _this.newGoogleMapsSymbol(station);
-                });
-                return stations;
-            });
-        });
-    };
-    PhenologyTrailPartnersComponent.prototype.ngAfterViewInit = function () {
-        var _this = this;
-        //cycle through the map elements and get the center position of the map
-        this.agmMap.mapReady.subscribe(function (map) {
-            _this.map = map;
-            _this.stations.then(function (stations) {
-                var bounds = new google.maps.LatLngBounds();
-                for (var _i = 0, stations_1 = stations; _i < stations_1.length; _i++) {
-                    var mm = stations_1[_i];
-                    bounds.extend(new google.maps.LatLng(mm.latitude, mm.longitude));
-                }
-                _this.bounds = bounds;
-                _this.resize();
-            });
-        });
-    };
-    PhenologyTrailPartnersComponent.prototype.resize = function () {
-        if (this.map && this.bounds) {
-            this.map.fitBounds(this.bounds);
-        }
-    };
-    /**
-     * Get the station information for display in the agm-info-window
-     * @param selectedStation - The station that is selected. Needs latitude, longitude, and station_id
-     */
-    PhenologyTrailPartnersComponent.prototype.selectMarker = function (selectedStation) {
-        var _this = this;
-        this.selectedStation = selectedStation;
-        this.stationService.getStation(selectedStation.station_id).then(function (station) { return _this.stationInfo = station; });
-    };
-    PhenologyTrailPartnersComponent.prototype.newGoogleMapsSymbol = function (station) {
-        return {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 7,
-            fillOpacity: 1,
-            fillColor: station.colors.color,
-            strokeColor: station.colors.outline,
-            strokeWeight: 1
-        };
-    };
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])('AgmMap'),
-        __metadata("design:type", _agm_core__WEBPACK_IMPORTED_MODULE_3__["AgmMap"])
-    ], PhenologyTrailPartnersComponent.prototype, "agmMap", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _entity_service__WEBPACK_IMPORTED_MODULE_1__["PhenologyTrail"])
-    ], PhenologyTrailPartnersComponent.prototype, "entity", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["HostListener"])('window:resize'),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", []),
-        __metadata("design:returntype", void 0)
-    ], PhenologyTrailPartnersComponent.prototype, "resize", null);
-    PhenologyTrailPartnersComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'phenology-trail-partners',
-            template: "\n  <agm-map #AgmMap [streetViewControl]=\"false\" [scrollwheel]=\"false\" [styles]=\"mapStyles\">\n    <agm-marker\n        *ngFor=\"let station of stations | async; let i = index\"\n        [latitude]=\"station.latitude\"\n        [longitude]=\"station.longitude\"\n        [iconUrl]=\"station.icon\"\n        (markerClick)=\"selectMarker(station)\"\n    ></agm-marker>\n    <agm-info-window [isOpen]=\"!!selectedStation\" (infoWindowClose)=\"selectedStation = stationInfo = null\"\n    [latitude]=\"selectedStation?.latitude\" [longitude]=\"selectedStation?.longitude\">\n        <npn-logo class=\"in-info-window\" spin=\"true\" *ngIf=\"!stationInfo\"></npn-logo>\n        <div class=\"info-window-card\" *ngIf=\"stationInfo\">\n            <h3>{{stationInfo.site_name}}</h3>\n            <h4>{{stationInfo.group_name}}</h4>\n            <ul>\n                <li><h3>{{stationInfo.num_individuals}}</h3> {{stationInfo.num_individuals | i18nPlural: itemPluralMapping['individual'] }}</li>\n                <li><h3>{{stationInfo.num_records}}</h3> {{stationInfo.num_records | i18nPlural: itemPluralMapping['record']}}</li>\n            </ul>\n        </div>\n    </agm-info-window>\n    \n  </agm-map>\n  <div class=\"map-legend\">\n    <h3>Legend</h3>\n    <ul>\n        <ng-container *ngFor=\"let network of networks | async; let i = index\">\n            <li *ngIf=\"!!network\"><div class=\"legend-box\" [style.background-color]=\"network.colors?.color\"></div> {{network.name}}</li>\n        </ng-container>\n    </ul>\n  </div>\n  ",
-            styles: [__webpack_require__(/*! ./phenology-trail-partners.component.scss */ "./src/app/phenology-trail-partners.component.scss")]
-        }),
-        __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_2__["NetworkService"],
-            _npn_common__WEBPACK_IMPORTED_MODULE_2__["StationService"],
-            _agm_core__WEBPACK_IMPORTED_MODULE_3__["MapsAPILoader"]])
-    ], PhenologyTrailPartnersComponent);
-    return PhenologyTrailPartnersComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/refuge-visualization-scope-selection.component.ts":
-/*!*******************************************************************!*\
-  !*** ./src/app/refuge-visualization-scope-selection.component.ts ***!
-  \*******************************************************************/
-/*! exports provided: RefugeVisualizationScopeSelectionComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RefugeVisualizationScopeSelectionComponent", function() { return RefugeVisualizationScopeSelectionComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
-/* harmony import */ var _npn_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @npn/common */ "../npn/common/src/lib/index.ts");
-/* harmony import */ var _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @npn/common/visualizations/vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-/**
-    Radius Dropdown Options for "Compare refuge data to sites within a radius".
-    text is what you want the user to see and value is the real value in the form.
-*/
-var RADIUS_OPTIONS = [{ value: 10, text: "10" }, { value: 25, text: "25" }, { value: 50, text: "50" }];
-var RADIUS_DEFAULT = 0; //The index of the default radius selected when page first loads
-var RefugeVisualizationScopeSelectionComponent = /** @class */ (function () {
-    function RefugeVisualizationScopeSelectionComponent(networkService) {
-        this.networkService = networkService;
-        this.radiusDropdownOptions = RADIUS_OPTIONS;
-        this.radius = RADIUS_OPTIONS[RADIUS_DEFAULT].value;
-        this.visScope = 'refuge';
-        this.stationFetch = false;
-    }
-    RefugeVisualizationScopeSelectionComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        var selection = this.selection;
-        if (selection.groups && selection.groups.length) {
-            // this control is simplistic when it comes to groups, there are only two use cases
-            this.visScope = selection.groups[0].mode === _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].STATION
-                ? 'stationGroup'
-                : 'outsideGroup';
-        }
-        else if (selection.stationIds && selection.stationIds.length) {
-            this.visScope = 'station';
-        }
-        else {
-            this.visScope = 'refuge';
-        }
-        if (this.visScope !== 'refuge') {
-            this.loadStations().then(function (stations) { return stations.forEach(function (s) {
-                if (_this.visScope === 'station') {
-                    s.selected = selection.stationIds.indexOf(s.station_id) !== -1;
-                }
-                else if (_this.visScope === 'outsideGroup') {
-                    s.selected = selection.groups[0].excludeIds.indexOf(s.station_id) !== -1;
-                }
-                else {
-                    s.selected = !!selection.groups.reduce(function (found, g) { return (found || (g.id === s.station_id ? s : undefined)); }, undefined);
-                }
-            }); });
-            if (this.visScope === 'outsideGroup') {
-                this.radius = this.selection.groups[1].outsideRadiusMiles
-                    ? this.selection.groups[1].outsideRadiusMiles
-                    : RADIUS_OPTIONS[RADIUS_DEFAULT].value;
-            }
-        }
-    };
-    RefugeVisualizationScopeSelectionComponent.prototype.loadStations = function () {
-        var _this = this;
-        if (!this._stations) {
-            this.stationFetch = true;
-            this._stations = this.networkService.getStations(this.refuge.network_id)
-                .then(function (stations) {
-                _this.stations = stations;
-                _this.stationFetch = false;
-                return stations;
-            });
-        }
-        return this._stations;
-    };
-    RefugeVisualizationScopeSelectionComponent.prototype.scopeChanged = function () {
-        var _this = this;
-        // reset to a clean slate
-        this.selection.stationIds = undefined;
-        this.selection.groups = undefined;
-        switch (this.visScope) {
-            case 'refuge':
-                // it's always set and doesn't ever need to change
-                // this.selection.networkIds = [this.refuge.network_id];
-                break;
-            case 'station':
-            case 'stationGroup':
-            case 'outsideGroup':
-                this.loadStations().then(function (stations) {
-                    // all selected for station mode and all de-selected for stationGroup mode
-                    stations.forEach(function (s) { return s.selected = _this.visScope === 'station'; });
-                    if (_this.visScope === 'outsideGroup') {
-                        _this.outsideGroupChange();
+        console.debug('setSelection', s ? s.external : 'NULL');
+        this.getMap
+            .then(function (map) {
+            var add = function () {
+                if (_this.selection = s) {
+                    var refuge = _this.focused, onResolve_1 = function () {
+                        _this.allControls.enable();
+                        console.debug('added selection', s.external);
+                    };
+                    _this.allControls.disable();
+                    if (refuge.no_geospatial) {
+                        console.debug('refuge has no geo spatial data.');
+                        s.layer = __assign({}, s.layer);
+                        s.layer.noDataDisclaimer = 'Data are not currently available for this Refuge, as it is outside of the coverage of the Spring Indices model.';
+                        s.getBoundary()
+                            .then(function (geoJson) {
+                            s.data = {
+                                data: null,
+                                boundary: geoJson,
+                                statistics: {
+                                    date: s.explicitDate,
+                                    count: 0
+                                },
+                            };
+                            s.addBoundary(map, geoJson);
+                            onResolve_1();
+                        });
                     }
-                });
-                break;
-        }
+                    else {
+                        s.addTo(map).then(onResolve_1);
+                    }
+                }
+            };
+            if (_this.selection) {
+                _this.selection.removeFrom(map)
+                    .then(add);
+            }
+            else {
+                add();
+            }
+        });
     };
-    RefugeVisualizationScopeSelectionComponent.prototype.outsideGroupChange = function () {
-        var exludeIds = this.stations.filter(function (s) { return s.selected; }).map(function (s) { return s.station_id; });
-        this.selection.groups = [{
-                label: this.refuge.title,
-                mode: _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].NETWORK,
-                id: this.refuge.network_id,
-                excludeIds: exludeIds
-            }, {
-                label: "Sites within " + this.radius + " miles",
-                mode: _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].OUTSIDE,
-                id: this.refuge.network_id,
-                outsideRadiusMiles: this.radius
-            }];
-    };
-    RefugeVisualizationScopeSelectionComponent.prototype.stationChange = function () {
-        switch (this.visScope) {
-            case 'station':
-                this.selection.stationIds = this.stations.filter(function (s) { return s.selected; }).map(function (s) { return s.station_id; });
-                break;
-            case 'stationGroup':
-                var mode_1 = _npn_common_visualizations_vis_selection__WEBPACK_IMPORTED_MODULE_3__["SelectionGroupMode"].STATION;
-                this.selection.groups = this.stations
-                    .filter(function (s) { return s.selected; })
-                    .map(function (s) {
-                    var label = s.station_name;
-                    var id = s.station_id;
-                    return { mode: mode_1, id: id, label: label };
-                });
-                break;
-            case 'outsideGroup':
-                this.outsideGroupChange();
-                break;
-        }
-    };
-    Object.defineProperty(RefugeVisualizationScopeSelectionComponent.prototype, "valid", {
-        get: function () {
-            return this.visScope !== 'stationGroup' || !!(this.selection.groups && this.selection.groups.length);
-        },
-        enumerable: true,
-        configurable: true
-    });
     __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _npn_common__WEBPACK_IMPORTED_MODULE_2__["StationAwareVisSelection"])
-    ], RefugeVisualizationScopeSelectionComponent.prototype, "selection", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _entity_service__WEBPACK_IMPORTED_MODULE_1__["Refuge"])
-    ], RefugeVisualizationScopeSelectionComponent.prototype, "refuge", void 0);
-    RefugeVisualizationScopeSelectionComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])(_refuge_control_component__WEBPACK_IMPORTED_MODULE_5__["RefugeControl"]),
+        __metadata("design:type", _refuge_control_component__WEBPACK_IMPORTED_MODULE_5__["RefugeControl"])
+    ], StatusOfSpringComponent.prototype, "refugeControl", void 0);
+    StatusOfSpringComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'refuge-visualization-scope-selection',
-            template: "\n    <mat-radio-group name=\"visScope\" class=\"vis-scope-input\" [(ngModel)]=\"visScope\" (change)=\"scopeChanged()\">\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'refuge'\">Show data for all sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'station'\">Show data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'stationGroup'\">Compare data for select sites at \"{{refuge.title}}\"</mat-radio-button>\n      <mat-radio-button class=\"vis-scope-radio\" [value]=\"'outsideGroup'\">Compare refuge data to sites within a radius</mat-radio-button>\n    </mat-radio-group>\n    <hr *ngIf=\"visScope !== 'refuge'\" />\n    <mat-form-field *ngIf=\"visScope === 'outsideGroup'\" class=\"radius-form-field\">\n        <mat-label>Radius (in miles)</mat-label>\n        <mat-select class=\"vis-scope-input\" class=\"radius-input\" [(ngModel)]=\"radius\" (selectionChange)=\"outsideGroupChange()\">\n            <mat-option *ngFor=\"let opt of radiusDropdownOptions\" [value]=\"opt.value\">{{opt.text}}</mat-option>\n        </mat-select>\n    </mat-form-field>   \n    <mat-progress-spinner *ngIf=\"stationFetch\" mode=\"indeterminate\"></mat-progress-spinner>\n    <div *ngIf=\"(visScope === 'station' || visScope === 'stationGroup' || visScope === 'outsideGroup')\">\n    <h3 *ngIf=\"(visScope === 'outsideGroup')\">Select Sites to Exclude</h3>\n        <mat-checkbox *ngFor=\"let s of stations\" class=\"station-input\" [(ngModel)]=\"s.selected\" (change)=\"stationChange()\"\n            [disabled]=\"visScope === 'station' && s.selected && selection.stationIds?.length === 1\">{{s.station_name}}</mat-checkbox>\n    </div>\n    <!--<pre *ngIf=\"selection\">{{selection.external | json}}</pre>-->\n    ",
-            styles: ["\n        .vis-scope-input {\n          display: inline-flex;\n          flex-direction: column;\n        }\n        .vis-scope-radio {\n          margin: 5px;\n        }\n        .station-input {\n            display: block;\n            padding-left: 34px;\n        },\n        .radius-form-field {\n            margin:20px 0 20px 0;\n        }\n        .radius-input {\n            width:200px;\n        }\n    "]
+            selector: 'status-of-spring',
+            template: "\n    <form class=\"control-form\">\n        <refuge-control (onList)=\"refuges=$event\" (onSelect)=\"focusRefuge($event)\"></refuge-control>\n        <mat-form-field *ngIf=\"selections\" class=\"selection-input\">\n            <mat-select placeholder=\"Layer\" [formControl]=\"selectionFormControl\">\n                <mat-option *ngFor=\"let s of selections\" [value]=\"s.selection\">{{ s.label }}</mat-option>\n            </mat-select>\n        </mat-form-field>\n        <button *ngIf=\"selection\" class=\"reset-button\" [disabled]=\"selection && selection.working\"\n            mat-icon-button (click)=\"reset()\" matTooltip=\"Reset map\"><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i></button>\n    </form>\n\n    <div class=\"map-wrapper\">\n        <div class=\"vis-working\" *ngIf=\"selection && selection.working\">\n            <mat-progress-spinner mode=\"indeterminate\"></mat-progress-spinner>\n        </div>\n        <agm-map (mapReady)=\"mapReady($event)\"\n                [latitude]=\"latitude\" [longitude]=\"longitude\" [zoom]=\"zoom\"\n                [streetViewControl]=\"false\" [scrollwheel]=\"false\" [styles]=\"mapStyles\">\n            <span *ngFor=\"let refuge of refuges\">\n                <agm-marker *ngIf=\"refuge !== focused\"\n                    (markerClick)=\"refugeClick(refuge)\"\n                    iconUrl=\"/sites/fws/libraries/gmap_markers/marker-1.png\"\n                    [title]=\"refuge.title\"\n                    [latitude]=\"refuge.location.lat\" [longitude]=\"refuge.location.lng\"></agm-marker>\n            </span>\n        </agm-map>\n        <map-layer-legend *ngIf=\"selection && selection.legend && selection.data && selection.data.statistics && selection.data.statistics.count !== 0\"\n            [legend]=\"selection.legend\"\n            [legendTitle]=\"selection.legendTitle\"></map-layer-legend>\n        <clipped-wms-map-statistics *ngIf=\"selection && selection.data && selection.data.statistics\"\n            [selection]=\"selection\"></clipped-wms-map-statistics>\n    </div>\n    <div class=\"project-profile-block\" *ngIf=\"focused\">\n        <p *ngIf=\"focused.partner\">\n            How is the Status of Spring impacting phenology of plants and animals at your Refuge?\n            Visit the <a [href]=\"focused.links.dashboard\" [title]=\"focused.title + 'Dashboard'\">{{focused.title}} Dashboard</a> to find out!</p>\n        <span *ngIf=\"!focused.partner\">\n            <p>Refuges across the country are using <a href=\"https://www.usanpn.org/natures_notebook\" alt=\"Nature's Notebook\" title=\"Nature's Notebook\"><em>Nature\u2019s Notebook</em></a> to learn about how the Status of Spring is impacting phenology of plants and animals at their refuges.</p>\n            <p>Start a phenology monitoring project at your refuge to better understand phenological changes of your species of interest!</p>\n            <p class=\"call-arrow\"><a href=\"/project\" title=\"Start a project\" class=\"call-arrow-link\">Start a project</a></p>\n        </span>\n    </div>\n    ",
+            styles: [__webpack_require__(/*! ./status-of-spring.component.scss */ "./src/app/status-of-spring.component.scss")]
         }),
-        __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_2__["NetworkService"]])
-    ], RefugeVisualizationScopeSelectionComponent);
-    return RefugeVisualizationScopeSelectionComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/resources.component.ts":
-/*!****************************************!*\
-  !*** ./src/app/resources.component.ts ***!
-  \****************************************/
-/*! exports provided: SafeHtmlPipe, ResourcesComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SafeHtmlPipe", function() { return SafeHtmlPipe; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResourcesComponent", function() { return ResourcesComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _entity_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./entity.service */ "./src/app/entity.service.ts");
-/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/platform-browser */ "../../node_modules/@angular/platform-browser/fesm5/platform-browser.js");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-var SafeHtmlPipe = /** @class */ (function () {
-    function SafeHtmlPipe(sanitized) {
-        this.sanitized = sanitized;
-    }
-    SafeHtmlPipe.prototype.transform = function (value) {
-        return this.sanitized.bypassSecurityTrustHtml(value);
-    };
-    SafeHtmlPipe = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Pipe"])({ name: 'safeHtml' }),
-        __metadata("design:paramtypes", [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["DomSanitizer"]])
-    ], SafeHtmlPipe);
-    return SafeHtmlPipe;
-}());
-
-var ResourcesComponent = /** @class */ (function () {
-    function ResourcesComponent() {
-        this.userIsLoggedIn = false;
-    }
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", _entity_service__WEBPACK_IMPORTED_MODULE_1__["EntityBase"])
-    ], ResourcesComponent.prototype, "entity", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", Boolean)
-    ], ResourcesComponent.prototype, "userIsLoggedIn", void 0);
-    ResourcesComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'fws-dashboard-resources',
-            template: "\n    <div [innerHtml]=\"entity && entity.resources ? (entity.resources | safeHtml) : ''\"></div>\n    <a mat-raised-button *ngIf=\"!userIsLoggedIn\" [href]=\"'//www.usanpn.org/user/register?default_group_id='+entity.network_id\">Register</a>\n    <a mat-raised-button *ngIf=\"!userIsLoggedIn\" href=\"/user/login\">Login</a>\n    <a mat-raised-button *ngIf=\"userIsLoggedIn\" href=\"//mynpn.usanpn.org/npnapps/\" target=\"_blank\">My Observation Deck</a>\n    ",
-            styles: ["\n        a[mat-raised-button] {\n            margin-right: 5px;\n        }\n    "]
-        })
-    ], ResourcesComponent);
-    return ResourcesComponent;
-}());
+        __metadata("design:paramtypes", [_npn_common__WEBPACK_IMPORTED_MODULE_6__["ClippedWmsMapSelectionFactory"]])
+    ], StatusOfSpringComponent);
+    return StatusOfSpringComponent;
+}(_map_base__WEBPACK_IMPORTED_MODULE_4__["MapBase"]));
 
 
 
@@ -17588,7 +17473,8 @@ __webpack_require__.r(__webpack_exports__);
 if (_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].production) {
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["enableProdMode"])();
 }
-Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformBrowserDynamic"])().bootstrapModule(_app_app_module__WEBPACK_IMPORTED_MODULE_2__["AppModule"]);
+Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformBrowserDynamic"])().bootstrapModule(_app_app_module__WEBPACK_IMPORTED_MODULE_2__["AppModule"])
+    .catch(function (err) { return console.error(err); });
 
 
 /***/ }),
@@ -17600,7 +17486,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/kevin/Documents/npn/proj/npn-viz-apps/projects/fws-dashboard/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /opt/TeamCity/buildAgent/work/d4924b5e8f54b001/npn-viz-apps/projects/fws-spring/src/main.ts */"./src/main.ts");
 
 
 /***/ })
