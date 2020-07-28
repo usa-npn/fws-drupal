@@ -8814,7 +8814,8 @@ var ClippedWmsMapSelection = /** @class */ (function (_super) {
     });
     ClippedWmsMapSelection.prototype.getBoundary = function () {
         var _this = this;
-        var url = this.serviceUtils.dataApiUrl('/v0/si-x/area/boundary');
+        // var url = this.serviceUtils.dataApiUrl('/v0/si-x/area/boundary');
+        var url = 'https://data-dev.usanpn.org/geoservices/v1/si-x/area/boundary';
         console.log('kev' + url);
         var params = {
             format: 'geojson',
