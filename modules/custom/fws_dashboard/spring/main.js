@@ -9035,7 +9035,7 @@ var ClippedWmsMapSelection = /** @class */ (function (_super) {
     });
     ClippedWmsMapSelection.prototype.getBoundary = function () {
         var _this = this;
-        var url = this.serviceUtils.dataApiUrl('/v0/si-x/area/boundary');
+        var url = this.serviceUtils.dataApiUrl('/v1/si-x/area/boundary');
         var params = {
             format: 'geojson',
             fwsBoundary: this.fwsBoundary
@@ -9049,7 +9049,7 @@ var ClippedWmsMapSelection = /** @class */ (function (_super) {
         });
     };
     ClippedWmsMapSelection.prototype.getData = function () {
-        var url = this.serviceUtils.dataApiUrl("/v0/" + this.layer.clippingService), params = {
+        var url = this.serviceUtils.dataApiUrl("/v1/" + this.layer.clippingService), params = {
             layerName: this.layer.layerName,
             fwsBoundary: this.fwsBoundary,
             date: this.apiDate,
@@ -9060,7 +9060,7 @@ var ClippedWmsMapSelection = /** @class */ (function (_super) {
         return this.serviceUtils.cachedGet(url, params);
     };
     ClippedWmsMapSelection.prototype.getStatistics = function () {
-        var url = this.serviceUtils.dataApiUrl("/v0/" + this.layer.statisticsService);
+        var url = this.serviceUtils.dataApiUrl("/v1/" + this.layer.statisticsService);
         var params = {
             layerName: this.layer.layerName,
             fwsBoundary: this.fwsBoundary,

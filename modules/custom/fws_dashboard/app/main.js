@@ -8819,7 +8819,6 @@ var ClippedWmsMapSelection = /** @class */ (function (_super) {
     ClippedWmsMapSelection.prototype.getBoundary = function () {
         var _this = this;
         var url = this.serviceUtils.dataApiUrl('/v1/si-x/area/boundary');
-        console.log('kev: getBoundary. url: ' + url);
         var params = {
             format: 'geojson',
             fwsBoundary: this.fwsBoundary
@@ -8841,7 +8840,6 @@ var ClippedWmsMapSelection = /** @class */ (function (_super) {
             style: true,
             fileFormat: 'png'
         };
-        console.log('kev: getData. url: ' + url);
         return this.serviceUtils.cachedGet(url, params);
     };
     ClippedWmsMapSelection.prototype.getStatistics = function () {
