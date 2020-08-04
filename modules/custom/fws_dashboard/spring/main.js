@@ -4795,7 +4795,7 @@ function xmlToString(xmlData) {
 /*!**************************************!*\
   !*** ../npn/common/src/lib/index.ts ***!
   \**************************************/
-/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivityVisMode, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4997,6 +4997,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CurveControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["CurveControlComponent"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityVisMode", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivityVisMode"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelection"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelectionFactory", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelectionFactory"]; });
@@ -5123,7 +5125,7 @@ var NpnLibModule = /** @class */ (function () {
 /*!*******************************************!*\
   !*** ../npn/common/src/lib/public_api.ts ***!
   \*******************************************/
-/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivityVisMode, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5324,6 +5326,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesControlComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ActivityCurvesControlComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CurveControlComponent", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["CurveControlComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityVisMode", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ObserverActivityVisMode"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _visualizations_public_api__WEBPACK_IMPORTED_MODULE_2__["ObserverActivitySelection"]; });
 
@@ -9031,7 +9035,7 @@ var ClippedWmsMapSelection = /** @class */ (function (_super) {
     });
     ClippedWmsMapSelection.prototype.getBoundary = function () {
         var _this = this;
-        var url = this.serviceUtils.dataApiUrl('/v0/si-x/area/boundary');
+        var url = this.serviceUtils.dataApiUrl('/v1/si-x/area/boundary');
         var params = {
             format: 'geojson',
             fwsBoundary: this.fwsBoundary
@@ -9045,7 +9049,7 @@ var ClippedWmsMapSelection = /** @class */ (function (_super) {
         });
     };
     ClippedWmsMapSelection.prototype.getData = function () {
-        var url = this.serviceUtils.dataApiUrl("/v0/" + this.layer.clippingService), params = {
+        var url = this.serviceUtils.dataApiUrl("/v1/" + this.layer.clippingService), params = {
             layerName: this.layer.layerName,
             fwsBoundary: this.fwsBoundary,
             date: this.apiDate,
@@ -9056,7 +9060,7 @@ var ClippedWmsMapSelection = /** @class */ (function (_super) {
         return this.serviceUtils.cachedGet(url, params);
     };
     ClippedWmsMapSelection.prototype.getStatistics = function () {
-        var url = this.serviceUtils.dataApiUrl("/v0/" + this.layer.statisticsService);
+        var url = this.serviceUtils.dataApiUrl("/v1/" + this.layer.statisticsService);
         var params = {
             layerName: this.layer.layerName,
             fwsBoundary: this.fwsBoundary,
@@ -10289,7 +10293,7 @@ var YearRangeInputComponent = /** @class */ (function () {
 /*!*****************************************************!*\
   !*** ../npn/common/src/lib/visualizations/index.ts ***!
   \*****************************************************/
-/*! exports provided: VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivityVisMode, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10362,6 +10366,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivityCurvesControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ActivityCurvesControlComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CurveControlComponent", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["CurveControlComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityVisMode", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivityVisMode"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelection"]; });
 
@@ -11813,8 +11819,25 @@ var MapVisualizationComponent = /** @class */ (function (_super) {
      */
     MapVisualizationComponent.prototype.redraw = function () {
         var _this = this;
+        if (this.selection.layerName == "precipitation:buffelgrass_prism") {
+            this.zoom = 6;
+            this.latitude = 33.4;
+            this.longitude = -112;
+        }
+        else if (this.selection.layerName != null && this.selection.layerName.includes("alaska")) {
+            this.zoom = 4;
+            this.latitude = 62;
+            this.longitude = -152;
+        }
+        else {
+            this.zoom = 4;
+            this.latitude = 38.8402805;
+            this.longitude = -97.61142369999999;
+        }
         console.log('MapVisualization.redraw');
         this.getMap().then(function (map) { return _this.selection.updateLayer(map).then(function () {
+            map.setCenter(new google.maps.LatLng(_this.latitude, _this.longitude));
+            map.setZoom(_this.zoom);
             if (_this.legend) {
                 _this.legend.redraw();
             }
@@ -12804,12 +12827,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!***********************************************************************!*\
   !*** ../npn/common/src/lib/visualizations/observer-activity/index.ts ***!
   \***********************************************************************/
-/*! exports provided: ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl */
+/*! exports provided: ObserverActivityVisMode, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _public_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./public_api */ "../npn/common/src/lib/visualizations/observer-activity/public_api.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityVisMode", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivityVisMode"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelection"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelectionFactory", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelectionFactory"]; });
@@ -12925,11 +12950,12 @@ var ObserverActivitySelectionFactory = /** @class */ (function () {
 /*!*********************************************************************************************!*\
   !*** ../npn/common/src/lib/visualizations/observer-activity/observer-activity-selection.ts ***!
   \*********************************************************************************************/
-/*! exports provided: ObserverActivitySelection */
+/*! exports provided: ObserverActivityVisMode, ObserverActivitySelection */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityVisMode", function() { return ObserverActivityVisMode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return ObserverActivitySelection; });
 /* harmony import */ var _vis_selection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
@@ -12954,6 +12980,12 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+var ObserverActivityVisMode;
+(function (ObserverActivityVisMode) {
+    ObserverActivityVisMode["NEW_OBSERVERS"] = "New Observers";
+    ObserverActivityVisMode["ACTIVE_OBSERVERS"] = "Active Observers";
+})(ObserverActivityVisMode || (ObserverActivityVisMode = {}));
+;
 var ObserverActivitySelection = /** @class */ (function (_super) {
     __extends(ObserverActivitySelection, _super);
     function ObserverActivitySelection(serviceUtils, networkService) {
@@ -12961,6 +12993,7 @@ var ObserverActivitySelection = /** @class */ (function (_super) {
         _this.serviceUtils = serviceUtils;
         _this.networkService = networkService;
         _this.$class = 'ObserverActivitySelection';
+        _this.mode = ObserverActivityVisMode.ACTIVE_OBSERVERS;
         return _this;
     }
     ObserverActivitySelection.prototype.isValid = function () {
@@ -13040,6 +13073,10 @@ var ObserverActivitySelection = /** @class */ (function (_super) {
         Object(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["selectionProperty"])(),
         __metadata("design:type", Number)
     ], ObserverActivitySelection.prototype, "year", void 0);
+    __decorate([
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["selectionProperty"])(),
+        __metadata("design:type", String)
+    ], ObserverActivitySelection.prototype, "mode", void 0);
     return ObserverActivitySelection;
 }(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["StationAwareVisSelection"]));
 
@@ -13054,7 +13091,7 @@ var ObserverActivitySelection = /** @class */ (function (_super) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"vis-container\">\n    <div class=\"vis-working\" *ngIf=\"selection.working\">\n        <npn-logo spin=\"false\"></npn-logo>\n    </div>\n    <div class=\"chart-container\">\n        <visualization-download *ngIf=\"!thumbnail && !mobileMode\" svgWrapperId=\"{{id}}\" filename=\"{{filename}}\"></visualization-download>\n        <div [class]=\"clazz\" id=\"{{id}}\"><svg class=\"svg-visualization\"></svg></div>\n    </div>\n    <mat-radio-group style=\"display:block; margin-top: 10px;\" *ngIf=\"!thumbnail\"\n        [(ngModel)]=\"mode\"\n        (change)=\"redraw()\">\n        <mat-radio-button [value]=\"modes.ACTIVE_OBSERVERS\" style=\"margin-right: 5px;\">{{modes.ACTIVE_OBSERVERS}}</mat-radio-button>\n        <mat-radio-button [value]=\"modes.NEW_OBSERVERS\">{{modes.NEW_OBSERVERS}}</mat-radio-button>\n    </mat-radio-group>\n</div>\n"
+module.exports = "<div class=\"vis-container\">\n    <div class=\"vis-working\" *ngIf=\"selection.working\">\n        <npn-logo spin=\"false\"></npn-logo>\n    </div>\n    <div class=\"chart-container\">\n        <visualization-download *ngIf=\"!thumbnail && !mobileMode\" svgWrapperId=\"{{id}}\" filename=\"{{filename}}\"></visualization-download>\n        <div [class]=\"clazz\" id=\"{{id}}\"><svg class=\"svg-visualization\"></svg></div>\n    </div>\n    <mat-radio-group style=\"display:block; margin-top: 10px;\" *ngIf=\"!thumbnail\"\n        [(ngModel)]=\"selection.mode\"\n        (change)=\"redraw()\">\n        <mat-radio-button [value]=\"modes.ACTIVE_OBSERVERS\" style=\"margin-right: 5px;\">{{modes.ACTIVE_OBSERVERS}}</mat-radio-button>\n        <mat-radio-button [value]=\"modes.NEW_OBSERVERS\">{{modes.NEW_OBSERVERS}}</mat-radio-button>\n    </mat-radio-group>\n</div>\n"
 
 /***/ }),
 
@@ -13117,20 +13154,13 @@ var MARGIN_VPAD = 5;
 var TITLE_FONT_SIZE = 18;
 var SWATCH_SIZE = 20;
 var BAR_OPACITY = '0.75';
-var ObserverActivityVisMode;
-(function (ObserverActivityVisMode) {
-    ObserverActivityVisMode["NEW_OBSERVERS"] = "New Observers";
-    ObserverActivityVisMode["ACTIVE_OBSERVERS"] = "Active Observers";
-})(ObserverActivityVisMode || (ObserverActivityVisMode = {}));
-;
 var ObserverActivityComponent = /** @class */ (function (_super) {
     __extends(ObserverActivityComponent, _super);
     function ObserverActivityComponent(rootElement, media) {
         var _this = _super.call(this, rootElement, media) || this;
         _this.rootElement = rootElement;
         _this.media = media;
-        _this.modes = ObserverActivityVisMode;
-        _this.mode = ObserverActivityVisMode.ACTIVE_OBSERVERS;
+        _this.modes = _observer_activity_selection__WEBPACK_IMPORTED_MODULE_3__["ObserverActivityVisMode"];
         _this.z = Object(d3_scale__WEBPACK_IMPORTED_MODULE_5__["scaleOrdinal"])();
         _this.filename = 'observer-activity.png';
         _this.margins = __assign({}, _svg_visualization_base_component__WEBPACK_IMPORTED_MODULE_2__["DEFAULT_MARGINS"], { top: DEFAULT_TOP_MARGIN, left: 80 });
@@ -13254,9 +13284,9 @@ var ObserverActivityComponent = /** @class */ (function (_super) {
         }
         console.debug('ObserverActivityComponent:data', this.data);
         this.title.text("" + this.selection.year);
-        this.yAxisLabel.text(this.mode);
+        this.yAxisLabel.text(this.selection.mode);
         this.updateLegend();
-        var dataKey = this.mode === ObserverActivityVisMode.ACTIVE_OBSERVERS ? 'activeObservers' : 'newObservers';
+        var dataKey = this.selection.mode === _observer_activity_selection__WEBPACK_IMPORTED_MODULE_3__["ObserverActivityVisMode"].ACTIVE_OBSERVERS ? 'activeObservers' : 'newObservers';
         var visData = d3__WEBPACK_IMPORTED_MODULE_6__["range"](0, 12)
             .map(function (month) { return _this.data.reduce(function (map, d, index) {
             map["" + index] = d.months[month][dataKey];
@@ -13322,12 +13352,14 @@ var ObserverActivityComponent = /** @class */ (function (_super) {
 /*!****************************************************************************!*\
   !*** ../npn/common/src/lib/visualizations/observer-activity/public_api.ts ***!
   \****************************************************************************/
-/*! exports provided: ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl */
+/*! exports provided: ObserverActivityVisMode, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _observer_activity_selection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./observer-activity-selection */ "../npn/common/src/lib/visualizations/observer-activity/observer-activity-selection.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityVisMode", function() { return _observer_activity_selection__WEBPACK_IMPORTED_MODULE_0__["ObserverActivityVisMode"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _observer_activity_selection__WEBPACK_IMPORTED_MODULE_0__["ObserverActivitySelection"]; });
 
 /* harmony import */ var _observer_activity_selection_factory_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./observer-activity-selection-factory.service */ "../npn/common/src/lib/visualizations/observer-activity/observer-activity-selection-factory.service.ts");
@@ -13351,7 +13383,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!**********************************************************!*\
   !*** ../npn/common/src/lib/visualizations/public_api.ts ***!
   \**********************************************************/
-/*! exports provided: VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivityVisMode, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13432,6 +13464,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClippedStatValuePipe", function() { return _clipped_wms_map_public_api__WEBPACK_IMPORTED_MODULE_6__["ClippedStatValuePipe"]; });
 
 /* harmony import */ var _observer_activity_public_api__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./observer-activity/public_api */ "../npn/common/src/lib/visualizations/observer-activity/public_api.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityVisMode", function() { return _observer_activity_public_api__WEBPACK_IMPORTED_MODULE_7__["ObserverActivityVisMode"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return _observer_activity_public_api__WEBPACK_IMPORTED_MODULE_7__["ObserverActivitySelection"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelectionFactory", function() { return _observer_activity_public_api__WEBPACK_IMPORTED_MODULE_7__["ObserverActivitySelectionFactory"]; });
@@ -17469,7 +17503,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /opt/TeamCity/buildAgent/work/d4924b5e8f54b001/npn-viz-apps/projects/fws-spring/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /opt/TeamCity/buildAgent/work/15854e59c085ebfa/npn-viz-apps/projects/fws-spring/src/main.ts */"./src/main.ts");
 
 
 /***/ })

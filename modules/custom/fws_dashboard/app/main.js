@@ -8818,7 +8818,7 @@ var ClippedWmsMapSelection = /** @class */ (function (_super) {
     });
     ClippedWmsMapSelection.prototype.getBoundary = function () {
         var _this = this;
-        var url = this.serviceUtils.dataApiUrl('/v0/si-x/area/boundary');
+        var url = this.serviceUtils.dataApiUrl('/v1/si-x/area/boundary');
         var params = {
             format: 'geojson',
             fwsBoundary: this.fwsBoundary
@@ -8832,7 +8832,7 @@ var ClippedWmsMapSelection = /** @class */ (function (_super) {
         });
     };
     ClippedWmsMapSelection.prototype.getData = function () {
-        var url = this.serviceUtils.dataApiUrl("/v0/" + this.layer.clippingService), params = {
+        var url = this.serviceUtils.dataApiUrl("/v1/" + this.layer.clippingService), params = {
             layerName: this.layer.layerName,
             fwsBoundary: this.fwsBoundary,
             date: this.apiDate,
@@ -8843,7 +8843,7 @@ var ClippedWmsMapSelection = /** @class */ (function (_super) {
         return this.serviceUtils.cachedGet(url, params);
     };
     ClippedWmsMapSelection.prototype.getStatistics = function () {
-        var url = this.serviceUtils.dataApiUrl("/v0/" + this.layer.statisticsService);
+        var url = this.serviceUtils.dataApiUrl("/v1/" + this.layer.statisticsService);
         var params = {
             layerName: this.layer.layerName,
             fwsBoundary: this.fwsBoundary,
@@ -11602,8 +11602,25 @@ var MapVisualizationComponent = /** @class */ (function (_super) {
      */
     MapVisualizationComponent.prototype.redraw = function () {
         var _this = this;
+        if (this.selection.layerName == "precipitation:buffelgrass_prism") {
+            this.zoom = 6;
+            this.latitude = 33.4;
+            this.longitude = -112;
+        }
+        else if (this.selection.layerName != null && this.selection.layerName.includes("alaska")) {
+            this.zoom = 4;
+            this.latitude = 62;
+            this.longitude = -152;
+        }
+        else {
+            this.zoom = 4;
+            this.latitude = 38.8402805;
+            this.longitude = -97.61142369999999;
+        }
         console.log('MapVisualization.redraw');
         this.getMap().then(function (map) { return _this.selection.updateLayer(map).then(function () {
+            map.setCenter(new google.maps.LatLng(_this.latitude, _this.longitude));
+            map.setZoom(_this.zoom);
             if (_this.legend) {
                 _this.legend.redraw();
             }
@@ -17617,7 +17634,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /opt/TeamCity/buildAgent/work/d4924b5e8f54b001/npn-viz-apps/projects/fws-dashboard/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /opt/TeamCity/buildAgent/work/15854e59c085ebfa/npn-viz-apps/projects/fws-dashboard/src/main.ts */"./src/main.ts");
 
 
 /***/ })
