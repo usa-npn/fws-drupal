@@ -72,3 +72,5 @@ At the moment `npn_fws_dashboard/src/app/app.module.ts` is keying off of `enviro
 All code is at the moment simply using `console.log|info|debug` as opposed to some service like AngularJS `$log` which can be configured.  Part of the reason for this was keeping things moving and because there were many cases where simple classes would want to log something and providing "injected" services became very cumbersome.  This should probably be reviewed.
 
 At the moment when `environment.production` is set to true the application on bootstrap will replace `console.log|info|debug` with a no-op function essentially turning off all non error/warning related log messages.
+
+test
