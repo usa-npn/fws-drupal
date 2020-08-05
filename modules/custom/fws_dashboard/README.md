@@ -73,4 +73,8 @@ All code is at the moment simply using `console.log|info|debug` as opposed to so
 
 At the moment when `environment.production` is set to true the application on bootstrap will replace `console.log|info|debug` with a no-op function essentially turning off all non error/warning related log messages.
 
+<<<<<<< HEAD
 test2
+=======
+test
+>>>>>>> 87f2a515c1d2a5e92f29a937d11fdcfbe28e2168
