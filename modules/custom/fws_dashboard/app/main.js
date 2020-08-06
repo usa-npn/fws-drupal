@@ -193,6 +193,25 @@ var NPN_CONFIGURATION = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectio
 
 /***/ }),
 
+/***/ "../npn/common/src/lib/common/constants.ts":
+/*!*************************************************!*\
+  !*** ../npn/common/src/lib/common/constants.ts ***!
+  \*************************************************/
+/*! exports provided: CURRENT_YEAR, CURRENT_YEAR_LABEL, CURRENT_YEAR_VALUE */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CURRENT_YEAR", function() { return CURRENT_YEAR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CURRENT_YEAR_LABEL", function() { return CURRENT_YEAR_LABEL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CURRENT_YEAR_VALUE", function() { return CURRENT_YEAR_VALUE; });
+var CURRENT_YEAR = -1;
+var CURRENT_YEAR_LABEL = 'Current year';
+var CURRENT_YEAR_VALUE = (new Date()).getFullYear();
+
+
+/***/ }),
+
 /***/ "../npn/common/src/lib/common/detect-ie.ts":
 /*!*************************************************!*\
   !*** ../npn/common/src/lib/common/detect-ie.ts ***!
@@ -325,7 +344,7 @@ function newGuid() {
 /*!*********************************************!*\
   !*** ../npn/common/src/lib/common/index.ts ***!
   \*********************************************/
-/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS */
+/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, CURRENT_YEAR, CURRENT_YEAR_LABEL, CURRENT_YEAR_VALUE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -378,6 +397,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpeciesTitleFormat", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["SpeciesTitleFormat"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "APPLICATION_SETTINGS", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["APPLICATION_SETTINGS"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CURRENT_YEAR", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["CURRENT_YEAR"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CURRENT_YEAR_LABEL", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["CURRENT_YEAR_LABEL"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CURRENT_YEAR_VALUE", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["CURRENT_YEAR_VALUE"]; });
 
 
 
@@ -881,7 +906,7 @@ var TaxonomicPhenophaseRank;
 /*!**************************************************!*\
   !*** ../npn/common/src/lib/common/public_api.ts ***!
   \**************************************************/
-/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS */
+/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, CURRENT_YEAR, CURRENT_YEAR_LABEL, CURRENT_YEAR_VALUE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -950,6 +975,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpeciesTitleFormat", function() { return _application_settings__WEBPACK_IMPORTED_MODULE_16__["SpeciesTitleFormat"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "APPLICATION_SETTINGS", function() { return _application_settings__WEBPACK_IMPORTED_MODULE_16__["APPLICATION_SETTINGS"]; });
+
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./constants */ "../npn/common/src/lib/common/constants.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CURRENT_YEAR", function() { return _constants__WEBPACK_IMPORTED_MODULE_17__["CURRENT_YEAR"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CURRENT_YEAR_LABEL", function() { return _constants__WEBPACK_IMPORTED_MODULE_17__["CURRENT_YEAR_LABEL"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CURRENT_YEAR_VALUE", function() { return _constants__WEBPACK_IMPORTED_MODULE_17__["CURRENT_YEAR_VALUE"]; });
+
 
 
 
@@ -1090,6 +1123,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _species__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./species */ "../npn/common/src/lib/common/species.ts");
 /* harmony import */ var _phenophase__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./phenophase */ "../npn/common/src/lib/common/phenophase.ts");
 /* harmony import */ var _npn_service_utils_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./npn-service-utils.service */ "../npn/common/src/lib/common/npn-service-utils.service.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./constants */ "../npn/common/src/lib/common/constants.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1099,6 +1133,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -1205,7 +1240,9 @@ var SpeciesService = /** @class */ (function () {
             // sets of input request parameters for filtering
             // e.g. [2013,2010,2012] ->
             // [['2010-01-01','2010-12-31'],['2012-01-01','2013-12-31']]
-            : years.slice().sort().reduce(function (rngs, year) {
+            : years.slice()
+                .map(function (y) { return y === _constants__WEBPACK_IMPORTED_MODULE_6__["CURRENT_YEAR"] ? _constants__WEBPACK_IMPORTED_MODULE_6__["CURRENT_YEAR_VALUE"] : y; })
+                .sort().reduce(function (rngs, year) {
                 if (!rngs.length) {
                     rngs[0] = [year, year];
                 }
@@ -4578,7 +4615,7 @@ function xmlToString(xmlData) {
 /*!**************************************!*\
   !*** ../npn/common/src/lib/index.ts ***!
   \**************************************/
-/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivityVisMode, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, CURRENT_YEAR, CURRENT_YEAR_LABEL, CURRENT_YEAR_VALUE, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivityVisMode, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4647,6 +4684,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpeciesTitleFormat", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["SpeciesTitleFormat"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "APPLICATION_SETTINGS", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["APPLICATION_SETTINGS"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CURRENT_YEAR", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["CURRENT_YEAR"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CURRENT_YEAR_LABEL", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["CURRENT_YEAR_LABEL"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CURRENT_YEAR_VALUE", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["CURRENT_YEAR_VALUE"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NpnGriddedModule", function() { return _public_api__WEBPACK_IMPORTED_MODULE_0__["NpnGriddedModule"]; });
 
@@ -4908,7 +4951,7 @@ var NpnLibModule = /** @class */ (function () {
 /*!*******************************************!*\
   !*** ../npn/common/src/lib/public_api.ts ***!
   \*******************************************/
-/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivityVisMode, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
+/*! exports provided: NpnCommonModule, NPN_BASE_HREF, CacheService, NetworkService, StationService, getStaticColor, DoyPipe, LegendDoyPipe, NpnServiceUtils, MapLayerLegendComponent, GriddedPipeProvider, DoyTxType, VisSelection, NetworkAwareVisSelection, StationAwareVisSelection, VisualizationSelectionFactory, NpnLibModule, TaxonomicSpeciesRank, Phenophase, TaxonomicPhenophaseRank, STATIC_COLORS, getSpeciesPlotKeys, SpeciesService, SpeciesTitlePipe, TaxonomicSpeciesTitlePipe, newGuid, NpnConfiguration, NPN_CONFIGURATION, detectIE, MonitorsDestroy, SpeciesTitleFormat, APPLICATION_SETTINGS, CURRENT_YEAR, CURRENT_YEAR_LABEL, CURRENT_YEAR_VALUE, NpnGriddedModule, MapLayer, encodeHttpParams, srsConversion, NpnMapLayerService, MapLayerLegend, DESTINATION_POINT, WcsDataService, GriddedInfoWindowHandler, googleFeatureBounds, MAP_STYLES, parseExtentDate, MapLayerType, MapLayerServiceType, MapLayerExtentType, CATEGORY_PEST, CATEGORY_TEMP_ACCUM_30_YR_AVG, CATEGORY_TEMP_ACCUM_CURRENT, CATEGORY_TEMP_ACCUM_CURRENT_AK, CATEGORY_TEMP_ACCUM_DAILY_ANOM, CATEGORY_SIX_HIST_ANNUAL, CATEGORY_SIX_CURRENT_YEAR, CATEGORY_SIX_CURRENT_YEAR_AK, CATEGORY_SIX_DAILY_ANOM, CATEGORY_SIX_30_YR_AVG, MAP_LAYERS, WMS_VERSION, BOX_SIZE, BASE_WMS_ARGS, GriddedUrls, WmsMapLayer, WmsMapLayerLegend, PestMapLayer, PestMapLayerLegend, DefaultMapLayerLegend, BoundaryService, VisualizationsModule, CalendarSelection, CalendarSelectionFactory, CalendarComponent, CalendarControlComponent, ScatterPlotSelection, AXIS, ScatterPlotSelectionFactory, ScatterPlotComponent, ScatterPlotControls, ClippedWmsMapSelection, ClippedWmsMapSelectionFactory, ClippedWmsMapControl, ClippedWmsMapComponent, ClippedWmsMapStatisticsComponent, ClippedStatValuePipe, ActivityCurve, INTERPOLATE, ACTIVITY_CURVE_KINGDOM_METRICS, ActivityFrequency, ACTIVITY_FREQUENCY_MONTHLY, ACTIVITY_FREQUENCY_BIWEEKLY, ACTIVITY_FREQUENCY_WEEKLY, ACTIVITY_FREQUENCIES, ActivityCurvesSelection, ActivityCurvesSelectionFactory, ActivityCurvesComponent, ACTIVITY_CURVES_INTERPOLATES, ActivityCurvesControlComponent, CurveControlComponent, ObserverActivityVisMode, ObserverActivitySelection, ObserverActivitySelectionFactory, ObserverActivityComponent, ObserverActivityControl, ObservationFrequencySelection, ObservationFrequencySelectionFactory, ObservationFrequencyComponent, ObservationFrequencyControl, CATEGORY_PESTS, CATEGORY_TEMP_ACCUMULATIONS, DATA_FUNC, AGDD_COLORS, DEFAULT_AGDD_LAYER_CATEGORY, DEFAULT_AGDD_LAYER_NAME, AgddTimeSeriesSelection, AgddTimeSeriesSelectionFactory, AgddTimeSeriesComponent, AgddTsMapLayerControl, MapSelection, MapSelectionFactory, MapVisualizationComponent, MAP_VIS_SVG_PATHS, MapVisMarker, ExtentControl, ExtentDateControl, ExtentDoyControl, ExtentYearControl, GriddedRangeSliderControl, ConsolidatedMapLayerControlComponent, PestMapLayerControlComponent, TempAccumMapLayerControlComponent, SpringIndexMapLayerControlComponent, MapVisualizationMarkerIw, YearRangeInputComponent, HigherSpeciesPhenophaseInputComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4961,6 +5004,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpeciesTitleFormat", function() { return _common_public_api__WEBPACK_IMPORTED_MODULE_0__["SpeciesTitleFormat"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "APPLICATION_SETTINGS", function() { return _common_public_api__WEBPACK_IMPORTED_MODULE_0__["APPLICATION_SETTINGS"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CURRENT_YEAR", function() { return _common_public_api__WEBPACK_IMPORTED_MODULE_0__["CURRENT_YEAR"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CURRENT_YEAR_LABEL", function() { return _common_public_api__WEBPACK_IMPORTED_MODULE_0__["CURRENT_YEAR_LABEL"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CURRENT_YEAR_VALUE", function() { return _common_public_api__WEBPACK_IMPORTED_MODULE_0__["CURRENT_YEAR_VALUE"]; });
 
 /* harmony import */ var _gridded_public_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./gridded/public_api */ "../npn/common/src/lib/gridded/public_api.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MapLayerLegendComponent", function() { return _gridded_public_api__WEBPACK_IMPORTED_MODULE_1__["MapLayerLegendComponent"]; });
@@ -5278,6 +5327,13 @@ var ActivityCurve = /** @class */ (function () {
             }
         }
     };
+    Object.defineProperty(ActivityCurve.prototype, "actualYear", {
+        get: function () {
+            return this._year === _common__WEBPACK_IMPORTED_MODULE_1__["CURRENT_YEAR"] ? _common__WEBPACK_IMPORTED_MODULE_1__["CURRENT_YEAR_VALUE"] : this._year;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(ActivityCurve.prototype, "year", {
         get: function () {
             return this._year;
@@ -5412,7 +5468,7 @@ var ActivityCurve = /** @class */ (function () {
     ActivityCurve.prototype.legendLabel = function (includeMetric) {
         var doyFocusValue = this.doyDataValue();
         var pp = this.phenophase;
-        return this.year + ": " +
+        return this.actualYear + ": " +
             SPECIES_TITLE(this.species, this.speciesRank) + ' - ' + (pp.phenophase_name || pp.pheno_class_name) +
             (includeMetric ? " (" + this.metric.label + ")" : '') +
             (this._group ? " (" + this._group.label + ")" : '') +
@@ -5498,8 +5554,8 @@ var ActivityCurve = /** @class */ (function () {
     ActivityCurve.prototype.loadData = function (baseParams) {
         var _this = this;
         var curveParams = baseParams
-            .set('start_date', this.year + "-01-01")
-            .set('end_date', this.endDate(this.year));
+            .set('start_date', this.actualYear + "-01-01")
+            .set('end_date', this.endDate(this.actualYear));
         var keys = Object(_common__WEBPACK_IMPORTED_MODULE_1__["getSpeciesPlotKeys"])(this);
         curveParams = curveParams.set(keys.speciesIdKey + "[0]", "" + this.species[keys.speciesIdKey]);
         if ((this.speciesRank || _common__WEBPACK_IMPORTED_MODULE_1__["TaxonomicSpeciesRank"].SPECIES) !== _common__WEBPACK_IMPORTED_MODULE_1__["TaxonomicSpeciesRank"].SPECIES) {
@@ -5635,7 +5691,7 @@ var ActivityCurve = /** @class */ (function () {
             }
             line.x(x_functor_1);
             line.y(y_functor_1);
-            console.debug('ActivityCurve.draw', self.species, self.phenophase, self.year, self.metric, self.domain(), y.domain());
+            console.debug('ActivityCurve.draw', self.species, self.phenophase, self.actualYear, self.metric, self.domain(), y.domain());
             console.debug('draw.datas', datas);
             datas.forEach(function (curve_data, i) {
                 if (curve_data.length === 1 || self.selection.dataPoints) {
@@ -5825,6 +5881,7 @@ var ACTIVITY_CURVES_INTERPOLATES = [{
     }];
 var ActivityCurvesControlComponent = /** @class */ (function () {
     function ActivityCurvesControlComponent() {
+        this.allowCurrentYear = false;
         this.frequencies = _activity_curves_selection__WEBPACK_IMPORTED_MODULE_2__["ACTIVITY_FREQUENCIES"];
         this.interpolates = ACTIVITY_CURVES_INTERPOLATES;
         this.faExclamationTriangle = _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_4__["faExclamationTriangle"];
@@ -5860,10 +5917,14 @@ var ActivityCurvesControlComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", _activity_curves_selection__WEBPACK_IMPORTED_MODULE_2__["ActivityCurvesSelection"])
     ], ActivityCurvesControlComponent.prototype, "selection", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Boolean)
+    ], ActivityCurvesControlComponent.prototype, "allowCurrentYear", void 0);
     ActivityCurvesControlComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'activity-curves-control',
-            template: "\n    <div *ngIf=\"!selection.canAddPlot\" class=\"max-plots-reached\"><fa-icon [icon]=\"faExclamationTriangle\"></fa-icon> One more curve would exceed the maximum of {{selection.MAX_PLOTS}} allowed</div>\n    <div class=\"curve mat-elevation-z1\" *ngFor=\"let curve of selection.curves; index as i\">\n        <label>Curve #{{i+1}}</label>\n        <curve-selection-control\n            [selection]=\"selection\"\n            [curve]=\"curve\"\n            [required]=\"i === 0\"\n            [gatherColor]=\"true\"\n            (onSpeciesChange)=\"speciesMetricChange($event)\"\n            (onMetricChange)=\"speciesMetricChange($event)\">\n            </curve-selection-control>\n        <div class=\"action-holder\">\n            <button *ngIf=\"selection.curves.length > 1\" mat-button (click)=\"removeCurve(i)\">Remove curve</button>\n            <button *ngIf=\"i === selection.curves.length-1\" mat-button (click)=\"addCurve()\" [disabled]=\"!selection.canAddPlot\">Add curve</button>\n        </div>\n    </div>\n    <div class=\"curve-common\">\n        <mat-form-field class=\"date-interval\">\n            <mat-select placeholder=\"Date Interval\" [(ngModel)]=\"selection.frequency\">\n                <mat-option *ngFor=\"let f of frequencies\" [value]=\"f\">{{f.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n\n        <mat-form-field class=\"line-interpolateion\">\n            <mat-select placeholder=\"Line Interpolation\" [(ngModel)]=\"selection.interpolate\">\n                <mat-option *ngFor=\"let i of interpolates\" [value]=\"i.value\">{{i.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n\n        <mat-checkbox [(ngModel)]=\"selection.dataPoints\">Show data points</mat-checkbox>\n    </div>\n    ",
+            template: "\n    <div *ngIf=\"!selection.canAddPlot\" class=\"max-plots-reached\"><fa-icon [icon]=\"faExclamationTriangle\"></fa-icon> One more curve would exceed the maximum of {{selection.MAX_PLOTS}} allowed</div>\n    <div class=\"curve mat-elevation-z1\" *ngFor=\"let curve of selection.curves; index as i\">\n        <label>Curve #{{i+1}}</label>\n        <curve-selection-control\n            [selection]=\"selection\"\n            [curve]=\"curve\"\n            [required]=\"i === 0\"\n            [gatherColor]=\"true\"\n            [allowCurrentYear]=\"allowCurrentYear\"\n            (onSpeciesChange)=\"speciesMetricChange($event)\"\n            (onMetricChange)=\"speciesMetricChange($event)\">\n            </curve-selection-control>\n        <div class=\"action-holder\">\n            <button *ngIf=\"selection.curves.length > 1\" mat-button (click)=\"removeCurve(i)\">Remove curve</button>\n            <button *ngIf=\"i === selection.curves.length-1\" mat-button (click)=\"addCurve()\" [disabled]=\"!selection.canAddPlot\">Add curve</button>\n        </div>\n    </div>\n    <div class=\"curve-common\">\n        <mat-form-field class=\"date-interval\">\n            <mat-select placeholder=\"Date Interval\" [(ngModel)]=\"selection.frequency\">\n                <mat-option *ngFor=\"let f of frequencies\" [value]=\"f\">{{f.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n\n        <mat-form-field class=\"line-interpolateion\">\n            <mat-select placeholder=\"Line Interpolation\" [(ngModel)]=\"selection.interpolate\">\n                <mat-option *ngFor=\"let i of interpolates\" [value]=\"i.value\">{{i.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n\n        <mat-checkbox [(ngModel)]=\"selection.dataPoints\">Show data points</mat-checkbox>\n    </div>\n    ",
             styles: ["\n        .curve,\n        .curve-common {\n            display: flex;\n            align-items: center;\n            margin: 2px 2px 5px 2px;\n            padding: 4px;\n        }\n        .curve-common {\n            margin-top: 10px;\n        }\n        .curve >label {\n            white-space: nowrap;\n        }\n        .curve >label:after {\n            content: ':';\n            margin-right: 10px;\n        }\n        .curve >.action-holder {\n            display: flex;\n            flex-direction: column;\n        }\n        .date-interval {\n            width: 125px;\n        }\n        .line-interpolateion {\n            width: 150px;\n        }\n        .action-holder {\n            margin: 10px 0px;\n            text-align: right;\n        }\n    "]
         })
     ], ActivityCurvesControlComponent);
@@ -6617,15 +6678,12 @@ var CurveControlComponent = /** @class */ (function (_super) {
         _this.gatherColor = false;
         _this.required = true;
         _this.disabled = false;
+        _this.allowCurrentYear = false;
+        _this.CURRENT_YEAR = _common__WEBPACK_IMPORTED_MODULE_2__["CURRENT_YEAR"];
+        _this.CURRENT_YEAR_LABEL = _common__WEBPACK_IMPORTED_MODULE_2__["CURRENT_YEAR_LABEL"];
         _this.onSpeciesChange = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
         _this.onMetricChange = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
-        _this.validYears = (function () {
-            var thisYear = (new Date()).getFullYear(), years = [], c = 2010;
-            while (c <= thisYear) {
-                years.push(c++);
-            }
-            return years.reverse();
-        })();
+        _this.validYears = [];
         return _this;
     }
     Object.defineProperty(CurveControlComponent.prototype, "metric", {
@@ -6642,6 +6700,16 @@ var CurveControlComponent = /** @class */ (function (_super) {
     });
     CurveControlComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.validYears = (function (allowCurrentYear) {
+            var thisYear = (new Date()).getFullYear(), years = [], c = 2010;
+            while (c <= thisYear) {
+                years.push(c++);
+            }
+            if (allowCurrentYear) {
+                years.push(_common__WEBPACK_IMPORTED_MODULE_2__["CURRENT_YEAR"]);
+            }
+            return years.reverse();
+        })(this.allowCurrentYear);
         this.selection.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["filter"])(function (event) { return event === "scope_change" /* SCOPE_CHANGE */; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["debounceTime"])(500), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["takeUntil"])(this.componentDestroyed)).subscribe(function () { return _this.updateCriteria(); });
         this.yearControl = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"](this.curve.year, /*Validators.required*/ function (c) {
             if (_this.required && !c.value) {
@@ -6706,6 +6774,10 @@ var CurveControlComponent = /** @class */ (function (_super) {
         __metadata("design:type", _activity_curve__WEBPACK_IMPORTED_MODULE_3__["ActivityCurve"])
     ], CurveControlComponent.prototype, "curve", void 0);
     __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Boolean)
+    ], CurveControlComponent.prototype, "allowCurrentYear", void 0);
+    __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
         __metadata("design:type", Object)
     ], CurveControlComponent.prototype, "onSpeciesChange", void 0);
@@ -6716,8 +6788,8 @@ var CurveControlComponent = /** @class */ (function (_super) {
     CurveControlComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'curve-selection-control',
-            template: "\n    <mat-form-field class=\"year-input\">\n        <mat-select [placeholder]=\"'Year'+(required ? ' *':'')\" [formControl]=\"yearControl\">\n            <mat-option *ngFor=\"let y of validYears\" [value]=\"y\">{{y}}</mat-option>\n        </mat-select>\n        <mat-error *ngIf=\"yearControl.errors && yearControl.errors.required\">Year is required</mat-error>\n    </mat-form-field>\n\n    <higher-species-phenophase-input\n        [gatherColor]=\"gatherColor\"\n        [selection]=\"selection\"\n        [criteria]=\"criteria\"\n        [(plot)]=\"curve\"\n        [disabled]=\"speciesInputDisabled\"\n        [required]=\"required\"\n        (plotChange)=\"onSpeciesChange.next($event)\">\n    </higher-species-phenophase-input>\n\n    <mat-form-field class=\"metric-input\">\n        <mat-select placeholder=\"Metric\" [(ngModel)]=\"metric\" [disabled]=\"!curve.validMetrics.length\" [disabled]=\"disabled\">\n            <mat-option *ngFor=\"let m of curve.validMetrics\" [value]=\"m\">{{m.label}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
-            styles: ["\n        .year-input {\n            width: 75px;\n        }\n        .metric-input {\n            width: 255px;\n        }\n    "]
+            template: "\n    <mat-form-field class=\"year-input\">\n        <mat-select [placeholder]=\"'Year'+(required ? ' *':'')\" [formControl]=\"yearControl\">\n            <mat-option *ngFor=\"let y of validYears\" [value]=\"y\">{{y === CURRENT_YEAR ? CURRENT_YEAR_LABEL : y}}</mat-option>\n        </mat-select>\n        <mat-error *ngIf=\"yearControl.errors && yearControl.errors.required\">Year is required</mat-error>\n    </mat-form-field>\n\n    <higher-species-phenophase-input\n        [gatherColor]=\"gatherColor\"\n        [selection]=\"selection\"\n        [criteria]=\"criteria\"\n        [(plot)]=\"curve\"\n        [disabled]=\"speciesInputDisabled\"\n        [required]=\"required\"\n        (plotChange)=\"onSpeciesChange.next($event)\">\n    </higher-species-phenophase-input>\n\n    <mat-form-field class=\"metric-input\">\n        <mat-select placeholder=\"Metric\" [(ngModel)]=\"metric\" [disabled]=\"!curve.validMetrics.length\" [disabled]=\"disabled\">\n            <mat-option *ngFor=\"let m of curve.validMetrics\" [value]=\"m\">{{m.label}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
+            styles: ["\n        .year-input {\n            width: 90px;\n        }\n        .metric-input {\n            width: 255px;\n        }\n    "]
         })
     ], CurveControlComponent);
     return CurveControlComponent;
@@ -8115,22 +8187,34 @@ var CalendarControlComponent = /** @class */ (function (_super) {
     __extends(CalendarControlComponent, _super);
     function CalendarControlComponent() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
+        /** set to true if want to gather input about allowing users to have visualization time controls */
+        _this.onVisControlOptions = false;
+        _this.allowCurrentYear = false;
         _this.maxYears = 5;
         _this.faExclamationTriangle = _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_4__["faExclamationTriangle"];
+        _this.validYears = VALID_YEARS.slice();
+        _this.CURRENT_YEAR = _npn_common_common__WEBPACK_IMPORTED_MODULE_3__["CURRENT_YEAR"];
+        _this.CURRENT_YEAR_LABEL = _npn_common_common__WEBPACK_IMPORTED_MODULE_3__["CURRENT_YEAR_LABEL"];
         return _this;
     }
     CalendarControlComponent.prototype.selectableYears = function (y) {
         var _this = this;
         if (y) {
             // validYears including y but excluding any others in the selection
-            return VALID_YEARS.filter(function (yr) {
+            return this.validYears.filter(function (yr) {
                 return yr === y || _this.selection.years.indexOf(yr) === -1;
             });
         }
-        return VALID_YEARS;
+        return this.validYears;
     };
     CalendarControlComponent.prototype.ngOnInit = function () {
         var _this = this;
+        if (this.onVisControlOptions) {
+            this.selection.meta = this.selection.meta || {};
+        }
+        if (this.allowCurrentYear) {
+            this.validYears.push(_npn_common_common__WEBPACK_IMPORTED_MODULE_3__["CURRENT_YEAR"]);
+        }
         this.selection.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["filter"])(function (event) { return event === "scope_change" /* SCOPE_CHANGE */; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["debounceTime"])(500), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["takeUntil"])(this.componentDestroyed)).subscribe(function () { return _this.updateCriteria(); });
         if (this.selection.years.length === 0) {
             this.addYear();
@@ -8184,11 +8268,19 @@ var CalendarControlComponent = /** @class */ (function (_super) {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", _calendar_selection__WEBPACK_IMPORTED_MODULE_1__["CalendarSelection"])
     ], CalendarControlComponent.prototype, "selection", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Boolean)
+    ], CalendarControlComponent.prototype, "onVisControlOptions", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Boolean)
+    ], CalendarControlComponent.prototype, "allowCurrentYear", void 0);
     CalendarControlComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'calendar-control',
-            template: "\n    <div *ngIf=\"!selection.canAddPlot\" class=\"max-plots-reached\"><fa-icon [icon]=\"faExclamationTriangle\"></fa-icon> One more year or species/phenophase combination would exceed the maximum of {{selection.MAX_PLOTS}} plots</div>\n    <div>\n        <div class=\"year-input-wrapper\" *ngFor=\"let plotYear of selection.years;index as idx\">\n            <mat-form-field class=\"year-input\">\n                <mat-select placeholder=\"Year {{idx+1}}\" [(ngModel)]=\"selection.years[idx]\" (ngModelChange)=\"yearChange()\" id=\"year_{{idx}}\">\n                    <mat-option *ngFor=\"let y of selectableYears(selection.years[idx])\" [value]=\"y\">{{y}}</mat-option>\n                </mat-select>\n            </mat-form-field>\n            <button *ngIf=\"selection.years?.length > 0\" mat-button class=\"remove-year\" (click)=\"removeYear(idx)\">Remove</button>\n            <button *ngIf=\"idx === (selection.years.length-1)\" mat-button class=\"add-year\" (click)=\"addYear()\" [disabled]=\"!selection.canAddPlot\">Add</button>\n        </div>\n    </div>\n\n    <div class=\"phenophase-input-wrapper\" *ngFor=\"let spi of selection.plots; index as idx\">\n        <higher-species-phenophase-input\n            gatherColor=\"true\"\n            [selection]=\"selection\"\n            [criteria]=\"criteria\"\n            [plot]=\"spi\"\n            (plotChange)=\"selection.update()\"></higher-species-phenophase-input>\n        <button *ngIf=\"idx > 0\" mat-button class=\"remove-plot\" (click)=\"removePlot(idx)\">Remove</button>\n        <button *ngIf=\"idx === (selection.plots.length-1)\" mat-button class=\"add-plot\" (click)=\"addPlot()\" [disabled]=\"!plotsValid() || !selection.canAddPlot\">Add</button>\n    </div>\n\n    <mat-checkbox [(ngModel)]=\"selection.negative\" (change)=\"redrawChange()\">Display negative data</mat-checkbox>\n\n    <label for=\"label-size-input\">Label size\n        <mat-slider id=\"label-size-input\" min=\"0\" max=\"10\" step=\"0.25\" [(ngModel)]=\"selection.fontSizeDelta\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-position-input\">Label position\n        <mat-slider id=\"label-position-input\" min=\"0\" max=\"100\" step=\"1\" [(ngModel)]=\"selection.labelOffset\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-band-size-input\">Band size\n        <mat-slider invert id=\"label-band-size-input\" min=\"0\" max=\"0.95\" step=\"0.05\" [(ngModel)]=\"selection.bandPadding\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n    ",
-            styles: ["\n        .year-input-wrapper {\n            display: inline-block;\n            margin-right: 15px;\n        }\n        .year-input {\n            width: 60px;\n        }\n        .phenophase-input-wrapper {\n            display: block;\n        }\n        label[for=\"label-size-input\"] {\n            margin-left: 15px;\n        }\n    "]
+            template: "\n    <div *ngIf=\"!selection.canAddPlot\" class=\"max-plots-reached\"><fa-icon [icon]=\"faExclamationTriangle\"></fa-icon> One more year or species/phenophase combination would exceed the maximum of {{selection.MAX_PLOTS}} plots</div>\n    <div>\n        <div class=\"year-input-wrapper\" *ngFor=\"let plotYear of selection.years;index as idx\">\n            <mat-form-field class=\"year-input\">\n                <mat-select placeholder=\"Year {{idx+1}}\" [(ngModel)]=\"selection.years[idx]\" (ngModelChange)=\"yearChange()\" id=\"year_{{idx}}\">\n                    <mat-option *ngFor=\"let y of selectableYears(selection.years[idx])\" [value]=\"y\">{{y === CURRENT_YEAR ? CURRENT_YEAR_LABEL : y}}</mat-option>\n                </mat-select>\n            </mat-form-field>\n            <button *ngIf=\"selection.years?.length > 0\" mat-button class=\"remove-year\" (click)=\"removeYear(idx)\">Remove</button>\n            <button *ngIf=\"idx === (selection.years.length-1)\" mat-button class=\"add-year\" (click)=\"addYear()\" [disabled]=\"!selection.canAddPlot\">Add</button>\n        </div>\n    </div>\n\n    <div class=\"phenophase-input-wrapper\" *ngFor=\"let spi of selection.plots; index as idx\">\n        <higher-species-phenophase-input\n            gatherColor=\"true\"\n            [selection]=\"selection\"\n            [criteria]=\"criteria\"\n            [plot]=\"spi\"\n            (plotChange)=\"selection.update()\"></higher-species-phenophase-input>\n        <button *ngIf=\"idx > 0\" mat-button class=\"remove-plot\" (click)=\"removePlot(idx)\">Remove</button>\n        <button *ngIf=\"idx === (selection.plots.length-1)\" mat-button class=\"add-plot\" (click)=\"addPlot()\" [disabled]=\"!plotsValid() || !selection.canAddPlot\">Add</button>\n    </div>\n\n    <mat-checkbox [(ngModel)]=\"selection.negative\" (change)=\"redrawChange()\">Display negative data</mat-checkbox>\n    <mat-checkbox [(ngModel)]=\"selection.meta.userNegativeToggle\" *ngIf=\"onVisControlOptions\" class=\"meta-userNegativeToggle\">Allow users to toggle negative data</mat-checkbox>\n\n    <label for=\"label-size-input\">Label size\n        <mat-slider id=\"label-size-input\" min=\"0\" max=\"10\" step=\"0.25\" [(ngModel)]=\"selection.fontSizeDelta\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-position-input\">Label position\n        <mat-slider id=\"label-position-input\" min=\"0\" max=\"100\" step=\"1\" [(ngModel)]=\"selection.labelOffset\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n\n    <label for=\"label-band-size-input\">Band size\n        <mat-slider invert id=\"label-band-size-input\" min=\"0\" max=\"0.95\" step=\"0.05\" [(ngModel)]=\"selection.bandPadding\" (change)=\"redrawChange()\" [disabled]=\"!selection.isValid()\"></mat-slider>\n    </label>\n    ",
+            styles: ["\n        .year-input-wrapper {\n            display: inline-block;\n            margin-right: 15px;\n        }\n        .year-input {\n            width: 90px;\n        }\n        .phenophase-input-wrapper {\n            display: block;\n        }\n        label[for=\"label-size-input\"],\n        .meta-userNegativeToggle {\n            margin-left: 15px;\n        }\n    "]
         })
     ], CalendarControlComponent);
     return CalendarControlComponent;
@@ -8321,6 +8413,17 @@ var CalendarSelection = /** @class */ (function (_super) {
 }(_observation_date_vis_selection__WEBPACK_IMPORTED_MODULE_0__["ObservationDateVisSelection"]));
 
 
+
+/***/ }),
+
+/***/ "../npn/common/src/lib/visualizations/calendar/calendar.component.html":
+/*!*****************************************************************************!*\
+  !*** ../npn/common/src/lib/visualizations/calendar/calendar.component.html ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"vis-container\">\n    <div class=\"vis-working\" *ngIf=\"selection.working\">\n        <npn-logo spin=\"false\"></npn-logo>\n    </div>\n    <div class=\"chart-container\">\n        <visualization-download *ngIf=\"!thumbnail && !mobileMode\" svgWrapperId=\"{{id}}\" filename=\"{{filename}}\"></visualization-download>\n        <div [class]=\"clazz\" id=\"{{id}}\"><svg class=\"svg-visualization\"></svg></div>\n    </div>\n    <mat-checkbox *ngIf=\"!thumbnail && selection.meta?.userNegativeToggle\" [(ngModel)]=\"selection.negative\" (change)=\"selection.redraw()\" class=\"meta-userNegativeToggle\">Display negative data</mat-checkbox>\n    <div *ngIf=\"disclaimer && !thumbnail\" class=\"vis-disclaimer\">{{disclaimer}}</div>\n</div>\n<!--pre *ngIf=\"record\">{{record | json}}</pre-->\n"
 
 /***/ }),
 
@@ -8499,7 +8602,7 @@ var CalendarComponent = /** @class */ (function (_super) {
     CalendarComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'calendar',
-            template: __webpack_require__(/*! ../svg-visualization-base.component.html */ "../npn/common/src/lib/visualizations/svg-visualization-base.component.html"),
+            template: __webpack_require__(/*! ./calendar.component.html */ "../npn/common/src/lib/visualizations/calendar/calendar.component.html"),
             styles: [__webpack_require__(/*! ../svg-visualization-base.component.scss */ "../npn/common/src/lib/visualizations/svg-visualization-base.component.scss")]
         }),
         __metadata("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"], _angular_flex_layout__WEBPACK_IMPORTED_MODULE_1__["ObservableMedia"]])
@@ -9948,6 +10051,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "YearRangeInputComponent", function() { return YearRangeInputComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../common */ "../npn/common/src/lib/common/index.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -9958,6 +10062,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
 var YearRangeInputComponent = /** @class */ (function () {
     function YearRangeInputComponent() {
         this.startChange = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
@@ -9965,6 +10070,9 @@ var YearRangeInputComponent = /** @class */ (function () {
         this.endChange = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
         this.onEndChange = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
         this.maxSpan = 10;
+        this.allowCurrentYear = false;
+        this.CURRENT_YEAR = _common__WEBPACK_IMPORTED_MODULE_1__["CURRENT_YEAR"];
+        this.CURRENT_YEAR_LABEL = _common__WEBPACK_IMPORTED_MODULE_1__["CURRENT_YEAR_LABEL"];
         this.validStarts = (function () {
             var max = (new Date()).getFullYear(), current = 1900, years = [];
             while (current <= max) {
@@ -9997,6 +10105,9 @@ var YearRangeInputComponent = /** @class */ (function () {
                     }
                     while (current < max) {
                         ends.push(current++);
+                    }
+                    if (this.allowCurrentYear) {
+                        ends.push(_common__WEBPACK_IMPORTED_MODULE_1__["CURRENT_YEAR"]);
                     }
                     this.validEnds = ends.reverse();
                     // if(this.end > max) {
@@ -10050,6 +10161,10 @@ var YearRangeInputComponent = /** @class */ (function () {
     ], YearRangeInputComponent.prototype, "maxSpan", void 0);
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Boolean)
+    ], YearRangeInputComponent.prototype, "allowCurrentYear", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", Object),
         __metadata("design:paramtypes", [Number])
     ], YearRangeInputComponent.prototype, "start", null);
@@ -10061,8 +10176,8 @@ var YearRangeInputComponent = /** @class */ (function () {
     YearRangeInputComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'year-range-input',
-            template: "\n    <mat-form-field class=\"start-year\">\n        <mat-select placeholder=\"Start year\" [(ngModel)]=\"start\">\n            <mat-option *ngFor=\"let y of validStarts\" [value]=\"y\">{{y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    <mat-form-field class=\"end-year\">\n        <mat-select placeholder=\"End year\" [(ngModel)]=\"end\" [disabled]=\"!start\">\n            <mat-option *ngFor=\"let y of validEnds\" [value]=\"y\">{{y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
-            styles: ["\n        .start-year,\n        .end-year {\n            width: 75px;\n        }\n        mat-form-field {\n            padding-right: 10px;\n        }\n    "]
+            template: "\n    <mat-form-field class=\"start-year\">\n        <mat-select placeholder=\"Start year\" [(ngModel)]=\"start\">\n            <mat-option *ngFor=\"let y of validStarts\" [value]=\"y\">{{y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    <mat-form-field class=\"end-year\">\n        <mat-select placeholder=\"End year\" [(ngModel)]=\"end\" [disabled]=\"!start\">\n            <mat-option *ngFor=\"let y of validEnds\" [value]=\"y\">{{y === CURRENT_YEAR ? CURRENT_YEAR_LABEL : y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
+            styles: ["\n        .start-year {\n            width: 75px;\n        }\n        .end-year {\n            width: 90px;\n        }\n        mat-form-field {\n            padding-right: 10px;\n        }\n    "]
         })
     ], YearRangeInputComponent);
     return YearRangeInputComponent;
@@ -11913,6 +12028,13 @@ var ObservationDateVisSelection = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(ObservationDateVisSelection.prototype, "actualYears", {
+        get: function () {
+            return (this.years || []).map(function (y) { return y === _common__WEBPACK_IMPORTED_MODULE_2__["CURRENT_YEAR"] ? _common__WEBPACK_IMPORTED_MODULE_2__["CURRENT_YEAR_VALUE"] : y; });
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(ObservationDateVisSelection.prototype, "canAddPlot", {
         /**
          * Indicates whether or not adding one more plot will result in a visualization exceeding
@@ -11931,7 +12053,7 @@ var ObservationDateVisSelection = /** @class */ (function (_super) {
     ObservationDateVisSelection.prototype.toURLSearchParams = function (params) {
         if (params === void 0) { params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_0__["HttpParams"](); }
         params = params.set('request_src', this.requestSrc);
-        this.years.forEach(function (y, i) {
+        this.actualYears.forEach(function (y, i) {
             params = params.set("year[" + i + "]", "" + y);
         });
         return _super.prototype.toURLSearchParams.call(this, params);
@@ -11941,7 +12063,8 @@ var ObservationDateVisSelection = /** @class */ (function (_super) {
         if (input === void 0) { input = __assign({}, _vis_selection__WEBPACK_IMPORTED_MODULE_1__["BASE_POP_INPUT"]); }
         return _super.prototype.toPOPInput.call(this, input)
             .then(function (input) {
-            var yearRange = _this.years.reduce(function (range, y) {
+            var yearRange = _this.actualYears
+                .reduce(function (range, y) {
                 if (!range) {
                     return [y, y];
                 }
@@ -11993,7 +12116,7 @@ var ObservationDateVisSelection = /** @class */ (function (_super) {
             if (rData && rData[pPhaseKey] && rData[pPhaseKey].length) {
                 pPhases = rData[pPhaseKey][0];
             }
-            _this.years.forEach(function (year) {
+            _this.actualYears.forEach(function (year) {
                 if (pPhases.years[year]) {
                     if (_this.negative) {
                         addDoys(pPhases.years[year].negative, _this.negativeColor);
@@ -12128,6 +12251,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ObservationFrequencyControl", function() { return ObservationFrequencyControl; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _observation_frequency_selection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./observation-frequency-selection */ "../npn/common/src/lib/visualizations/observation-frequency/observation-frequency-selection.ts");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../common */ "../npn/common/src/lib/common/index.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -12139,28 +12263,39 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 var ObservationFrequencyControl = /** @class */ (function () {
     function ObservationFrequencyControl() {
-        // TODO what are the valid years?
-        this.validYears = (function () {
+        this.allowCurrentYear = false;
+        this.CURRENT_YEAR = _common__WEBPACK_IMPORTED_MODULE_2__["CURRENT_YEAR"];
+        this.CURRENT_YEAR_LABEL = _common__WEBPACK_IMPORTED_MODULE_2__["CURRENT_YEAR_LABEL"];
+        this.validYears = [];
+    }
+    ObservationFrequencyControl.prototype.ngOnInit = function () {
+        this.validYears = (function (allowCurrentYear) {
             var max = (new Date()).getFullYear() + 1, current = 2000, years = [];
             while (current < max) {
                 years.push(current++);
             }
+            if (allowCurrentYear) {
+                years.push(_common__WEBPACK_IMPORTED_MODULE_2__["CURRENT_YEAR"]);
+            }
             return years.reverse();
-        })();
-    }
-    ObservationFrequencyControl.prototype.ngOnInit = function () {
+        })(this.allowCurrentYear);
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", _observation_frequency_selection__WEBPACK_IMPORTED_MODULE_1__["ObservationFrequencySelection"])
     ], ObservationFrequencyControl.prototype, "selection", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Boolean)
+    ], ObservationFrequencyControl.prototype, "allowCurrentYear", void 0);
     ObservationFrequencyControl = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'observation-frequency-control',
-            template: "\n    <mat-form-field class=\"year-input\">\n        <mat-select placeholder=\"Year *\" [(ngModel)]=\"selection.year\" (ngModelChange)=\"selection.update()\">\n            <mat-option *ngFor=\"let y of validYears\" [value]=\"y\">{{y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
-            styles: ["\n        .year-input {\n            width: 65px;\n        }\n    "]
+            template: "\n    <mat-form-field class=\"year-input\">\n        <mat-select placeholder=\"Year *\" [(ngModel)]=\"selection.year\" (ngModelChange)=\"selection.update()\">\n            <mat-option *ngFor=\"let y of validYears\" [value]=\"y\">{{y === CURRENT_YEAR ? CURRENT_YEAR_LABEL : y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
+            styles: ["\n        .year-input {\n            width: 90px;\n        }\n    "]
         })
     ], ObservationFrequencyControl);
     return ObservationFrequencyControl;
@@ -12224,8 +12359,9 @@ var ObservationFrequencySelectionFactory = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ObservationFrequencySelection", function() { return ObservationFrequencySelection; });
-/* harmony import */ var _vis_selection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../common */ "../npn/common/src/lib/common/index.ts");
+/* harmony import */ var _vis_selection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -12247,6 +12383,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 /**
  * @dynamic
  */
@@ -12259,12 +12396,19 @@ var ObservationFrequencySelection = /** @class */ (function (_super) {
         _this.$class = 'ObservationFrequencySelection';
         return _this;
     }
+    Object.defineProperty(ObservationFrequencySelection.prototype, "actualYear", {
+        get: function () {
+            return this.year === _common__WEBPACK_IMPORTED_MODULE_0__["CURRENT_YEAR"] ? _common__WEBPACK_IMPORTED_MODULE_0__["CURRENT_YEAR_VALUE"] : this.year;
+        },
+        enumerable: true,
+        configurable: true
+    });
     ObservationFrequencySelection.prototype.isValid = function () {
         return !!this.year && this.networkIds.length > 0;
     };
     ObservationFrequencySelection.prototype.toURLSearchParams = function (params) {
-        if (params === void 0) { params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpParams"](); }
-        return _super.prototype.toURLSearchParams.call(this, params.set('year', "" + this.year));
+        if (params === void 0) { params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"](); }
+        return _super.prototype.toURLSearchParams.call(this, params.set('year', "" + this.actualYear));
     };
     ObservationFrequencySelection.prototype.getData = function () {
         var _this = this;
@@ -12281,7 +12425,7 @@ var ObservationFrequencySelection = /** @class */ (function (_super) {
         if (!this.$entity) {
             // the selection was created before the phenology trails work and must just contain a single network id
             // for a refuge, chase it to get the label for the visualization and then the data....
-            return this.serviceUtils.cachedGet(url, { year: this.year, network_id: this.networkIds[0] })
+            return this.serviceUtils.cachedGet(url, { year: this.actualYear, network_id: this.networkIds[0] })
                 .then(function (result) {
                 _this.working = false;
                 return [rollup(result, result.network_name)];
@@ -12314,19 +12458,19 @@ var ObservationFrequencySelection = /** @class */ (function (_super) {
         });
     };
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["selectionProperty"])(),
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_1__["selectionProperty"])(),
         __metadata("design:type", String)
     ], ObservationFrequencySelection.prototype, "$class", void 0);
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["selectionProperty"])(),
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_1__["selectionProperty"])(),
         __metadata("design:type", Object)
     ], ObservationFrequencySelection.prototype, "$entity", void 0);
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["selectionProperty"])(),
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_1__["selectionProperty"])(),
         __metadata("design:type", Number)
     ], ObservationFrequencySelection.prototype, "year", void 0);
     return ObservationFrequencySelection;
-}(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["StationAwareVisSelection"]));
+}(_vis_selection__WEBPACK_IMPORTED_MODULE_1__["StationAwareVisSelection"]));
 
 
 
@@ -12507,7 +12651,7 @@ var ObservationFrequencyComponent = /** @class */ (function (_super) {
             return;
         }
         console.debug('ObservationFrequencyComponent.redrawSvg:data', this.data);
-        this.title.text("" + this.selection.year);
+        this.title.text("" + this.selection.actualYear);
         this.updateLegend();
         var visData = d3__WEBPACK_IMPORTED_MODULE_6__["range"](0, 12)
             .map(function (month) { return _this.data.reduce(function (map, d, index) {
@@ -12626,6 +12770,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityControl", function() { return ObserverActivityControl; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _observer_activity_selection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./observer-activity-selection */ "../npn/common/src/lib/visualizations/observer-activity/observer-activity-selection.ts");
+/* harmony import */ var _npn_common_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @npn/common/common */ "../npn/common/src/lib/common/index.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -12637,28 +12782,39 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 var ObserverActivityControl = /** @class */ (function () {
     function ObserverActivityControl() {
-        // TODO what are the valid years?
-        this.validYears = (function () {
-            var max = (new Date()).getFullYear() + 1, current = 2000, years = [];
-            while (current < max) {
-                years.push(current++);
-            }
-            return years.reverse();
-        })();
+        this.allowCurrentYear = false;
+        this.CURRENT_YEAR = _npn_common_common__WEBPACK_IMPORTED_MODULE_2__["CURRENT_YEAR"];
+        this.CURRENT_YEAR_LABEL = _npn_common_common__WEBPACK_IMPORTED_MODULE_2__["CURRENT_YEAR_LABEL"];
+        this.validYears = [];
     }
     ObserverActivityControl.prototype.ngOnInit = function () {
+        this.validYears = (function (allowCurrentYear) {
+            var thisYear = (new Date()).getFullYear(), years = [], c = 2000;
+            while (c <= thisYear) {
+                years.push(c++);
+            }
+            if (allowCurrentYear) {
+                years.push(_npn_common_common__WEBPACK_IMPORTED_MODULE_2__["CURRENT_YEAR"]);
+            }
+            return years.reverse();
+        })(this.allowCurrentYear);
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", _observer_activity_selection__WEBPACK_IMPORTED_MODULE_1__["ObserverActivitySelection"])
     ], ObserverActivityControl.prototype, "selection", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Boolean)
+    ], ObserverActivityControl.prototype, "allowCurrentYear", void 0);
     ObserverActivityControl = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'observer-activity-control',
-            template: "\n    <mat-form-field class=\"year-input\">\n        <mat-select placeholder=\"Year *\" [(ngModel)]=\"selection.year\" (ngModelChange)=\"selection.update()\">\n            <mat-option *ngFor=\"let y of validYears\" [value]=\"y\">{{y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
-            styles: ["\n        .year-input {\n            width: 65px;\n        }\n    "]
+            template: "\n    <mat-form-field class=\"year-input\">\n        <mat-select placeholder=\"Year *\" [(ngModel)]=\"selection.year\" (ngModelChange)=\"selection.update()\">\n            <mat-option *ngFor=\"let y of validYears\" [value]=\"y\">{{y === CURRENT_YEAR ? CURRENT_YEAR_LABEL : y}}</mat-option>\n        </mat-select>\n    </mat-form-field>\n    ",
+            styles: ["\n        .year-input {\n            width: 90px;\n        }\n    "]
         })
     ], ObserverActivityControl);
     return ObserverActivityControl;
@@ -12723,8 +12879,9 @@ var ObserverActivitySelectionFactory = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ObserverActivityVisMode", function() { return ObserverActivityVisMode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ObserverActivitySelection", function() { return ObserverActivitySelection; });
-/* harmony import */ var _vis_selection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../common */ "../npn/common/src/lib/common/index.ts");
+/* harmony import */ var _vis_selection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../vis-selection */ "../npn/common/src/lib/visualizations/vis-selection.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -12746,6 +12903,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 var ObserverActivityVisMode;
 (function (ObserverActivityVisMode) {
     ObserverActivityVisMode["NEW_OBSERVERS"] = "New Observers";
@@ -12765,9 +12923,16 @@ var ObserverActivitySelection = /** @class */ (function (_super) {
     ObserverActivitySelection.prototype.isValid = function () {
         return !!this.year;
     };
+    Object.defineProperty(ObserverActivitySelection.prototype, "actualYear", {
+        get: function () {
+            return this.year === _common__WEBPACK_IMPORTED_MODULE_0__["CURRENT_YEAR"] ? _common__WEBPACK_IMPORTED_MODULE_0__["CURRENT_YEAR_VALUE"] : this.year;
+        },
+        enumerable: true,
+        configurable: true
+    });
     ObserverActivitySelection.prototype.toURLSearchParams = function (params) {
-        if (params === void 0) { params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpParams"](); }
-        return _super.prototype.toURLSearchParams.call(this, params.set('year', "" + this.year));
+        if (params === void 0) { params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"](); }
+        return _super.prototype.toURLSearchParams.call(this, params.set('year', "" + this.actualYear));
     };
     ObserverActivitySelection.prototype.getData = function () {
         var _this = this;
@@ -12782,7 +12947,7 @@ var ObserverActivitySelection = /** @class */ (function (_super) {
         // if $entity is not set then this selection was created prior to the phenology trail
         // work and so needs to behave as it did previously, only single network id, etc.
         if (!this.$entity) {
-            return this.serviceUtils.cachedGet(url, { year: this.year, network_id: this.networkIds[0] })
+            return this.serviceUtils.cachedGet(url, { year: this.actualYear, network_id: this.networkIds[0] })
                 .then(function (data) {
                 _this.working = false;
                 data.label = "" + data.network_name;
@@ -12828,23 +12993,23 @@ var ObserverActivitySelection = /** @class */ (function (_super) {
         });
     };
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["selectionProperty"])(),
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_1__["selectionProperty"])(),
         __metadata("design:type", String)
     ], ObserverActivitySelection.prototype, "$class", void 0);
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["selectionProperty"])(),
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_1__["selectionProperty"])(),
         __metadata("design:type", Object)
     ], ObserverActivitySelection.prototype, "$entity", void 0);
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["selectionProperty"])(),
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_1__["selectionProperty"])(),
         __metadata("design:type", Number)
     ], ObserverActivitySelection.prototype, "year", void 0);
     __decorate([
-        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["selectionProperty"])(),
+        Object(_vis_selection__WEBPACK_IMPORTED_MODULE_1__["selectionProperty"])(),
         __metadata("design:type", String)
     ], ObserverActivitySelection.prototype, "mode", void 0);
     return ObserverActivitySelection;
-}(_vis_selection__WEBPACK_IMPORTED_MODULE_0__["StationAwareVisSelection"]));
+}(_vis_selection__WEBPACK_IMPORTED_MODULE_1__["StationAwareVisSelection"]));
 
 
 
@@ -13049,7 +13214,7 @@ var ObserverActivityComponent = /** @class */ (function (_super) {
             return;
         }
         console.debug('ObserverActivityComponent:data', this.data);
-        this.title.text("" + this.selection.year);
+        this.title.text("" + this.selection.actualYear);
         this.yAxisLabel.text(this.selection.mode);
         this.updateLegend();
         var dataKey = this.selection.mode === _observer_activity_selection__WEBPACK_IMPORTED_MODULE_3__["ObserverActivityVisMode"].ACTIVE_OBSERVERS ? 'activeObservers' : 'newObservers';
@@ -13423,6 +13588,7 @@ var ScatterPlotControlsComponent = /** @class */ (function (_super) {
     __extends(ScatterPlotControlsComponent, _super);
     function ScatterPlotControlsComponent() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.allowCurrentYear = false;
         _this.axis = _scatter_plot_selection__WEBPACK_IMPORTED_MODULE_1__["AXIS"];
         _this.faExclamationTriangle = _fortawesome_pro_light_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faExclamationTriangle"];
         return _this;
@@ -13441,7 +13607,7 @@ var ScatterPlotControlsComponent = /** @class */ (function (_super) {
     };
     ScatterPlotControlsComponent.prototype.updateCriteria = function () {
         this.criteria = {
-            years: d3__WEBPACK_IMPORTED_MODULE_2__["range"](this.selection.start, this.selection.end + 1),
+            years: d3__WEBPACK_IMPORTED_MODULE_2__["range"](this.selection.start, this.selection.actualEnd + 1),
             stationIds: this.selection.getStationIds()
         };
     };
@@ -13467,10 +13633,14 @@ var ScatterPlotControlsComponent = /** @class */ (function (_super) {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", _scatter_plot_selection__WEBPACK_IMPORTED_MODULE_1__["ScatterPlotSelection"])
     ], ScatterPlotControlsComponent.prototype, "selection", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Boolean)
+    ], ScatterPlotControlsComponent.prototype, "allowCurrentYear", void 0);
     ScatterPlotControlsComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'scatter-plot-control',
-            template: "\n    <div *ngIf=\"!selection.canAddPlot\" class=\"max-plots-reached\"><fa-icon [icon]=\"faExclamationTriangle\"></fa-icon> One more plot would exceed the maximum of {{selection.MAX_PLOTS}} allowed</div>\n    <year-range-input [(start)]=\"selection.start\" [(end)]=\"selection.end\" (onStartChange)=\"yearChange()\" (onEndChange)=\"yearChange()\"></year-range-input>\n\n    <div class=\"phenophase-input-wrapper\" *ngFor=\"let spi of selection.plots; index as idx\">\n        <higher-species-phenophase-input\n            gatherColor=\"true\"\n            [selection]=\"selection\"\n            [criteria]=\"criteria\"\n            [plot]=\"spi\"\n            (plotChange)=\"selection.update()\">\n        </higher-species-phenophase-input>\n        <button *ngIf=\"selection.plots.length > 1\" mat-button class=\"remove-plot\" (click)=\"removePlot(idx)\">Remove</button>\n        <button *ngIf=\"idx === (selection.plots.length-1)\" mat-button class=\"add-plot\" [disabled]=\"!plotsValid() || !selection.canAddPlot\" (click)=\"addPlot()\">Add</button>\n    </div>\n\n    <div>\n        <mat-form-field>\n            <mat-select placeholder=\"X Axis\" name=\"xAxis\" [(ngModel)]=\"selection.axis\" (ngModelChange)=\"redrawChange()\">\n              <mat-option *ngFor=\"let a of axis\" [value]=\"a\">{{a.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n\n        <mat-checkbox [(ngModel)]=\"selection.regressionLines\" (change)=\"redrawChange()\">Fit Lines</mat-checkbox>\n\n        <mat-checkbox [(ngModel)]=\"selection.individualPhenometrics\" (change)=\"selection.update()\">Use Individual Phenometrics</mat-checkbox>\n    </div>\n    ",
+            template: "\n    <div *ngIf=\"!selection.canAddPlot\" class=\"max-plots-reached\"><fa-icon [icon]=\"faExclamationTriangle\"></fa-icon> One more plot would exceed the maximum of {{selection.MAX_PLOTS}} allowed</div>\n    <year-range-input [allowCurrentYear]=\"allowCurrentYear\" [(start)]=\"selection.start\" [(end)]=\"selection.end\" (onStartChange)=\"yearChange()\" (onEndChange)=\"yearChange()\"></year-range-input>\n\n    <div class=\"phenophase-input-wrapper\" *ngFor=\"let spi of selection.plots; index as idx\">\n        <higher-species-phenophase-input\n            gatherColor=\"true\"\n            [selection]=\"selection\"\n            [criteria]=\"criteria\"\n            [plot]=\"spi\"\n            (plotChange)=\"selection.update()\">\n        </higher-species-phenophase-input>\n        <button *ngIf=\"selection.plots.length > 1\" mat-button class=\"remove-plot\" (click)=\"removePlot(idx)\">Remove</button>\n        <button *ngIf=\"idx === (selection.plots.length-1)\" mat-button class=\"add-plot\" [disabled]=\"!plotsValid() || !selection.canAddPlot\" (click)=\"addPlot()\">Add</button>\n    </div>\n\n    <div>\n        <mat-form-field>\n            <mat-select placeholder=\"X Axis\" name=\"xAxis\" [(ngModel)]=\"selection.axis\" (ngModelChange)=\"redrawChange()\">\n              <mat-option *ngFor=\"let a of axis\" [value]=\"a\">{{a.label}}</mat-option>\n            </mat-select>\n        </mat-form-field>\n\n        <mat-checkbox [(ngModel)]=\"selection.regressionLines\" (change)=\"redrawChange()\">Fit Lines</mat-checkbox>\n\n        <mat-checkbox [(ngModel)]=\"selection.individualPhenometrics\" (change)=\"selection.update()\">Use Individual Phenometrics</mat-checkbox>\n    </div>\n    ",
             styles: ["\n        year-range-input,\n        .phenophase-input-wrapper {\n            display: block;\n            margin-top: 15px;\n        }\n        mat-form-field,\n        mat-checkbox {\n            padding-right: 10px;\n        }\n    "]
         })
     ], ScatterPlotControlsComponent);
@@ -13543,6 +13713,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _site_or_summary_vis_selection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../site-or-summary-vis-selection */ "../npn/common/src/lib/visualizations/site-or-summary-vis-selection.ts");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "../../node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! d3 */ "../../node_modules/d3/index.js");
+/* harmony import */ var _npn_common_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @npn/common/common */ "../npn/common/src/lib/common/index.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -13570,6 +13741,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -13620,6 +13792,13 @@ var ScatterPlotSelection = /** @class */ (function (_super) {
         _this.d3DateFormat = d3__WEBPACK_IMPORTED_MODULE_3__["timeFormat"]('%x');
         return _this;
     }
+    Object.defineProperty(ScatterPlotSelection.prototype, "actualEnd", {
+        get: function () {
+            return this.end === _npn_common_common__WEBPACK_IMPORTED_MODULE_4__["CURRENT_YEAR"] ? _npn_common_common__WEBPACK_IMPORTED_MODULE_4__["CURRENT_YEAR_VALUE"] : this.end;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(ScatterPlotSelection.prototype, "canAddPlot", {
         /**
          * Indicates whether or not adding one more plot will result in a visualization exceeding
@@ -13673,9 +13852,9 @@ var ScatterPlotSelection = /** @class */ (function (_super) {
     });
     ScatterPlotSelection.prototype.isValid = function () {
         return this.start &&
-            this.end &&
+            this.actualEnd &&
             this.axis &&
-            (this.start <= this.end) &&
+            (this.start <= this.actualEnd) &&
             this.validPlots.length > 0;
     };
     ScatterPlotSelection.prototype.toURLSearchParams = function (params) {
@@ -13683,7 +13862,7 @@ var ScatterPlotSelection = /** @class */ (function (_super) {
         params = params.set('climate_data', '1')
             .set('request_src', 'npn-vis-scatter-plot')
             .set('start_date', this.start + "-01-01")
-            .set('end_date', this.end + "-12-31");
+            .set('end_date', this.actualEnd + "-12-31");
         return _super.prototype.toURLSearchParams.call(this, params);
     };
     ScatterPlotSelection.prototype.toPOPInput = function (input) {
@@ -13692,7 +13871,7 @@ var ScatterPlotSelection = /** @class */ (function (_super) {
         return _super.prototype.toPOPInput.call(this, input)
             .then(function (input) {
             input.startDate = _this.start + "-01-01";
-            input.endDate = _this.end + "-12-31";
+            input.endDate = _this.actualEnd + "-12-31";
             return input;
         });
     };
@@ -13909,7 +14088,7 @@ var ScatterPlotComponent = /** @class */ (function (_super) {
         }
         var processedData = this.selection.postProcessData(this.data), padding = 1, selection = this.selection, nonNullData = selection.axisNonNull(processedData), getX = function (d) { return selection.axisData(d); }, getY = function (d) { return selection.getDoy(d); }, // dataFunc
         extent = d3__WEBPACK_IMPORTED_MODULE_7__["extent"](nonNullData, getX), formatXTickLabels = selection.axis.axisFmt || this.defaultAxisFormat;
-        this.title.text(selection.start + " - " + selection.end);
+        this.title.text(selection.start + " - " + selection.actualEnd);
         this.x.domain([extent[0] - padding, extent[1] + padding]);
         this.xAxis.scale(this.x).tickFormat(d3__WEBPACK_IMPORTED_MODULE_7__["format"]('.2f')); // TODO per-selection tick formatting
         var xA = this.chart.selectAll('g .x.axis');
@@ -16772,7 +16951,7 @@ var NewVisualizationBuilderComponent = /** @class */ (function () {
     NewVisualizationBuilderComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'new-visualization-builder',
-            template: "\n    <activity-curves-control  *ngIf=\"activity\" [selection]=\"activity\"></activity-curves-control>\n    <scatter-plot-control *ngIf=\"scatter\" [selection]=\"scatter\"></scatter-plot-control>\n    <calendar-control *ngIf=\"calendar\" [selection]=\"calendar\"></calendar-control>\n    <observer-activity-control *ngIf=\"observer\" [selection]=\"observer\"></observer-activity-control>\n    <observation-frequency-control *ngIf=\"observationFreq\" [selection]=\"observationFreq\"></observation-frequency-control>\n    <clipped-wms-map-control *ngIf=\"clipped\" [selection]=\"clipped\"></clipped-wms-map-control>\n\n    <npn-visualization *ngIf=\"selection\" [selection]=\"selection\"></npn-visualization>\n    <!--pre *ngIf=\"selection\">{{selection.external | json}}</pre-->\n    ",
+            template: "\n    <activity-curves-control  *ngIf=\"activity\" [selection]=\"activity\" [allowCurrentYear]=\"true\"></activity-curves-control>\n    <scatter-plot-control *ngIf=\"scatter\" [selection]=\"scatter\" [allowCurrentYear]=\"true\"></scatter-plot-control>\n    <calendar-control *ngIf=\"calendar\" [selection]=\"calendar\" [onVisControlOptions]=\"true\" [allowCurrentYear]=\"true\"></calendar-control>\n    <observer-activity-control *ngIf=\"observer\" [selection]=\"observer\" [allowCurrentYear]=\"true\"></observer-activity-control>\n    <observation-frequency-control *ngIf=\"observationFreq\" [selection]=\"observationFreq\" [allowCurrentYear]=\"true\"></observation-frequency-control>\n    <clipped-wms-map-control *ngIf=\"clipped\" [selection]=\"clipped\"></clipped-wms-map-control>\n\n    <npn-visualization *ngIf=\"selection\" [selection]=\"selection\"></npn-visualization>\n    <!--pre *ngIf=\"selection\">{{selection.external | json}}</pre-->\n    ",
             styles: ["\n        npn-visualization {\n            margin-top: 20px;\n            width: 90%; // within stepper o/w horizontal scroll\n        }\n    "]
         })
     ], NewVisualizationBuilderComponent);
