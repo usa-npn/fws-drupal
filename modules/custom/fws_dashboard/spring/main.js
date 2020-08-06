@@ -1,5 +1,5 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["main"],{
-// test
+
 /***/ "../fws-dashboard/src/app/entity.service.ts":
 /*!**************************************************!*\
   !*** ../fws-dashboard/src/app/entity.service.ts ***!
@@ -17475,6 +17475,7 @@ if (_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].produc
 }
 Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformBrowserDynamic"])().bootstrapModule(_app_app_module__WEBPACK_IMPORTED_MODULE_2__["AppModule"])
     .catch(function (err) { return console.error(err); });
+console.log('test');
 
 
 /***/ }),
