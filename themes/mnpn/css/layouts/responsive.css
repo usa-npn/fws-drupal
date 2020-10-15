@@ -3085,7 +3085,7 @@ div.messages .dismiss:hover {
   }
 }
 
-.pheno-trail-header-text{
+.pheno-trail-header-text, .rd-tab-content p a{
     color:#599a53;
 }
 
