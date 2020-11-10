@@ -1654,7 +1654,7 @@ var SpeciesService = /** @class */ (function () {
                 break;
         }
         if (date) {
-            params.date = this.datePipe.transform(date, 'y-MM-dd');
+            params.date = this.datePipe.transform(date, 'yyyy-MM-dd');
         }
         else {
             params.return_all = true;
@@ -1694,7 +1694,7 @@ var SpeciesService = /** @class */ (function () {
                 break;
         }
         if (date) {
-            params.date = this.datePipe.transform(date, 'y-MM-dd');
+            params.date = this.datePipe.transform(date, 'yyyy-MM-dd');
         }
         else {
             params.return_all = true;
@@ -9131,7 +9131,7 @@ var ClippedWmsMapSelection = /** @class */ (function (_super) {
             if (this.layer && this.layer.forecast) {
                 d.setTime(d.getTime() + (this.forecastDays * _vis_selection__WEBPACK_IMPORTED_MODULE_0__["ONE_DAY_MILLIS"]));
             }
-            return this.datePipe.transform(d, 'y-MM-dd');
+            return this.datePipe.transform(d, 'yyyy-MM-dd');
         },
         enumerable: true,
         configurable: true
