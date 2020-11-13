@@ -6942,7 +6942,7 @@ var CurveControlComponent = /** @class */ (function (_super) {
         this.yearControl.valueChanges
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["takeUntil"])(this.componentDestroyed))
             .subscribe(function (y) {
-            _this.curve.year = y;
+            _this.curve.year = (y === _common__WEBPACK_IMPORTED_MODULE_2__["CURRENT_YEAR"] ? _common__WEBPACK_IMPORTED_MODULE_2__["CURRENT_YEAR_VALUE"] : y);
             _this.updateCriteria();
         });
         setTimeout(function () { return _this.updateCriteria(); });
